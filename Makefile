@@ -1,5 +1,5 @@
 default:	
-	gcc -o main.o main.c
+	gcc -pthread -o main.o main.c
 run:
 	./main.o
 clean:
