@@ -79,6 +79,12 @@ void *apprentice(void *j){
     int i = (int) j;
 
     while (1){
+        
+        pthread_mutex_lock(&mutex);
+        if (breads == MAX_BREAD){
+            pthread_exit((void *)i);
+        }
+
         pthread_cond_wait(&cond, &mutex);
     
         flour -= 1;
@@ -88,13 +94,6 @@ void *apprentice(void *j){
         breads += 1;
         printf("Apprentice %d just made some bread.\n",i);
 
-
-
-
-
-        if (breads == MAX_BREAD){
-            pthread_exit((void *)i);
-        }
     }
     
     
@@ -125,7 +124,9 @@ int main() {
 
     /* LOGIC HANDLING ROUND ROBIN WITH LL */
 
-
+    //HOW??
+    // Multiple Mutexes and Conditions?
+    // Array with value for specific apprentice set to true? 
 
 
 
