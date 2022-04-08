@@ -82,18 +82,23 @@ void *apprentice(void *j){
         
         pthread_mutex_lock(&mutex);
         if (breads == MAX_BREAD){
+            pthread_mutex_unlock(&mutex);
             pthread_exit((void *)i);
         }
 
         pthread_cond_wait(&cond, &mutex);
+
+        /* pseudo code 
+        if (array[i] == TRUE){ */   // PROBABLY NOT THE MOST PERFORMANT SOLUTION   
+            flour -= 1;             // OTHER APPROACH: *MAYBE* have multiple condition 
+            oil -= 1;               //      variables and specifically release the correct one
+            bp -= 1;
+
+            breads += 1;
+            printf("Apprentice %d just made some bread.\n",i);    
+    /*    }   */
+        
     
-        flour -= 1;
-        oil -= 1;
-        bp -= 1;
-
-        breads += 1;
-        printf("Apprentice %d just made some bread.\n",i);
-
     }
     
     
@@ -107,7 +112,7 @@ int main() {
 
 
     /* CREATING THREADS */
-    pthread_t threads[N];
+    pthread_t threads[MAX_A];
 
     for (int i = 0; i < N ; i++){
         if(pthread_create(&threads[i], NULL, apprentice, (void *)i)){
