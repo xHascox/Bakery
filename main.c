@@ -76,14 +76,14 @@ void fireApprentice(int apprentice){
 
 
 void *apprentice(void *j){
-    int i = (int) j;
+    int i = *(int*) j; // fix cast error
 
     while (1){
         
         pthread_mutex_lock(&mutex);
         if (breads == MAX_BREAD){
             pthread_mutex_unlock(&mutex);
-            pthread_exit((void *)i);
+            pthread_exit(j);
         }
 
         pthread_cond_wait(&cond, &mutex);
@@ -115,7 +115,7 @@ int main() {
     pthread_t threads[MAX_A];
 
     for (int i = 0; i < N ; i++){
-        if(pthread_create(&threads[i], NULL, apprentice, (void *)i)){
+        if(pthread_create(&threads[i], NULL, apprentice, (void *)&i)){ // must get address of i first, before casting to void-ptr
             printf("Error in thread creation!\n");
             exit(1);
         } else {
