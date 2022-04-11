@@ -77,25 +77,35 @@ void fireApprentice(int apprentice){
 
 void *apprentice(void *j){
     int i = *(int*) j; // fix cast error
-
+    printf("apprentice %d is born\n", i);
     while (1){
-        
+        printf("apprentice %d wants to make a bread\n",i);
         pthread_mutex_lock(&mutex);
         if (breads == MAX_BREAD){
+            printf("apprentice %d has detected there is enough bread (%d) and is stopping work\n",i, breads);
             pthread_mutex_unlock(&mutex);
-            pthread_exit(j);
+            pthread_exit((void*)(&i));
         }
-
-        pthread_cond_wait(&cond, &mutex);
-
-        /* pseudo code 
-        if (array[i] == TRUE){ */   // PROBABLY NOT THE MOST PERFORMANT SOLUTION   
+        // we have the lock for all resources now
+        if(flour > 0 && oil > 0 && bp > 0) {
+            // apprentice can make a bread
             flour -= 1;             // OTHER APPROACH: *MAYBE* have multiple condition 
             oil -= 1;               //      variables and specifically release the correct one
             bp -= 1;
 
             breads += 1;
-            printf("Apprentice %d just made some bread.\n",i);    
+            printf("Apprentice %d just made some bread. We have %d in total now\n",i, breads);  
+        } else {
+            // not enough resources, wait for more to come
+            // we need a master to notify us
+            printf("apprentice %d must wait for more resources\n", i);
+            pthread_cond_wait(&cond, &mutex);
+        }
+        pthread_mutex_unlock(&mutex); // release before trying to make next bread
+
+        /* pseudo code 
+        if (array[i] == TRUE){ */   // PROBABLY NOT THE MOST PERFORMANT SOLUTION   
+  
     /*    }   */
         
     
@@ -140,9 +150,11 @@ int main() {
     /* JOINING THREADS */
 
     for (int i = 0; i < N; i++){
-        int val;
-        pthread_join(threads[i], (void **)&val);
-        printf("Thread is %d \n", val);
+        void** pRet = NULL;
+        pthread_join(threads[i], pRet);
+        void* pVal = &pRet;
+        int* pI = (int*)pVal;
+        printf("Thread is %d \n", *pI); // why dont we get the correct return-value here?? its always 0
     }
     
 
