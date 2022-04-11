@@ -11,8 +11,9 @@
 #define MAX_BREAD 100 // max # of breads to be made by the A.
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;  
+pthread_mutex_t tMut = PTHREAD_MUTEX_INITIALIZER;  
 pthread_cond_t cond[MAX_A]; // = PTHREAD_COND_INITIALIZER;
-pthread_cond_t teacher = PTHREAD_COND_INITIALIZER;
+pthread_cond_t tCond = PTHREAD_COND_INITIALIZER;
 
 int flour = INT_MAX;
 int oil = INT_MAX;
@@ -84,6 +85,7 @@ void *apprentice(void *j){
         
         pthread_mutex_lock(&mutex);
         pthread_cond_wait(&cond[i], &mutex);
+        pthread_mutex_lock(&tMut);
 
         if (breads == MAX_BREAD){ // Enough bread? If so, exit.
             pthread_mutex_unlock(&mutex);
@@ -102,7 +104,9 @@ void *apprentice(void *j){
 
 
         pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&teacher);
+        pthread_mutex_unlock(&tMut);
+        pthread_cond_signal(&tCond);
+        
     }
 }
 
@@ -136,9 +140,9 @@ int main() {
     sleep(1); // Give threads time to initilize
 
     for (int i = 0; i < MAX_A; i++){
+        pthread_mutex_lock(&tMut);
         pthread_cond_signal(&cond[i]);
-        
-        pthread_cond_wait(&teacher,);
+        pthread_cond_wait(&tCond,&tMut);
     }
 
     /* JOINING THREADS */
