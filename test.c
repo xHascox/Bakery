@@ -152,7 +152,7 @@ int main() {
 
         pthread_cond_signal(&cond[i]);
         pthread_cond_wait(&tCond,&tMut);
-        i= (i+1)%N;
+        i = (i+1)%N;
         printf("Current amount of bread: %d\n", breads);
         
             

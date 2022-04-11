@@ -1,0 +1,2 @@
+Problem mit erster Iteration:
+* Race condition: Main waked ein Apprentice aber gibt tMut noch nicht frei und dann pennt Apprentice wieder ein, weil er nicht tMut locken kann.
