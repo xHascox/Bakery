@@ -79,7 +79,7 @@ void fireApprentice(int apprentice){
 
 void *apprentice(void *j){
     int i = (int) j;
-    printf("i = %d\n",i);
+    //printf("i = %d\n",i);
 
     while (1){
         
@@ -89,6 +89,10 @@ void *apprentice(void *j){
 
         if (breads == MAX_BREAD){ // Enough bread? If so, exit.
             pthread_mutex_unlock(&mutex);
+            pthread_mutex_unlock(&tMut);
+            pthread_cond_signal(&tCond);
+            printf("Killing %d\n", i);
+        
             pthread_exit((void *)i);
         }
 
@@ -104,7 +108,10 @@ void *apprentice(void *j){
 
 
         pthread_mutex_unlock(&mutex);
+        //printf("Shared val mutex\n");
         pthread_mutex_unlock(&tMut);
+        //sleep(1);
+        //printf("Shared val mutex\n");
         pthread_cond_signal(&tCond);
         
     }
@@ -115,7 +122,7 @@ void *apprentice(void *j){
 
 int main() {
 
-
+    int a = 0;
 
     for (int i = 0; i < MAX_A; i++){
         pthread_cond_init(&cond[i], NULL); // Initilaize a condition variable for each apprentice.
@@ -125,7 +132,7 @@ int main() {
     /* CREATING THREADS */
     pthread_t threads[MAX_A];
 
-    for (int i = 0; i < MAX_A ; i++){
+    for (int i = 0; i < N ; i++){
         if(pthread_create(&threads[i], NULL, apprentice, (void *)i)){
             printf("Error in thread creation!\n");
             exit(1);
@@ -138,11 +145,18 @@ int main() {
     }    
 
     sleep(1); // Give threads time to initilize
+    pthread_mutex_lock(&tMut);
+    //for (int i = 0; i < MAX_A; i++){
+    int i = 0;
+    while(1){
 
-    for (int i = 0; i < MAX_A; i++){
-        pthread_mutex_lock(&tMut);
         pthread_cond_signal(&cond[i]);
         pthread_cond_wait(&tCond,&tMut);
+        i= (i+1)%N;
+        printf("Current amount of bread: %d\n", breads);
+        
+            
+
     }
 
     /* JOINING THREADS */
