@@ -13,21 +13,23 @@ pthread_mutex_t tMut = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond[MAX_A]; // = PTHREAD_COND_INITIALIZER;
 pthread_cond_t tCond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t bla = PTHREAD_MUTEX_INITIALIZER; 
+pthread_mutex_t emut[MAX_A];//lock for each A
 
 
 void *apprentice(void *j){
     int i = (int) j;
 
     while (1){
-        pthread_cond_wait(&cond[i], &tMut);
-        pthread_mutex_lock(&bla);
+    	pthread_mutex_lock(&emut[i]);
+        //pthread_cond_wait(&cond[i], &tMut);
+
         printf("Before tMut\n");
         pthread_mutex_lock(&tMut);
 
         printf("Apprentice %d's turn.\n", i);
 
-        pthread_mutex_unlock(&bla);
         pthread_cond_signal(&tCond);
+        printf("Apprentice %d finished.\n", i);
     }
 }
 
@@ -36,6 +38,9 @@ int main() {
 
     for (int i = 0; i < MAX_A; i++){
         pthread_cond_init(&cond[i], NULL);
+    }
+    for (int i = 0; i < MAX_A; i++){
+        pthread_mutex_lock(&emut[i]);
     }
 
     pthread_t threads[MAX_A];
@@ -57,8 +62,12 @@ int main() {
     while(1){
         printf("Main's turn.\n");
         pthread_mutex_unlock(&tMut);
-        pthread_cond_signal(&cond[i]);
-        pthread_cond_wait(&tCond,&bla);
+        //pthread_mutex_unlock(&emut[i]);//unlock
+        //pthread_cond_signal(&cond[i]);//unlock
+        printf("main waiting for A\n");
+        pthread_cond_wait(&tCond, &emut[i]);//unlock
+        printf("main woke up from A\n");
+        pthread_mutex_lock(&emut[i]);//lock
         pthread_mutex_lock(&tMut);
         i = (i+1)%N;
     }
