@@ -19,8 +19,10 @@ pthread_mutex_t emut[MAX_A];//lock for each A
 void *apprentice(void *j){
     int i = (int) j;
 
+
     while (1){
-    	pthread_mutex_lock(&emut[i]);
+        
+        pthread_mutex_lock(&emut[i]); // CONTINUE HERE: Not waking up
         //pthread_cond_wait(&cond[i], &tMut);
 
         printf("Before tMut %d\n", i);
@@ -29,10 +31,10 @@ void *apprentice(void *j){
 	// EAT AND MAKE BREAT AND LIVE
 	
         printf("Apprentice %d's turn.\n", i);
-	pthread_mutex_unlock(&emut[i]);
+	    pthread_mutex_unlock(&emut[i]);
         pthread_cond_signal(&tCond);
-        pthread_mutex_unlock(&tMut);
         printf("Apprentice %d finished.\n", i);
+        pthread_cond_wait(&cond[i],&tMut);
     }
 }
 
@@ -64,17 +66,21 @@ int main() {
     int i = 0;
     while(1){
         printf("Main's turn.\n");
-        pthread_mutex_unlock(&tMut);
-        printf("main unlocked tmut\n");
+        // pthread_mutex_unlock(&emut[i]);
+        printf("main unlocked emut\n");
         //pthread_mutex_unlock(&emut[i]);//unlock
         //pthread_cond_signal(&cond[i]);//unlock
+        pthread_mutex_unlock(&tMut);
         printf("main waiting for A\n");
-        pthread_cond_wait(&tCond, &emut[i]);//unlock
+        pthread_cond_wait(&tCond, &emut[i]); //unlock
+        pthread_mutex_lock(&tMut);
         printf("main woke up from A\n");
         //pthread_mutex_lock(&emut[i]);//lock
         printf("main got emut\n");
-        pthread_mutex_lock(&tMut);
+        // pthread_mutex_lock(&tMut);
         printf("main got tmut\n");
+        // pthread_mutex_lock(&emut[i]);
+        printf("End main\n");
         i = (i+1)%N;
     }
     return 0;
