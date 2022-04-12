@@ -27,28 +27,20 @@ void *apprentice(void *j){
     	pthread_mutex_lock(&emut[i]);
     	
     	printf("Apprentice %d - %d\n", i, k); 
-        //pthread_cond_wait(&cond[i], &tMut);
 
-        printf("Apprentice Before tMut %d\n", i);
-        //pthread_mutex_lock(&tMut);
-
-	// EAT AND MAKE BREAT AND LIVE
+	// BREED
 	
         printf("Apprentice %d's turn.\n", i);
 		pthread_mutex_unlock(&emut[i]);
         pthread_cond_signal(&tCond);
-        //pthread_mutex_unlock(&tMut);
+
         
         k++;
-        //sleep(1);
-        //pthread_cond_wait(&aCond, &fix);//unlock
+
+
         printf("Apprentice %d is waiting for fix\n", i);
         sem_wait(&sp[i]);
-        //pthread_mutex_lock(&fix);
-        //printf("Apprentice %d is waiting for cond\n", i);
-        //pthread_cond_wait(&cond[i], &fix);
-        //pthread_mutex_unlock(&fix);//prevent sthread from stealing emit[i] before main
-        //pthread_mutex_lock(&fix);
+        
         printf("Apprentice %d finished.\n", i);
         
     }
@@ -68,8 +60,6 @@ int main() {
 
     pthread_t threads[MAX_A];
 
-    pthread_mutex_lock(&tMut);
-    //pthread_mutex_lock(&fix);
     
 
     for (int i = 0; i < N ; i++){
@@ -81,28 +71,17 @@ int main() {
         }
     }    
 
-    sleep(1); // Give threads time to initilize
-
     int i = 0;
     while(1){
-        printf("Main's turn.\n");
-        //pthread_mutex_unlock(&tMut);
-        printf("main unlocked tmut\n");
-        //pthread_mutex_unlock(&emut[i]);//unlock
-        //pthread_cond_signal(&cond[i]);//unlock
+
         printf("main waiting for A [%d]\n", i);
         pthread_cond_wait(&tCond, &emut[i]);//unlock
         printf("main woke up from A\n");
-        //pthread_mutex_lock(&emut[i]);//lock
-        printf("main got emut\n");
-        //pthread_mutex_lock(&tMut);
-        
+
         printf("main waking A up\n");
-        //pthread_mutex_unlock(&tMut);
-        //pthread_cond_signal(&cond[i]);
+
         sem_post(&sp[i]);
         
-        printf("main finished\n");
         i = (i+1)%N;
     }
     return 0;
