@@ -2,21 +2,31 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <pthread.h>
+#include <unistd.h>
+#include <semaphore.h>
 
 
-
-#define N 3 // # of apprentices
+#define N 5 // # of apprentices
 #define MAX_A 20  // max # of apprentices
-#define MAX_BREAD 100 // max # of breads to be made by the A.
+#define MAX_BREAD 1000 // max # of breads to be made by the A.
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; //   
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+#define TRUE 1
+#define FALSE 0
 
+/* CONDITION VARIABLES, MUTEXES AND SEMAPHORES */
+pthread_mutex_t mutA[MAX_A];   
+pthread_cond_t condA[MAX_A]; 
+pthread_cond_t condT = PTHREAD_COND_INITIALIZER;
+sem_t sp[MAX_A];
+
+/* INVETORY */
 int flour = INT_MAX;
 int oil = INT_MAX;
-int bp = INT_MAX; //baking powder
+int bp = INT_MAX;   //baking powder
+int breads = 0;     // # of breads made
 
-int breads = 0;
+/* FOR COMMUNICATION: APPRENTICE - TEACHER */
+int finished[MAX_A];
 
 
 /* NODE STRUCTURE */
@@ -33,10 +43,10 @@ struct Node {
 /* NEW NODE FUNCTION */
 struct Node* newNode(int i) {
 
-    // Allocate Memory
+    // allocate Memory
     struct Node *node = (struct Node *) malloc(sizeof(struct Node));
 
-    // Init data
+    // init data
     node->apprNb = i;
     node->next = NULL;
     node->prev = NULL; 
@@ -72,91 +82,91 @@ void fireApprentice(int apprentice){
 
 }
 
-
-
+/* APPRENTICE FUNCTION */
 void *apprentice(void *j){
-    int i = *(int*) j; // fix cast error
-    printf("apprentice %d is born\n", i);
+    int i = (int) j;
+
     while (1){
-        printf("apprentice %d wants to make a bread\n",i);
-        pthread_mutex_lock(&mutex);
-        if (breads == MAX_BREAD){
-            printf("apprentice %d has detected there is enough bread (%d) and is stopping work\n",i, breads);
-            pthread_mutex_unlock(&mutex);
-            pthread_exit((void*)(&i));
-        }
-        // we have the lock for all resources now
-        if(flour > 0 && oil > 0 && bp > 0) {
-            // apprentice can make a bread
-            flour -= 1;             // OTHER APPROACH: *MAYBE* have multiple condition 
-            oil -= 1;               //      variables and specifically release the correct one
-            bp -= 1;
 
-            breads += 1;
-            printf("Apprentice %d just made some bread. We have %d in total now\n",i, breads);  
-        } else {
-            // not enough resources, wait for more to come
-            // we need a master to notify us
-            printf("apprentice %d must wait for more resources\n", i);
-            pthread_cond_wait(&cond, &mutex);
-        }
-        pthread_mutex_unlock(&mutex); // release before trying to make next bread
+        pthread_mutex_lock(&mutA[i]);
 
-        /* pseudo code 
-        if (array[i] == TRUE){ */   // PROBABLY NOT THE MOST PERFORMANT SOLUTION   
-  
-    /*    }   */
-        
-    
+        if (breads == MAX_BREAD){ // Enough bread? If so, exit.
+            pthread_mutex_unlock(&mutA[i]);
+            printf("Killing %d\n", i);
+            finished[i] = TRUE;
+            pthread_cond_signal(&condT);
+            pthread_exit(NULL);
+        }
+
+        printf("Entering Inventory: i = %d\n", i); 
+        flour -= 1;
+        oil -= 1;               
+        bp -= 1;
+            
+        breads += 1;
+        printf("Apprentice %d just made some bread.\n",i);
+
+        pthread_mutex_unlock(&mutA[i]);
+        pthread_cond_signal(&condT);
+
+        sem_wait(&sp[i]);        
     }
-    
-    
 }
-
 
 
 
 int main() {
 
-
+    /* INITIALIZING CONDITION AND MUTEX VARIABLE ARRAYS */
+    for (int i = 0; i < MAX_A; i++){
+        pthread_cond_init(&condA[i], NULL); // Initilaize a condition variable for each apprentice.
+        pthread_mutex_init(&mutA[i], NULL); // Initilaize a mutex for each apprentice.
+        pthread_mutex_lock(&mutA[i]);       // Also lock mutex immediately   
+        finished[i] = FALSE;                
+    }
+    
 
     /* CREATING THREADS */
     pthread_t threads[MAX_A];
 
     for (int i = 0; i < N ; i++){
-        if(pthread_create(&threads[i], NULL, apprentice, (void *)&i)){ // must get address of i first, before casting to void-ptr
+        if(pthread_create(&threads[i], NULL, apprentice, (void *)i)){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
             printf("Thread %d created!\n", i);
             newApprentice(i);
-
-
         }
+    }    
 
+
+    int i = 0;
+    while(1){
+
+        pthread_cond_wait(&condT,&mutA[i]);
+
+        sem_post(&sp[i]);
+
+        i = (i+1)%N;
+        printf("Current amount of bread: %d\n", breads);
+
+        if (breads == MAX_BREAD){
+            int k = 0;
+            for (int i = 0; i < N; i++){
+                k += finished[i];
+            }
+            if (k == N){
+                break;
+            }
+        }
     }
-
-    /* LOGIC HANDLING ROUND ROBIN WITH LL */
-
-    //HOW??
-    // Multiple Mutexes and Conditions?
-    // Array with value for specific apprentice set to true? 
-
-
-
-
 
     /* JOINING THREADS */
-
     for (int i = 0; i < N; i++){
-        void** pRet = NULL;
-        pthread_join(threads[i], pRet);
-        void* pVal = &pRet;
-        int* pI = (int*)pVal;
-        printf("Thread is %d \n", *pI); // why dont we get the correct return-value here?? its always 0
+        pthread_join(threads[i], NULL);
     }
+    printf("All threads joined!\n");
     
-
 
     return 0;
 }
