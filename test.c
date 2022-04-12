@@ -3,23 +3,30 @@
 #include <limits.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <semaphore.h>
 
 
-
-#define N 3 // # of apprentices
+#define N 5 // # of apprentices
 #define MAX_A 20  // max # of apprentices
-#define MAX_BREAD 100 // max # of breads to be made by the A.
+#define MAX_BREAD 1000 // max # of breads to be made by the A.
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;  
-pthread_mutex_t tMut = PTHREAD_MUTEX_INITIALIZER;  
-pthread_cond_t cond[MAX_A]; // = PTHREAD_COND_INITIALIZER;
-pthread_cond_t tCond = PTHREAD_COND_INITIALIZER;
+#define TRUE 1
+#define FALSE 0
 
+/* CONDITION VARIABLES, MUTEXES AND SEMAPHORES */
+pthread_mutex_t mutA[MAX_A];   
+pthread_cond_t condA[MAX_A]; 
+pthread_cond_t condT = PTHREAD_COND_INITIALIZER;
+sem_t sp[MAX_A];
+
+/* INVETORY */
 int flour = INT_MAX;
 int oil = INT_MAX;
-int bp = INT_MAX; //baking powder
+int bp = INT_MAX;   //baking powder
+int breads = 0;     // # of breads made
 
-int breads = 0;
+/* FOR COMMUNICATION: APPRENTICE - TEACHER */
+int finished[MAX_A];
 
 
 /* NODE STRUCTURE */
@@ -36,10 +43,10 @@ struct Node {
 /* NEW NODE FUNCTION */
 struct Node* newNode(int i) {
 
-    // Allocate Memory
+    // allocate Memory
     struct Node *node = (struct Node *) malloc(sizeof(struct Node));
 
-    // Init data
+    // init data
     node->apprNb = i;
     node->next = NULL;
     node->prev = NULL; 
@@ -75,25 +82,20 @@ void fireApprentice(int apprentice){
 
 }
 
-
-
+/* APPRENTICE FUNCTION */
 void *apprentice(void *j){
     int i = (int) j;
-    //printf("i = %d\n",i);
 
     while (1){
-        
-        pthread_mutex_lock(&mutex);
-        pthread_cond_wait(&cond[i], &mutex);
-        pthread_mutex_lock(&tMut);
+
+        pthread_mutex_lock(&mutA[i]);
 
         if (breads == MAX_BREAD){ // Enough bread? If so, exit.
-            pthread_mutex_unlock(&mutex);
-            pthread_mutex_unlock(&tMut);
-            pthread_cond_signal(&tCond);
+            pthread_mutex_unlock(&mutA[i]);
             printf("Killing %d\n", i);
-        
-            pthread_exit((void *)i);
+            finished[i] = TRUE;
+            pthread_cond_signal(&condT);
+            pthread_exit(NULL);
         }
 
         printf("Entering Inventory: i = %d\n", i); 
@@ -102,30 +104,25 @@ void *apprentice(void *j){
         bp -= 1;
             
         breads += 1;
-
         printf("Apprentice %d just made some bread.\n",i);
-        printf("Leave inventory: i = %d\n", i);
 
+        pthread_mutex_unlock(&mutA[i]);
+        pthread_cond_signal(&condT);
 
-        pthread_mutex_unlock(&mutex);
-        //printf("Shared val mutex\n");
-        pthread_mutex_unlock(&tMut);
-        //sleep(1);
-        //printf("Shared val mutex\n");
-        pthread_cond_signal(&tCond);
-        
+        sem_wait(&sp[i]);        
     }
 }
 
 
 
-
 int main() {
 
-    int a = 0;
-
+    /* INITIALIZING CONDITION AND MUTEX VARIABLE ARRAYS */
     for (int i = 0; i < MAX_A; i++){
-        pthread_cond_init(&cond[i], NULL); // Initilaize a condition variable for each apprentice.
+        pthread_cond_init(&condA[i], NULL); // Initilaize a condition variable for each apprentice.
+        pthread_mutex_init(&mutA[i], NULL); // Initilaize a mutex for each apprentice.
+        pthread_mutex_lock(&mutA[i]);       // Also lock mutex immediately   
+        finished[i] = FALSE;                
     }
     
 
@@ -139,35 +136,37 @@ int main() {
         } else {
             printf("Thread %d created!\n", i);
             newApprentice(i);
-
-
         }
     }    
 
-    sleep(1); // Give threads time to initilize
-    pthread_mutex_lock(&tMut);
-    //for (int i = 0; i < MAX_A; i++){
+
     int i = 0;
     while(1){
 
-        pthread_cond_signal(&cond[i]);
-        pthread_cond_wait(&tCond,&tMut);
+        pthread_cond_wait(&condT,&mutA[i]);
+
+        sem_post(&sp[i]);
+
         i = (i+1)%N;
         printf("Current amount of bread: %d\n", breads);
-        
-            
 
+        if (breads == MAX_BREAD){
+            int k = 0;
+            for (int i = 0; i < N; i++){
+                k += finished[i];
+            }
+            if (k == N){
+                break;
+            }
+        }
     }
 
     /* JOINING THREADS */
-
     for (int i = 0; i < N; i++){
-        int val;
-        pthread_join(threads[i], (void **)&val);
-        printf("Thread is %d \n", val);
+        pthread_join(threads[i], NULL);
     }
+    printf("All threads joined!\n");
     
-
 
     return 0;
 }
