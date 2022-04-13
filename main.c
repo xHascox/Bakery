@@ -122,6 +122,7 @@ int main() {
         pthread_cond_init(&condA[i], NULL); // Initilaize a condition variable for each apprentice.
         pthread_mutex_init(&mutA[i], NULL); // Initilaize a mutex for each apprentice.
         pthread_mutex_lock(&mutA[i]);       // Also lock mutex immediately   
+        sem_init(&sp[i], 0, 0);
         finished[i] = FALSE;                
     }
     
