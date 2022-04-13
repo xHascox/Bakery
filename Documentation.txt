@@ -1,2 +1,7 @@
-Problem mit erster Iteration:
-* Race condition: Main waked ein Apprentice aber gibt tMut noch nicht frei und dann pennt Apprentice wieder ein, weil er nicht tMut locken kann.
+1. Learning to make bread
+
+2. Too good to go
+* Possible strategies:
+** Donate old bread
+
+3. Additional features
