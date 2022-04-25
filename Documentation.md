@@ -32,12 +32,18 @@ Analogy to: Page eviction.
 
 ## Implementation of NRU:
 Variables:
-* Bread :: struct containing int representing the bread type. E.g., 1 == croissant, 2 == zopf.
-* TypeTimestamp :: Array of bool length n containing most recent selling time for each bread type. Gets reset after k ticks.
-* k :: int representing the number of ticks until TypeTimestamp is set to false for all the entries.
+* Bread_Types :: struct containing int representing the bread type. E.g., 1 == croissant, 2 == zopf.
+* types :: Array of Bread_Types :: Containing bread types the bakery offers.
+* Sold :: Array of int::  Flags whether the bread type was sold in the last k TICKS.
+* TICKS :: int representing the number of ticks until Sold is set to false for all the entries.
+* TgtgBasket :: Array of int :: Flag for each bread type indicating whether the bread is offered via TGTG.
 
 Structure of code:
 * Three phases in the code: (1) Production phase (bake breads), (2) Sell breads, (3) TGTG decision.
+
+Possible improvements:
+* Dynamic bread type addition.
+* Implement additional strategies.
 
 
 # 3 Additional features
