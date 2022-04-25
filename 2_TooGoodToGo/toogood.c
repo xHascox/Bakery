@@ -23,13 +23,13 @@ struct BreadType {
     int nb; // Number of breads of this type
 };
 
-// The types of bread the bakery offers
+// Types of bread the bakery offers
 struct BreadType types[BREAD_TYPES];
 
-// The types sold in the last k TICKS
+// Types sold in the last k TICKS
 int Sold[BREAD_TYPES];
 
-// The types that are currently offered over TGTG
+// Types that are currently offered over TGTG
 int TgtgBasket[BREAD_TYPES];
 
 // Function that gets called every k TICKS and decides whether a bread type is going to be offered via TGTG
