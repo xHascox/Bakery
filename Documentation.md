@@ -10,7 +10,7 @@ Analogy to: Page eviction.
 * Donate old bread: Analogy to FIFO.
 * Second chance: Analogy to Second Chance.
 * Not recently sold: Analogy to NRU.
-* --> We implement NRU
+* --> We implement NRU.
 
 ## Implementation of NRU:
 Variables:

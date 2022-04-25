@@ -8,6 +8,7 @@
 #define BREAD_TYPES 2 //number of different bread types
 #define BREADS_SOLD 5 //must be less than MAX_BREAD
 
+// 
 struct BreadType {
     int id;//name but as an int
     char name[64];//human readable identifier, e.g. "Tessinerli"
