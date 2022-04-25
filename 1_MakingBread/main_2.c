@@ -9,7 +9,7 @@
 #define MAX_A 20  // max # of apprentices
 #define MAX_BREAD 100 // max # of breads to be made by the A.
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; //   
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; 
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 int flour = INT_MAX;

@@ -79,7 +79,6 @@ void newApprentice(int apprentice) {
 
 void fireApprentice(int apprentice){
 
-
 }
 
 /* APPRENTICE FUNCTION */
@@ -140,7 +139,7 @@ int main() {
         }
     }    
 
-
+    /* BAKING BREADS */
     int i = 0;
     while(1){
 
