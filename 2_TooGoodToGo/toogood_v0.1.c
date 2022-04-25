@@ -18,18 +18,21 @@
 
 // Blueprint for different types of breads
 struct BreadType {
-    int id;//name but as an int
+    int id; // Identifier
     char name[64]; // Name of bread type
-    int nb;//number of breads of this type
+    int nb; // Number of breads of this type
 };
 
 // The types of bread the bakery offers
 struct BreadType types[BREAD_TYPES];
 
+// The types sold in the last k TICKS
 int Sold[BREAD_TYPES];
 
+// The types that are currently offered over TGTG
 int TgtgBasket[BREAD_TYPES];
 
+// Function that gets called every k TICKS and decides whether a bread type is going to be offered via TGTG
 void tgtg(){
     for (int i = 0; i < BREAD_TYPES; i++){
         if (TgtgBasket[i] == NO){
@@ -41,6 +44,7 @@ void tgtg(){
         Sold[i] = NO;
     }
 }
+
 
 int main(){
 
