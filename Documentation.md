@@ -53,7 +53,8 @@ Possible improvements:
 * Do we have to compile everything in one file? --> No, but we can.
 * Does the project count 30 or 40%? --> Answer: 30%
 * Inventory:
-  * Inventory: Do the apprentices take all ingredients at once, or only one at once? --> Both options are okay.
+  * Do the apprentices take all ingredients at once, or only one at once? --> Both options are okay.
+  * Ines: Would be good to implement dynamic datatypes for ingredients.
 * TooGoodToGo
   * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email.
-* Ines: Would be good to implement dynamic datatypes for ingredients.
+
