@@ -49,12 +49,11 @@ Possible improvements:
 # 3 Additional features
 
 # Questions
-* How to do testing (of the scenarios)?
+* How to do testing (of the scenarios)? --> Use large numbers for apprentices.
 * Do we have to compile everything in one file?
 * Does the project count 30 or 40%? --> Answer: 30%
 * Inventory:
-* * Access 
-* Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)
-* inventory why binary search????
-* inventory: do the apprentices take all ingredients at once, or only one at once?
-* Re 2: 
+  * Access 
+  * inventory: do the apprentices take all ingredients at once, or only one at once?
+* TooGoodToGo
+  * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)
