@@ -22,7 +22,7 @@ sem_t sp[MAX_A];
 /* INVETORY */
 int flour = INT_MAX;
 int oil = INT_MAX;
-int bp = INT_MAX;   //baking powder
+int bp = INT_MAX;   // baking powder
 int breads = 0;     // # of breads made
 
 /* FOR COMMUNICATION: APPRENTICE - TEACHER */
@@ -80,7 +80,7 @@ int main() {
             exit(1);
         } else {
             printf("Thread %d created!\n", i);
-            newApprentice(i);
+            // newApprentice(i);
         }
     }    
 

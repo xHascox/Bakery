@@ -47,3 +47,9 @@ Possible improvements:
 
 
 # 3 Additional features
+
+# Questions
+* How to do testing?
+* Do we have to compile everything in one file?
+* Does the project count 30 or 40%?
+* Re 2: 
