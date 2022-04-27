@@ -49,7 +49,9 @@ Possible improvements:
 # 3 Additional features
 
 # Questions
-* How to do testing?
+* How to do testing (of the scenarios)?
 * Do we have to compile everything in one file?
 * Does the project count 30 or 40%? --> Answer: 30%
+* Inventory:
+* * Access 
 * Re 2: 
