@@ -51,5 +51,5 @@ Possible improvements:
 # Questions
 * How to do testing?
 * Do we have to compile everything in one file?
-* Does the project count 30 or 40%?
+* Does the project count 30 or 40%? --> Answer: 30%
 * Re 2: 
