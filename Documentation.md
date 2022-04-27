@@ -52,4 +52,5 @@ Possible improvements:
 * How to do testing?
 * Do we have to compile everything in one file?
 * Does the project count 30 or 40%? --> Answer: 30%
+* Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)
 * Re 2: 
