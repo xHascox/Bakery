@@ -12,15 +12,14 @@
 #define N 10
 #define NbCustomers 30
 
-//Chairs (Queue of customers) and the corresponding mutex
-Queue* chairs = init_queue();
+Queue* chairs;
 pthread_mutex_t mutex_chairs;
 
 //baker's semaphore
 sem_t baker_semaphore;
 
 //baker
-void *baker(void *j){
+void *baker(){
     while(TRUE) {
         sem_wait(&baker_semaphore);
 
@@ -50,7 +49,7 @@ void *customer(){
     //if Q full: kill
     if (length(chairs)>= N) {
         printf("I'm leaving, 0 star, overcrowded\n");
-        pthread_exit();
+        pthread_exit(NULL);
     } 
     else {
         sem_t customer_semaphore;
@@ -67,7 +66,7 @@ void *customer(){
 
         printf("thanks for selling me bread\n");
 
-        pthread_exit();
+        pthread_exit(NULL);
     }
         
 
@@ -79,6 +78,10 @@ void *customer(){
 
 int main() {
     sem_init(&baker_semaphore, 0, 0);
+
+    //Chairs (Queue of customers) and the corresponding mutex
+    chairs = init_queue();
+    
 
 
     pthread_t threads[NbCustomers];
@@ -99,6 +102,8 @@ int main() {
 
     }
 
+    pthread_t bakert;
+    pthread_create(&bakert, NULL, baker, NULL)
 
     /* JOINING THREADS */
     for (int i = 0; i < N; i++){
