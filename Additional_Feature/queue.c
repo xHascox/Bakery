@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <semaphore.h>
 #include "queue.h"
 
 #define TRUE 1
@@ -15,9 +16,8 @@ Queue* init_queue() {
     return new;
 }
 
-void enqueue(Queue* q, int customer) {
-    int R = rand() % 2;
-    Node* new = create_node(customer, R);
+void enqueue(Queue* q, sem_t customer_semaphore) {
+    Node* new = create_node(customer_semaphore);
     if (q->nbElements == 0) {
         new->previous = NULL;
         new->next = NULL;
@@ -34,15 +34,16 @@ void enqueue(Queue* q, int customer) {
     q->nbElements++;
 }
 
-void move_to_tail(Queue* q, int customer) {
+/*
+void move_to_tail(Queue* q, int customer_semaphore) {
     Node* tmp = q->head;
-    while (tmp->customer != customer) {
+    while (tmp->customer_semaphore != customer_semaphore) {
         tmp = tmp->next;
     }
 
     if (tmp == q->tail) return;
 
-    // now tmp is the node holding customer
+    // now tmp is the node holding customer_semaphore
     if (tmp != q->head) {
         Node* prev = tmp->previous;
         prev->next = tmp->next;
@@ -56,12 +57,12 @@ void move_to_tail(Queue* q, int customer) {
     q->tail->next = tmp;
     q->tail = tmp;
 }
-
-int dequeue(Queue* q) {
-    if (q->nbElements == 0) return -1;
+*/ 
+sem_t dequeue(Queue* q) {
+    // if (q->nbElements == 0) return void;
 
     Node* tmp = q->head;
-    int ret = q->head->customer;
+    sem_t ret = q->head->customer_semaphore;
 
     if (q->nbElements > 1) {
         q->head = q->head->next;
@@ -76,11 +77,12 @@ int dequeue(Queue* q) {
     return ret;
 }
 
+/*
 Node* dequeue_node(Queue* q) {
     if (q->nbElements == 0) return NULL;
 
     Node* tmp = q->head;
-    int ret = q->head->customer;
+    int ret = q->head->customer_semaphore;
 
     if (q->nbElements > 1) {
         q->head = q->head->next;
@@ -96,22 +98,23 @@ Node* dequeue_node(Queue* q) {
 
     return tmp;
 }
+*/
 
-Node* create_node(int customer, int R) {
+Node* create_node(sem_t customer_semaphore) {
     Node* new = malloc(sizeof(Node));
-    new->customer = customer;
-    new->R = R;
+    new->customer_semaphore = customer_semaphore;
     return new;
 }
-
+/*
 void print_queue(Queue* q) {
     Node* tmp = q->head;
     while (tmp != q->tail) {
-        printf("{P %2d, R = %d} -> ", tmp->customer, tmp->R);
+        printf("{P %2d, R = %d} -> ", tmp->customer_semaphore, tmp->R);
         tmp = tmp->next;
     }
     printf("\n");
 }
+*/
 
 //return length of Queue
 int length(Queue* q) {
