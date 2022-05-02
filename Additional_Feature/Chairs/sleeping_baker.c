@@ -12,6 +12,7 @@
 #define N 10
 #define NbCustomers 30
 
+//Chairs (Queue of customers) and the corresponding mutex
 Queue* chairs;
 pthread_mutex_t mutex_chairs;
 
@@ -61,6 +62,10 @@ void *customer(){
         //wake Baker up
         sem_post(&baker_semaphore);
 
+        pthread_mutex_unlock(&mutex_chairs);
+
+        printf("I'm waiting in a chair\n");
+
         //wait to be served
         sem_wait(&customer_semaphore);
 
@@ -79,9 +84,7 @@ void *customer(){
 int main() {
     sem_init(&baker_semaphore, 0, 0);
 
-    //Chairs (Queue of customers) and the corresponding mutex
     chairs = init_queue();
-    
 
 
     pthread_t threads[NbCustomers];
@@ -102,8 +105,11 @@ int main() {
 
     }
 
+
     pthread_t bakert;
-    pthread_create(&bakert, NULL, baker, NULL)
+    pthread_create(&bakert, NULL, baker, NULL);
+    
+
 
     /* JOINING THREADS */
     for (int i = 0; i < N; i++){
