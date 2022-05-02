@@ -22,65 +22,11 @@ sem_t sp[MAX_A];
 /* INVETORY */
 int flour = INT_MAX;
 int oil = INT_MAX;
-int bp = INT_MAX;   //baking powder
+int bp = INT_MAX;   // baking powder
 int breads = 0;     // # of breads made
 
 /* FOR COMMUNICATION: APPRENTICE - TEACHER */
 int finished[MAX_A];
-
-
-/* NODE STRUCTURE */
-struct Node {
-
-    int apprNb; //apprentice
-    
-    struct Node *next;
-    struct Node *prev; 
-
-};
-
-
-/* NEW NODE FUNCTION */
-struct Node* newNode(int i) {
-
-    // allocate Memory
-    struct Node *node = (struct Node *) malloc(sizeof(struct Node));
-
-    // init data
-    node->apprNb = i;
-    node->next = NULL;
-    node->prev = NULL; 
-
-    return node;
-}
-
-
-struct Node *linkedList; // Kinda the Current node
-
-/* CREATING NEW APPRENTICE AND ADDING TO LL */
-void newApprentice(int apprentice) {
-
-    if (!linkedList){
-        linkedList = newNode(apprentice);
-        
-        return;
-    }
-
-    struct Node *newAppr = newNode(apprentice);
-
-    newAppr->prev = linkedList;
-    newAppr->next = linkedList->next;
-    linkedList->next = newAppr;
-    linkedList = newAppr;
-
-    return;
-}
-
-
-void fireApprentice(int apprentice){
-
-
-}
 
 /* APPRENTICE FUNCTION */
 void *apprentice(void *j){
@@ -113,8 +59,6 @@ void *apprentice(void *j){
     }
 }
 
-
-
 int main() {
 
     /* INITIALIZING CONDITION AND MUTEX VARIABLE ARRAYS */
@@ -137,11 +81,11 @@ int main() {
             exit(1);
         } else {
             printf("Thread %d created!\n", i);
-            newApprentice(i);
+            // newApprentice(i);
         }
     }    
 
-
+    /* BAKING BREADS */
     int i = 0;
     while(1){
 
