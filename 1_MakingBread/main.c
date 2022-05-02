@@ -30,7 +30,7 @@ int finished[MAX_A];
 
 /* APPRENTICE FUNCTION */
 void *apprentice(void *j){
-    int i = (int) j;
+    int i = *(int*) j;
 
     while (1){
 
@@ -73,9 +73,10 @@ int main() {
 
     /* CREATING THREADS */
     pthread_t threads[MAX_A];
-
+    int threadIndexes[N];   // store the thread-id in a place where it is alive during the lifespan of the thread
     for (int i = 0; i < N ; i++){
-        if(pthread_create(&threads[i], NULL, apprentice, (void *)i)){
+        threadIndexes[i] = i;
+        if(pthread_create(&threads[i], NULL, apprentice, (void *) &threadIndexes[i])){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
