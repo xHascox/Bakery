@@ -23,6 +23,39 @@ struct BreadType {
     int nb; // Number of breads of this type
 };
 
+struct TypeList {
+  struct BreadType** types;
+  int max;
+  int count;
+};
+
+struct TypeList dynTypes;
+
+void initTypeList(int max) {
+    dynTypes.max = max;
+    dynTypes.count = 0;
+    dynTypes.types = (struct BreadType**) malloc(sizeof(struct BreadType*) * max);
+}
+
+void addType(const char* name, int nb) {
+    if(dynTypes.max == dynTypes.count) {
+        return;
+    }
+    struct BreadType* bt = (struct BreadType*) malloc(sizeof(struct BreadType));
+    strcpy(bt->name, name);
+    bt->id = dynTypes.count;
+    bt->nb = nb;
+    dynTypes.types[dynTypes.count] = bt;
+    dynTypes.count++;
+}
+
+void printTypes() {
+    for(int i = 0; i < dynTypes.count; i++) {
+        struct BreadType* bt = dynTypes.types[i];
+        printf("BreadType %d: %s nb: %d\n", i, bt->name, bt->nb);
+    }
+}
+
 // Types of bread the bakery offers
 struct BreadType types[BREAD_TYPES];
 
@@ -53,6 +86,12 @@ int main(){
         Sold[i] = NO;
         TgtgBasket[i] = NO;
     }
+    // Test dynamic bread types:
+    initTypeList(10);
+    addType("Hartbrot", 4);
+    addType("Ruchtbrot", 10);
+    addType("Muetschli", 5);
+    printTypes();
 
     //(1) Create bread
     strcpy(types[CROISSANT].name, "Croissant");
