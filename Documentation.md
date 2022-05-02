@@ -16,7 +16,12 @@ Variables:
 * N :: int :: Number of apprentices
 * MAX_A :: int :: Max. number of apprentices
 * MAX_BREAD :: int :: Max number of bread to be produced
-* mutA :: pthread_mutex_t :: 
+* mutA :: pthread_mutex_t ::
+
+Possible improvements:
+* [] Dynamic datastructure for ingredients
+* [] A way to test dynamic data structure.
+* [] Testing script
 
 # 2 Too good to go
 
@@ -42,11 +47,16 @@ Structure of code:
 * Three phases in the code: (1) Production phase (bake breads), (2) Sell breads, (3) TGTG decision.
 
 Possible improvements:
-* Dynamic bread type addition.
-* Implement additional strategies.
+* [x] Dynamic bread type addition
+* [] Implement additional strategies (Extra)
+* [] Testing script
 
 
 # 3 Additional features
+
+Sleeping Barber:
+
+Pizza:
 
 # Questions
 * How to do testing (of the scenarios)? --> Use large numbers for apprentices.
