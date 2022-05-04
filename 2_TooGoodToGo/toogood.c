@@ -75,7 +75,7 @@ void printTypes() {
 void tgtg(){
     for (int i = 0; i < dynTypes.count; i++){
         if (dynTypes.TgtgBasket[i] == NO){
-            if (dynTypes.Sold[i] == YES) {
+            if (dynTypes.Sold[i] == NO) {
                 dynTypes.TgtgBasket[i]= YES;
                 printf("%s was flagged for TGTG\n", dynTypes.types[i]->name);
             }

@@ -69,3 +69,6 @@ Pizza:
 * TooGoodToGo
   * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email --> Its okay to have k ticks.
 
+* Todos:
+  * 
+
