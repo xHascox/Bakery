@@ -65,6 +65,7 @@ Pizza:
 * Inventory:
   * Do the apprentices take all ingredients at once, or only one at once? --> Both options are okay.
   * Ines: Would be good to implement dynamic datatypes for ingredients.
+  * In what way does the inventory have to be dynamic?
 * TooGoodToGo
-  * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email.
+  * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email --> Its okay to have k ticks.
 
