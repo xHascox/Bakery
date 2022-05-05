@@ -9,8 +9,8 @@
 #define TRUE 1
 #define FALSE 0
 
-#define N 10
-#define NbCustomers 30
+int NbCustomers;
+int N;// # chairs
 
 //Chairs (Queue of customers) and the corresponding mutex
 Queue* chairs;
@@ -81,7 +81,27 @@ void *customer(){
 
 
 
-int main() {
+int main(int argc, char const *argv[]) {
+
+    
+    if (argc == 1) {//Default valaues
+        NbCustomers = 30;
+        N=10;
+    } else if (argc == 2) {// one argument given = # chairs
+        N = atoi(argv[1]);
+        if (N < 1) {
+            printf("Please input a positive number for the # chairs as first argument\n")
+        }
+    } else if (argc == 3) {
+        N = atoi(argv[1]);
+        NbCustomers = atoi(argv[2]);
+        if (N < 1 || NbCustomers < 1) {
+            printf("Please input a positive number for the # chairs as first argument\n")
+            printf("Please input a positive number for the # customers as second argument\n")
+
+        }
+    }
+  
     sem_init(&baker_semaphore, 0, 0);
 
     chairs = init_queue();
