@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <semaphore.h>
+#include "Inventory.h"
 
 
 #define N 5 // # of apprentices
@@ -20,9 +21,16 @@ pthread_cond_t condT = PTHREAD_COND_INITIALIZER;
 sem_t sp[MAX_A];
 
 /* INVETORY */
-int flour = INT_MAX;
+void RegisterIngredients() {
+    RegisterIngredient("flour", INT_MAX);
+    RegisterIngredient("oil", INT_MAX);
+    RegisterIngredient("bp", INT_MAX);
+    RegisterIngredient("sugar", INT_MAX);
+    RegisterIngredient("salt", INT_MAX);
+}
+/*int flour = INT_MAX;
 int oil = INT_MAX;
-int bp = INT_MAX;   // baking powder
+int bp = INT_MAX;   // baking powder*/
 int breads = 0;     // # of breads made
 
 /* FOR COMMUNICATION: APPRENTICE - TEACHER */
@@ -45,9 +53,11 @@ void *apprentice(void *j){
         }
 
         printf("Entering Inventory: i = %d\n", i); 
-        flour -= 1;
-        oil -= 1;               
-        bp -= 1;
+        TakeIngredient("flour");
+        TakeIngredient("oil");
+        TakeIngredient("bp");
+        TakeIngredient("sugar");
+        TakeIngredient("salt");
             
         breads += 1;
         printf("Apprentice %d just made some bread.\n",i);

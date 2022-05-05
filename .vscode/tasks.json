@@ -35,14 +35,56 @@
                 "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
-                "cwd": "C:\\usr\\bin"
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": [
                 "$gcc"
             ],
             "group": "build",
             "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
-        }
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: Compile InventoryTest",
+            "command": "C:/msys64/mingw64/bin/gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}\\1_MakingBread\\Inventory.c",
+                "${workspaceFolder}\\1_MakingBread\\InventoryTest.c",
+                "-o",
+                "${workspaceFolder}\\1_MakingBread\\InventoryTest.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: Compile MakingBread",
+            "command": "C:/msys64/mingw64/bin/gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}\\1_MakingBread\\Inventory.c",
+                "${workspaceFolder}\\1_MakingBread\\main.c",
+                "-o",
+                "${workspaceFolder}\\1_MakingBread\\main.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
+        }        
     ],
     "version": "2.0.0"
 }
