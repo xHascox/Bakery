@@ -68,14 +68,14 @@ Pizza:
   * In what way does the inventory have to be dynamic?
 * TooGoodToGo
   * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email --> Its okay to have k ticks.
-
-* Todos:
-  * (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
-  * (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo).
-  * (iii) Implement CLI to start all the scripts and input parameters (Lukas).
-  * (iv) Code cleaning.
-  * (v) Code commenting.
-  * (vi) Write documentation.
-  * (vii) Prepare presentation.
-  * (viii) Upload stuff to gitlab.
+  * 
+# Todos
+* (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
+* (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo).
+* (iii) Implement CLI to start all the scripts and input parameters (Lukas).
+* (iv) Code cleaning.
+* (v) Code commenting.
+* (vi) Write documentation.
+* (vii) Prepare presentation.
+* (viii) Upload stuff to gitlab.
 
