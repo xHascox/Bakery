@@ -27,10 +27,10 @@ void *baker(){
         sem_wait(&baker_semaphore);
 
         //dequeue
-        sem_t customer = dequeue(chairs);
+        sem_t* customer = dequeue(chairs);
 
 
-
+	printf("waking up %d\n", &customer);
         //wake up dequeued customer
         sem_post(&customer);
 
@@ -58,14 +58,14 @@ void *customer(void *id){
     else {
 
         //sit down on free chair
-        enqueue(chairs, customer_semaphore[cid]);
+        enqueue(chairs, &customer_semaphore[cid]);
 
         //wake Baker up
         sem_post(&baker_semaphore);
 
         pthread_mutex_unlock(&mutex_chairs);
 
-        printf("I'm waiting in a chair\n");
+        printf("I %d waiting in a chair\n", &customer_semaphore[cid]);
 
         //wait to be served
         sem_wait(&customer_semaphore[cid]);
@@ -109,21 +109,22 @@ int main(int argc, char const *argv[]) {
 
 
     pthread_t threads[NbCustomers];
-    sem_t customer_s[NbCustomer];
-    *customer_semaphore = customer_s;
-
+    
+    //sem_t customer_s[NbCustomers];
+    customer_semaphore = malloc(NbCustomers*sizeof(sem_t));
+    
     //Customers
     for (int i=0; i< NbCustomers  ; i++) {
         //create customers thread
 
-        sem_init(&customer_s, 0, 0);
+        sem_init(&customer_semaphore[i], 0, 0);
         
         
-        if(pthread_create(&threads[i], NULL, customer, NULL)){
+        if(pthread_create(&threads[i], NULL, customer, (void *)&i)){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
-            printf("Customer %d created!\n", i);
+            printf("Customer %d created!\n", &customer_semaphore[i]);
             // newApprentice(i);
         }
 
