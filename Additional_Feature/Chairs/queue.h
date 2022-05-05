@@ -11,10 +11,10 @@ typedef struct {
 } Queue;
 
 Queue* init_queue();
-void enqueue(Queue* q, sem_t customer_semaphore);
-sem_t dequeue(Queue* q);
+void enqueue(Queue* q, sem_t* customer_semaphore);
+sem_t* dequeue(Queue* q);
 Node* dequeue_node(Queue* q);
 void move_to_tail(Queue* q, int page);
-Node* create_node(sem_t customer);
+Node* create_node(sem_t* customer);
 void print_queue(Queue* q);
 int length(Queue* q);
