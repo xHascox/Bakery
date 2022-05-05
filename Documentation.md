@@ -16,7 +16,12 @@ Variables:
 * N :: int :: Number of apprentices
 * MAX_A :: int :: Max. number of apprentices
 * MAX_BREAD :: int :: Max number of bread to be produced
-* mutA :: pthread_mutex_t :: 
+* mutA :: pthread_mutex_t ::
+
+Possible improvements:
+* [] Dynamic datastructure for ingredients
+* [] A way to test dynamic data structure.
+* [] Testing script
 
 # 2 Too good to go
 
@@ -42,11 +47,16 @@ Structure of code:
 * Three phases in the code: (1) Production phase (bake breads), (2) Sell breads, (3) TGTG decision.
 
 Possible improvements:
-* Dynamic bread type addition.
-* Implement additional strategies.
+* [x] Dynamic bread type addition
+* [] Implement additional strategies (Extra)
+* [] Testing script
 
 
 # 3 Additional features
+
+Sleeping Barber:
+
+Pizza:
 
 # Questions
 * How to do testing (of the scenarios)? --> Use large numbers for apprentices.
@@ -55,6 +65,19 @@ Possible improvements:
 * Inventory:
   * Do the apprentices take all ingredients at once, or only one at once? --> Both options are okay.
   * Ines: Would be good to implement dynamic datatypes for ingredients.
+  * In what way does the inventory have to be dynamic?
 * TooGoodToGo
-  * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email.
+  * Is it okay to run the toogodtogo algorithm every k ticks, like paging, or should it be run only once (1 hour before the bakery closes)' --> Ines will send us an email --> Its okay to have k ticks.
+
+
+# Todos
+* (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
+* (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo).
+* (iii) Implement CLI to start all the scripts and input parameters (Lukas).
+* (iv) Write testing scripts.
+* (v) Code cleaning.
+* (vi) Code commenting.
+* (vii) Write documentation.
+* (viii) Prepare presentation.
+* (ix) Upload stuff to gitlab.
 
