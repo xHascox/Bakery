@@ -45,6 +45,10 @@ int main(/*int argc, char const *argv[]*/) {
     /* init linked list inventory */
     ////////////////////////////////
     
+    //////////////////////////////////////////////////////////////
+    /* TODO: ADD CLI FOR AMOUNT FOR EACH INGREDIENT TO BE ADDED */
+    //////////////////////////////////////////////////////////////
+
     /* ENTERING RECIPE FOR BREADS (three ingredients) */
     printf("Now you are asked to enter three ingredients for each type of bread (max length %d). These ingredients may vary but do not have to.\n", maxStrLen);
     for (int i = 0; i < nbBreadTypes; i++){     // For every bread type
