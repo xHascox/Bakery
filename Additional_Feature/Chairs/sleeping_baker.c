@@ -40,7 +40,6 @@ void *baker(){
         
 
     }
-
 }
 
 
@@ -53,6 +52,7 @@ void *customer(void *id){
     //if Q full: kill
     if (length(chairs)>= N) {
         printf("I'm leaving, 0 star, overcrowded\n");
+        pthread_mutex_unlock(&mutex_chairs);
         pthread_exit(NULL);
     } 
     else {
@@ -65,7 +65,7 @@ void *customer(void *id){
 
         pthread_mutex_unlock(&mutex_chairs);
 
-        printf("I %d waiting in a chair\n", &customer_semaphore[cid]);
+        printf("I %d waiting in a chair\n", cid);
 
         //wait to be served
         sem_wait(&customer_semaphore[cid]);
@@ -74,10 +74,6 @@ void *customer(void *id){
 
         pthread_exit(NULL);
     }
-        
-
-       
-
 }
 
 
@@ -107,14 +103,13 @@ int main(int argc, char const *argv[]) {
 
     chairs = init_queue();
 
-
     pthread_t threads[NbCustomers];
     
     //sem_t customer_s[NbCustomers];
     customer_semaphore = malloc(NbCustomers*sizeof(sem_t));
     
     //Customers
-    for (int i=0; i< NbCustomers  ; i++) {
+    for (int i=0; i < NbCustomers  ; i++) {
         //create customers thread
 
         sem_init(&customer_semaphore[i], 0, 0);
@@ -124,7 +119,7 @@ int main(int argc, char const *argv[]) {
             printf("Error in thread creation!\n");
             exit(1);
         } else {
-            printf("Customer %d created!\n", &customer_semaphore[i]);
+            printf("Customer %d created!\n", i);
             // newApprentice(i);
         }
 
