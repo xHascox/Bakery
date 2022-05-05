@@ -16,7 +16,7 @@ Queue* init_queue() {
     return new;
 }
 
-void enqueue(Queue* q, sem_t customer_semaphore) {
+void enqueue(Queue* q, sem_t* customer_semaphore) {
     Node* new = create_node(customer_semaphore);
     if (q->nbElements == 0) {
         new->previous = NULL;
@@ -58,7 +58,7 @@ void move_to_tail(Queue* q, int customer_semaphore) {
     q->tail = tmp;
 }
 */ 
-sem_t dequeue(Queue* q) {
+sem_t* dequeue(Queue* q) {
     // if (q->nbElements == 0) return void;
 
     Node* tmp = q->head;
@@ -74,7 +74,7 @@ sem_t dequeue(Queue* q) {
 
     free(tmp);
     q->nbElements--;
-    return ret;
+    return &ret;
 }
 
 /*
@@ -100,9 +100,9 @@ Node* dequeue_node(Queue* q) {
 }
 */
 
-Node* create_node(sem_t customer_semaphore) {
+Node* create_node(sem_t* customer_semaphore) {
     Node* new = malloc(sizeof(Node));
-    new->customer_semaphore = customer_semaphore;
+    new->customer_semaphore = *customer_semaphore;
     return new;
 }
 /*
