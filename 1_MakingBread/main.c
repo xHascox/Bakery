@@ -19,7 +19,7 @@ pthread_cond_t condA[MAX_A];
 pthread_cond_t condT = PTHREAD_COND_INITIALIZER;
 sem_t sp[MAX_A];
 
-/* INVETORY */
+/* INVENTORY */
 int flour = INT_MAX;
 int oil = INT_MAX;
 int bp = INT_MAX;   // baking powder
