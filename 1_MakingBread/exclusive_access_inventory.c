@@ -5,6 +5,8 @@
 
 #define GRANTED 0
 
+int breads = 0;     // # of breads made
+int maxBread;
 int NBApprentices; // Number of apprentices :: int
 pthread_t *threadIndexes; // Array keeping track of apprentice IDs :: Array of int
 int *interested_array; // Array of size NBApprentices where apprentices can anounce interest in accessing the inventory :: Array of int
@@ -13,26 +15,39 @@ pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to i
 pthread_mutex_t *mutA; // Mutexes and condition variable (1 for each apprentice) to wake it up once they're allow to access the inventory
 pthread_cond_t *condA;
 sem_t *semA;
+sem_t bakers;
 pthread_cond_t *condT; // Condition variable to wake up teacher :: pthread_cond_t
 
 void *baker(void *j){
-	while (1) {
+	while (breads < maxBread) {
+	
+		printf("baker started loop\n");
+	
 		int max=-1;//the next A to be allowed into Inv
 		//printf("baker\n");
 		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
-			if (interested_array[i] > max) {
+			if (interested_array[i] > max) { 
 				max = i;
 			}
 		}
+		
+		printf("baker ended loop\n");
+		
 		if (max>=0) {
 			//wakre up A
 			interested_array[max]=-1;
 			printf("baker wakes up %d\n", max);
 			sem_post(&semA[max]);
+			
+			//baker sleep until that one is finished
+			printf("baker sleeping");
+			sem_wait(&bakers);
 		}
 		
-		//TODO baker itself needs to sleep until A is finished
+
 	}
+	int ret = 0;
+	pthread_exit(&ret);
 }
 
 
@@ -54,17 +69,20 @@ void *apprentice(void *j){
 
     int i = (int) j; // Apprentice ID
 
-    while(1){
+    while(breads<maxBread){
         printf("Apprentice %d wants to access the inventory.\n",i);
-
-        int access = 0//pthread_mutex_trylock(&mutex_inventory);
-        if (access == GRANTED && 0){//TODO change 0 just debug
+		
+		
+		 //Allowing this leads to deadlocks?!
+		 /*
+        int access = pthread_mutex_trylock(&mutex_inventory);
+        if (access == GRANTED){
         	printf("%d easy access\n", i);
             access_inventory(i);
             pthread_mutex_unlock(&mutex_inventory);
             sleep(1);
-        } else {
-            int metric = i; // TODO Change to desired metric
+        } else {*/
+            int metric = i; // TODO Change to desired metric (now: fast learners have high IDs)
             interested_array[i] = metric; // Announce interest
             //pthread_mutex_lock(&mutA[i]); // Wait until it's my turn
             printf("%d is sleeping\n", i);
@@ -73,24 +91,51 @@ void *apprentice(void *j){
 
             pthread_mutex_lock(&mutex_inventory);
             access_inventory(i);
+            if (breads>=maxBread) {
+            	pthread_mutex_unlock(&mutex_inventory);	
+            	printf("A %d stopped\n", i);
+            	pthread_exit(NULL);
+            }
+            breads++;
             pthread_mutex_unlock(&mutex_inventory);
             
-            
-        }
+            //tell baker you are out again
+            sem_post(&bakers);
+        //}
 
-        printf("Apprentice %d just baked some bread.\n",i);
+        printf("Apprentice %d just baked some bread %d.\n",i, breads);
+        for (int k=0; k<999999; k++) {//sleep TODO just for debug reasons and nic ebehaviour
+        }
+        
     }
 }
 
 
 
 int main(int argc, char const *argv[]){
-printf("v2\n");
+printf("v3\n");
 
     /* INITIALIZE VARIABLES BASED ON USER INPUT */
-    if (argc == 1) {
-        NBApprentices = 2;
+    if (argc == 1) {//Default valaues
+        NBApprentices = 30;
+        maxBread = 300;
+        
+    } else if (argc == 2) {// one argument given = # chairs
+    	maxBread = 300;
+        NBApprentices = atoi(argv[1]);
+        if (NBApprentices < 1) {
+            printf("Please input a positive number for the # Apprentices as first argument\n");
+        	return;
+        }
+    } else if (argc == 3) {// 2 argument given = # chairs # maxBreads
+    	maxBread = atoi(argv[2]);
+        NBApprentices = atoi(argv[1]);
+        if (NBApprentices < 1 || maxBread < 1) {
+            printf("Please input a positive number for the # Apprentices as first argument\nand for the maximum amount of breads to be made as second arg\n");
+            return;
+        }
     }
+    
 
     interested_array = malloc(NBApprentices*sizeof(int));
     threadIndexes = malloc(NBApprentices*sizeof(pthread_t));
@@ -102,6 +147,7 @@ printf("v2\n");
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
     pthread_mutex_init(&mutex_inventory, NULL);
     pthread_cond_init(&condT, NULL);
+    sem_init(&bakers, 0, 0);
 
     for(int i = 0; i < NBApprentices; i++){
         pthread_mutex_init(&mutA[i], NULL);
@@ -127,6 +173,7 @@ printf("v2\n");
 		//pthread_join(&threadIndexes[i], NULL);
 	}
 
-	pthread_join(&bakert, NULL);
+	int be = pthread_join(bakert, NULL);
+	printf("baker joined %d\n", be);
     return 0;
 }
