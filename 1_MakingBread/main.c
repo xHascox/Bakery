@@ -28,9 +28,6 @@ void RegisterIngredients() {
     RegisterIngredient("sugar", INT_MAX);
     RegisterIngredient("salt", INT_MAX);
 }
-/*int flour = INT_MAX;
-int oil = INT_MAX;
-int bp = INT_MAX;   // baking powder*/
 int breads = 0;     // # of breads made
 
 /* FOR COMMUNICATION: APPRENTICE - TEACHER */
