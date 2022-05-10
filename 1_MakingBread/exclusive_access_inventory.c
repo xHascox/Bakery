@@ -2,8 +2,17 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <time.h>
+#include <limits.h>
 
 #define GRANTED 0
+
+#define FAIRLEARNERS 0
+#define FASTLEARNERS 1
+#define ARRIVALORDER 2
+#define PRELEARNERS 3
+
+int scheduler_metric; 
 
 int breads = 0;     // # of breads made
 int maxBread;
@@ -13,15 +22,17 @@ int *interested_array; // Array of size NBApprentices where apprentices can anou
 // Node *inventory; // Inventory :: Dynamic array of linked lists
 pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to inventory :: pthread_sem_t
 pthread_mutex_t *mutA; // Mutexes and condition variable (1 for each apprentice) to wake it up once they're allow to access the inventory
-pthread_cond_t *condA;
+
 sem_t *semA;
 sem_t bakers;
 pthread_cond_t *condT; // Condition variable to wake up teacher :: pthread_cond_t
 
+struct timespec tv;
+
 void *baker(void *j){
 	while (breads < maxBread) {
 	
-		printf("baker started loop\n");
+		//printf("baker started loop\n");
 	
 		int max=-1;//the next A to be allowed into Inv
 		//printf("baker\n");
@@ -31,7 +42,7 @@ void *baker(void *j){
 			}
 		}
 		
-		printf("baker ended loop\n");
+		//printf("baker ended loop\n");
 		
 		if (max>=0) {
 			//wakre up A
@@ -68,44 +79,47 @@ void *apprentice(void *j){
     */
 
     int i = (int) j; // Apprentice ID
+    int abread = 0;
 
     while(breads<maxBread){
         printf("Apprentice %d wants to access the inventory.\n",i);
 		
-		
-		 //Allowing this leads to deadlocks?!
-		 /*
-        int access = pthread_mutex_trylock(&mutex_inventory);
-        if (access == GRANTED){
-        	printf("%d easy access\n", i);
-            access_inventory(i);
-            pthread_mutex_unlock(&mutex_inventory);
-            sleep(1);
-        } else {*/
-            int metric = i; // TODO Change to desired metric (now: fast learners have high IDs)
-            interested_array[i] = metric; // Announce interest
-            //pthread_mutex_lock(&mutA[i]); // Wait until it's my turn
-            printf("%d is sleeping\n", i);
-            sem_wait(&semA[i]);//sleep on own semaphore
+	
+	    int metric;
+	    if (scheduler_metric == ARRIVALORDER) {//arrival order
+	    	//metric = INT_MAX - clock_gettime(CLOCK_REALTIME, &stime); //TODO
+	    } else if (scheduler_metric == FASTLEARNERS) {//fast learners
+	    	metric = abread;
+	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
+	    	metric = INT_MAX - abread;
+	    } else if (scheduler_metric == PRELEARNERS) {//pre defined learners
+	    	metric = i;
+	    } 
+	    
+	    
+	    interested_array[i] = metric; // Announce interest
+	    
+	     // Wait until it's my turn
+	    printf("%d is sleeping\n", i);
+	    sem_wait(&semA[i]);//sleep on own semaphore
 			printf("%d woke up\n", i);
 
-            pthread_mutex_lock(&mutex_inventory);
-            access_inventory(i);
-            if (breads>=maxBread) {
-            	pthread_mutex_unlock(&mutex_inventory);	
-            	printf("A %d stopped\n", i);
-            	pthread_exit(NULL);
-            }
-            breads++;
-            pthread_mutex_unlock(&mutex_inventory);
-            
-            //tell baker you are out again
-            sem_post(&bakers);
-        //}
-
+	    pthread_mutex_lock(&mutex_inventory);//TODO dynamic inventory
+	    access_inventory(i);
+	    if (breads>=maxBread) {
+	    	pthread_mutex_unlock(&mutex_inventory);	
+	    	printf("A %d stopped\n", i);
+	    	pthread_exit(NULL);
+	    }
+	    breads++;
+	    abread++;
+	    pthread_mutex_unlock(&mutex_inventory);
+	    
+	    //tell baker you are out again
+	    sem_post(&bakers);
+        
+		sleep(rand()%3+1);
         printf("Apprentice %d just baked some bread %d.\n",i, breads);
-        for (int k=0; k<999999; k++) {//sleep TODO just for debug reasons and nic ebehaviour
-        }
         
     }
 }
@@ -113,15 +127,17 @@ void *apprentice(void *j){
 
 
 int main(int argc, char const *argv[]){
+srand(time(NULL));
 printf("v3\n");
 
     /* INITIALIZE VARIABLES BASED ON USER INPUT */
     if (argc == 1) {//Default valaues
         NBApprentices = 30;
-        maxBread = 300;
-        
+        maxBread = 100;
+        scheduler_metric = FAIRLEARNERS;
+        //TODO get metric
     } else if (argc == 2) {// one argument given = # chairs
-    	maxBread = 300;
+    	maxBread = 100;
         NBApprentices = atoi(argv[1]);
         if (NBApprentices < 1) {
             printf("Please input a positive number for the # Apprentices as first argument\n");
@@ -134,12 +150,11 @@ printf("v3\n");
             printf("Please input a positive number for the # Apprentices as first argument\nand for the maximum amount of breads to be made as second arg\n");
             return;
         }
-    }
+    }//TODO TEST SCENARIO TWO A AT A TIME
     
 
     interested_array = malloc(NBApprentices*sizeof(int));
     threadIndexes = malloc(NBApprentices*sizeof(pthread_t));
-    condA = malloc(NBApprentices*sizeof(pthread_cond_t));
     mutA = malloc(NBApprentices*sizeof(pthread_mutex_t));
     semA = malloc(NBApprentices*sizeof(sem_t));
 
@@ -151,7 +166,6 @@ printf("v3\n");
 
     for(int i = 0; i < NBApprentices; i++){
         pthread_mutex_init(&mutA[i], NULL);
-        pthread_cond_init(&condA[i], NULL);
         sem_init(&semA[i], 0, 0);
         interested_array[i]=-1;
     }
@@ -169,8 +183,9 @@ printf("v3\n");
     }
 
 	//join threads so we see the printed output
-	for (int i=0; i<NBApprentices; i++) { //TODO joining gives an error
-		//pthread_join(&threadIndexes[i], NULL);
+	for (int i=0; i<NBApprentices; i++) { 
+		pthread_join(threadIndexes[i], NULL);
+		printf("joined a thread\n");
 	}
 
 	int be = pthread_join(bakert, NULL);
