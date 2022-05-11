@@ -37,15 +37,15 @@ void *baker(void *j){
 	
 		//printf("baker started loop\n");
 	
-		timeType max=0;
+		timeType min=timeTypeMax;
 		int j=-1;//the next A to be allowed into Inv
 		//printf("baker\n");
 		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
-			if (interested_array[i] > max) { 
+			if (interested_array[i] < min) { 
 				j = i;
-				max = interested_array[i];
+				min = interested_array[i];
 			}
-			//printf("cmp %lu > %lu\n", interested_array[i] ,max);
+			//printf("cmp %lu > %lu\n", interested_array[i] ,min);
 			
 		}
 		
@@ -53,8 +53,8 @@ void *baker(void *j){
 		
 		if (j>=0) {
 			//wakre up A
-			interested_array[j]=0;
-			printf("baker wakes up %d with metric: %lu\n", j, max);
+			interested_array[j]=timeTypeMax;
+			printf("baker wakes up %d with metric: %lu\n", j, min);
 			sem_post(&semA[j]);
 			
 			//baker sleep until that one is finished
@@ -102,12 +102,12 @@ void *apprentice(void *j){
 	    timeType metric;
 	    if (scheduler_metric == ARRIVALORDER) {//arrival order
 	    	
-	    	metric = timeTypeMax - (tvnow.tv_sec - tvbase.tv_sec)*1000000 - (tvnow.tv_usec - tvbase.tv_usec);
+	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
 	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
 	    } else if (scheduler_metric == FASTLEARNERS) {//fast learners
-	    	metric = abread;
-	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
 	    	metric = timeTypeMax - abread;
+	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
+	    	metric = abread;
 	    } else if (scheduler_metric == PRELEARNERS) {//pre defined learners
 	    	metric = i;
 	    } 
@@ -129,7 +129,7 @@ void *apprentice(void *j){
 	    }
 	    breads++;
 	    abread++;
-	    printf("Apprentice %d made bread #%d.\n",i, breads);
+	    printf("Apprentice %d made bread #%d (her %dth bread).\n",i, breads, abread);
 	    pthread_mutex_unlock(&mutex_inventory);
 	    
 	    //tell baker you are out again
@@ -139,6 +139,7 @@ void *apprentice(void *j){
         
         
     }
+    printf("Apprentice %d made %d breads today\n", i, abread);
 }
 
 
@@ -158,6 +159,7 @@ printf("v3\n");
     } else if (argc == 2) {// one argument given = # chairs
     	maxBread = 100;
         NBApprentices = atoi(argv[1]);
+        scheduler_metric = FASTLEARNERS;
         if (NBApprentices < 1) {
             printf("Please input a positive number for the # Apprentices as first argument\n");
         	return;
@@ -186,7 +188,7 @@ printf("v3\n");
     for(int i = 0; i < NBApprentices; i++){
         pthread_mutex_init(&mutA[i], NULL);
         sem_init(&semA[i], 0, 0);
-        interested_array[i]=-1;
+        interested_array[i]=timeTypeMax;
     }
 
 	pthread_t bakert;
@@ -203,11 +205,11 @@ printf("v3\n");
 
 	//join threads so we see the printed output
 	for (int i=0; i<NBApprentices; i++) { 
-		pthread_join(threadIndexes[i], NULL);//TODO join
-		printf("joined a thread\n");
+		pthread_join(threadIndexes[i], NULL);
+		//printf("joined a thread\n");
 	}
 
 	int be = pthread_join(bakert, NULL);
-	printf("baker joined %d\n", be);
+	//printf("baker joined %d\n", be);
     return 0;
 }
