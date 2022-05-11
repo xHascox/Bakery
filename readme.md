@@ -1,4 +1,4 @@
-/open-vsx/stars/:namespace/:extension
+![image](https://user-images.githubusercontent.com/54436086/167746566-c6555442-a760-4756-b7bf-ab1019a806ea.png)
 
 ### new_main.c 
 
