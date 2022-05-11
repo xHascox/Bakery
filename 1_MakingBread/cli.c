@@ -3,8 +3,9 @@
 //#include <unistd.h>
 //#include <ctype.h>
 #include <string.h>
+#include <Inventory.h>
 
-
+InventoryNode *ingredients;
 
 int main(/*int argc, char const *argv[]*/) {
 
