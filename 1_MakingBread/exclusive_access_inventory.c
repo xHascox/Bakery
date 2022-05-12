@@ -204,7 +204,7 @@ printf("v3\n");
             printf("Please input a positive number for the # Apprentices as first argument\nand for the maximum amount of breads to be made as second arg\n");
             return;
         }
-    }//TODO TEST SCENARIO TWO A AT A TIME
+    }//TODO SCENARIO 1 and 3
     
 
     interested_array = malloc(NBApprentices*sizeof(timeType));
