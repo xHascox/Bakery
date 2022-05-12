@@ -37,7 +37,8 @@ sem_t bakers;
 struct timeval tvbase, tvnow;
 
 void *baker(void *j){
-	int scenarioAlt=0;
+	int scenario2alt=0;
+	int scenario2j;
 	while (breads < maxBread) {
 	
 		//printf("baker started loop\n");
@@ -59,16 +60,31 @@ void *baker(void *j){
 		if (j>=0) {
 
 			//scenario handler
-			if (scenario == SCENARIO2 && scenarioAlt == 0) {
-				sem_post(&bakers);//dont sleep for one loop
-				scenarioAlt = 1;
+			if (scenario == SCENARIO2 && scenario2alt == 0) {
+				
+				scenario2alt = 1;
+				scenario2j = j;
+				interested_array[j]=timeTypeMax;
+				continue;//dont sleep for one loop
+
 			} else if (scenario == SCENARIO2) {
-				scenarioAlt = 0; //to sleep after waking up 2 apprentices
+				scenario2alt = 0; //to sleep after waking up 2 apprentices
+				//wakre up both A
+				interested_array[j]=timeTypeMax;
+				printf("Baker wakes up %d and %d simultaneously\n", j, scenario2j);
+				sem_post(&semA[j]);
+				sem_post(&semA[scenario2j]);
+				
+				//baker sleep until that one is finished
+				//printf("baker sleeping");
+				sem_wait(&bakers);
+				sem_wait(&bakers);
+				continue;
 			}
 
 			//wakre up A
 			interested_array[j]=timeTypeMax;
-			printf("baker wakes up %d with metric: %lu\n", j, min);
+			printf("Baker wakes up %d with metric: %lu\n", j, min);
 			sem_post(&semA[j]);
 			
 			//baker sleep until that one is finished
@@ -118,10 +134,10 @@ void *apprentice(void *j){
 	    if (scheduler_metric == ARRIVALORDER) {//arrival order
 	    	
 	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
-	    	printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
+	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
 	    } else if (scheduler_metric == FASTLEARNERS) {//fast learners
 	    	metric = timeTypeMax - abread - 1;
-			printf("%d metric: %lu\n", i, metric);
+			//printf("%d metric: %lu\n", i, metric);
 	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
 	    	metric = abread;
 	    } else if (scheduler_metric == PRELEARNERS) {//pre defined learners
@@ -132,20 +148,20 @@ void *apprentice(void *j){
 	    interested_array[i] = metric; // Announce interest
 	    
 	     // Wait until it's my turn
-	    printf("%d is sleeping\n", i);
+	    //printf("%d is sleeping\n", i);
 	    sem_wait(&semA[i]);//sleep on own semaphore
-			printf("Apprentice %d woke up\n", i);
+		printf("     Apprentice %d woke up\n", i);
 
 	    pthread_mutex_lock(&mutex_inventory);// TODO dynamic inventory
 	    access_inventory(i);
 	    if (breads>=maxBread) {
 	    	pthread_mutex_unlock(&mutex_inventory);	
-	    	printf("Apprentice %d stopped\n", i);
+	    	//printf("Apprentice %d stopped\n", i);
 	    	pthread_exit(NULL);
 	    }
 	    breads++;
 	    abread++;
-	    printf("Apprentice %d made bread #%d (her %dth bread).\n",i, breads, abread);
+	    printf("     Apprentice %d made bread #%d (her %dth bread).\n",i, breads, abread);
 	    pthread_mutex_unlock(&mutex_inventory);
 	    
 	    //tell baker you are out again
@@ -155,7 +171,7 @@ void *apprentice(void *j){
         
         
     }
-    printf("Apprentice %d made %d breads today\n", i, abread);
+    printf("     Apprentice %d made %d breads today\n", i, abread);
 }
 
 
