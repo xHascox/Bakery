@@ -1,5 +1,5 @@
 default:	
-	gcc -pthread -lm -o makeBreadEx.o exclusive_access_inventory.c
+	gcc -pthread -o makeBreadEx exclusive_access_inventory.c inventory_BinTree.c
 run:
 	./makeBreadEx.o
 clean:

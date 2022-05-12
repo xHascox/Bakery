@@ -3,7 +3,7 @@
 //#include <unistd.h>
 //#include <ctype.h>
 #include <string.h>
-#include <Inventory.h>
+#include <inventory_BinTree.h>
 
 InventoryNode *ingredients;
 

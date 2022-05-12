@@ -19,8 +19,8 @@ Variables:
 * mutA :: pthread_mutex_t ::
 
 Possible improvements:
-* [] Dynamic datastructure for ingredients
-* [] A way to test dynamic data structure.
+* [x] Dynamic datastructure for ingredients
+* [no] A way to test dynamic data structure.
 * [] Testing script
 
 # 2 Too good to go

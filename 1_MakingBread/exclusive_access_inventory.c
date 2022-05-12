@@ -5,6 +5,8 @@
 #include <sys/time.h>
 #include <limits.h>
 
+#include <inventory_BinTree.h>
+
 #define GRANTED 0
 
 #define FAIRLEARNERS 0

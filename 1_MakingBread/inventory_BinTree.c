@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "IngredInv.h"
+#include "inventory_BinTree.h"
 
 
 #define LEFT 0
