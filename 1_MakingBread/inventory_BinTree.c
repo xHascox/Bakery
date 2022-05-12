@@ -1,9 +1,8 @@
+#include "inventory_BinTree.h"
 
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include "inventory_BinTree.h"
 
 
 #define LEFT 0

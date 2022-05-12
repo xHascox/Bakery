@@ -3,11 +3,38 @@
 //#include <unistd.h>
 //#include <ctype.h>
 #include <string.h>
-#include <inventory_BinTree.h>
 
-InventoryNode *ingredients;
+#include "inventory_BinTree.h"
+
+void makingBread();
+void tgtg();
+void sleepingBaker();
+void testingScripts();
 
 int main(/*int argc, char const *argv[]*/) {
+
+    /*
+    please choose your program
+    if 1: 
+        makingBread()
+    if 2:
+        tgtg()
+    if 3:
+        sleepingBaker()
+    if 4:
+        Testing scripts()
+
+
+    */
+    
+    
+
+
+        return 0;
+}
+
+
+void makingBread() {
 
     int nbBreadTypes;
     int maxStrLen = 32;
@@ -75,13 +102,86 @@ int main(/*int argc, char const *argv[]*/) {
         printf("Bread type %d is: %s\n", i, &breadTypes[i]);
     }
     */
- 
-    
-    
 
 
-        return 0;
+
 }
+
+
+void tgtg() {
+
+
+
+
+}
+
+
+void sleepingBaker() {
+
+
+
+
+}
+
+
+void testBaking();
+void testTgtg();
+void testAdditional();
+void testScenarios();
+
+void testingScripts() {
+
+    /*
+    please choose which part you would like to test
+    if 1:
+        testBaking()
+    if 2:
+        testTgtg()
+    if 3:
+        testAdditional()
+    if 4:
+        testScenarios()
+
+    */
+
+
+}
+
+
+void testBaking() {
+
+
+
+
+}
+
+
+void testTgtg() {
+
+
+
+
+}
+
+
+void testAdditional() {
+
+
+
+
+}
+
+
+void testScenarios() {
+
+    // adding the same item to the inventory
+
+    // accessing the same item in the inventory
+
+    // adding and removing same item at the same time
+
+}
+
 
 
 
