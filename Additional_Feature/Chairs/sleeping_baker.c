@@ -32,7 +32,7 @@ void *baker(){
 
 	printf("waking up %d\n", &customer);
         //wake up dequeued customer
-        sem_post(&customer);
+        sem_post(customer);
 
 
         //sell bread / friendy smalltalk
@@ -127,7 +127,7 @@ int main(int argc, char const *argv[]) {
 
 
     pthread_t bakert;
-    pthread_create(&bakert, NULL, baker, NULL);
+    //pthread_create(&bakert, NULL, baker, NULL);
     
 
 

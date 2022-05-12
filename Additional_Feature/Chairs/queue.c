@@ -24,6 +24,7 @@ void enqueue(Queue* q, sem_t* customer_semaphore) {
         q->head = new;
         q->tail = new;
         q->nbElements++;
+        
         return;
     }
     new->previous = q->tail;
@@ -32,6 +33,7 @@ void enqueue(Queue* q, sem_t* customer_semaphore) {
     q->tail = new;
 
     q->nbElements++;
+    printf("EQ: %d\n", q->head->customer_semaphore);
 }
 
 /*
@@ -60,7 +62,7 @@ void move_to_tail(Queue* q, int customer_semaphore) {
 */ 
 sem_t* dequeue(Queue* q) {
     // if (q->nbElements == 0) return void;
-
+	printf("DQ: %d\n", q->head->customer_semaphore);
     Node* tmp = q->head;
     sem_t ret = q->head->customer_semaphore;
 

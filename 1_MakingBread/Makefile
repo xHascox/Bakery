@@ -1,7 +1,7 @@
 default:	
-	gcc -pthread -o main.o main.c
+	gcc -pthread -lm -o makeBreadEx.o exclusive_access_inventory.c
 run:
-	./main.o
+	./makeBreadEx.o
 clean:
 	rm *.o
 rm:

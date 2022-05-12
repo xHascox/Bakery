@@ -12,6 +12,11 @@
 #define ARRIVALORDER 2
 #define PRELEARNERS 3
 
+int scenario = 2;
+#define SCENARIO1 1 //2 A add same Item
+#define SCENARIO2 2 //2 A access same Item
+#define SCENARIO3 3 //add and another retrieve the sam eitem at the sam etime
+
 #define timeType unsigned long  //the type we store time in, used for metric
 #define timeTypeMax ULONG_MAX
 
@@ -28,11 +33,11 @@ pthread_mutex_t *mutA; // Mutexes and condition variable (1 for each apprentice)
 
 sem_t *semA;
 sem_t bakers;
-pthread_cond_t *condT; // Condition variable to wake up teacher :: pthread_cond_t
 
 struct timeval tvbase, tvnow;
 
 void *baker(void *j){
+	int scenarioAlt=0;
 	while (breads < maxBread) {
 	
 		//printf("baker started loop\n");
@@ -49,9 +54,18 @@ void *baker(void *j){
 			
 		}
 		
-		//printf("baker ended loop\n");
+		//printf("baker ended loop %d\n", j);
 		
 		if (j>=0) {
+
+			//scenario handler
+			if (scenario == SCENARIO2 && scenarioAlt == 0) {
+				sem_post(&bakers);//dont sleep for one loop
+				scenarioAlt = 1;
+			} else if (scenario == SCENARIO2) {
+				scenarioAlt = 0; //to sleep after waking up 2 apprentices
+			}
+
 			//wakre up A
 			interested_array[j]=timeTypeMax;
 			printf("baker wakes up %d with metric: %lu\n", j, min);
@@ -74,7 +88,8 @@ void *baker(void *j){
 }
 
 
-void access_inventory(int i){
+void access_inventory(int i){   
+
     //printf("Apprentic %d accesses the inventory.\n",i);
 }
 
@@ -93,19 +108,20 @@ void *apprentice(void *j){
     int i = (int ) j; // Apprentice ID
     int abread = 0;
     
-
+	timeType metric;
     while(breads<maxBread){
         //printf("Apprentice %d wants to access the inventory.\n",i);
 		
 		gettimeofday(&tvnow, NULL);
 	
-	    timeType metric;
+	    
 	    if (scheduler_metric == ARRIVALORDER) {//arrival order
 	    	
 	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
-	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
+	    	printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
 	    } else if (scheduler_metric == FASTLEARNERS) {//fast learners
-	    	metric = timeTypeMax - abread;
+	    	metric = timeTypeMax - abread - 1;
+			printf("%d metric: %lu\n", i, metric);
 	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
 	    	metric = abread;
 	    } else if (scheduler_metric == PRELEARNERS) {//pre defined learners
@@ -116,11 +132,11 @@ void *apprentice(void *j){
 	    interested_array[i] = metric; // Announce interest
 	    
 	     // Wait until it's my turn
-	    //printf("%d is sleeping\n", i);
+	    printf("%d is sleeping\n", i);
 	    sem_wait(&semA[i]);//sleep on own semaphore
 			printf("Apprentice %d woke up\n", i);
 
-	    pthread_mutex_lock(&mutex_inventory);//TODO dynamic inventory
+	    pthread_mutex_lock(&mutex_inventory);// TODO dynamic inventory
 	    access_inventory(i);
 	    if (breads>=maxBread) {
 	    	pthread_mutex_unlock(&mutex_inventory);	
@@ -156,6 +172,7 @@ printf("v3\n");
         maxBread = 100;
         scheduler_metric = FASTLEARNERS;
         //TODO get metric
+		//TODO get scenario
     } else if (argc == 2) {// one argument given = # chairs
     	maxBread = 100;
         NBApprentices = atoi(argv[1]);
@@ -182,7 +199,6 @@ printf("v3\n");
 
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
     pthread_mutex_init(&mutex_inventory, NULL);
-    pthread_cond_init(&condT, NULL);
     sem_init(&bakers, 0, 0);
 
     for(int i = 0; i < NBApprentices; i++){
