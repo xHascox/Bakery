@@ -8,7 +8,7 @@
  *  It is a representation for actual stock of this ingredient.
  */
 struct IngredNode {
-    struct IngredNode* pNextIngred;     // Pointer to the next Ingredient Node
+    struct IngredNode* pNextIngred; // Pointer to the next Ingredient Node
 };
 typedef struct IngredNode IngredNode;
 

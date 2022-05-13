@@ -13,10 +13,11 @@ void testingScripts();
 
 int main(/*int argc, char const *argv[]*/) {
 
+    
+    // Please choose your program
+    // if 1: 
+        makingBread();
     /*
-    please choose your program
-    if 1: 
-        makingBread()
     if 2:
         tgtg()
     if 3:
@@ -87,7 +88,7 @@ void makingBread() {
                 printf("ERROR: Your String is too long! It should not be greater than %d.\n", maxStrLen);   // print error
                 exit(1);                                                                                    // and exit program
             }
-            // ADD INGREDIENT TO INVENTORY (AND RECIPE)!!!
+            // TODO ADD INGREDIENT TO INVENTORY (AND RECIPE)!!!
 
             printf("Ingredient #%d : %s \n\n", j+1, inputString);
         
