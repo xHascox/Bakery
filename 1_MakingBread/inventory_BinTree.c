@@ -210,9 +210,6 @@ int takeIngredient(const char* name, int amount)
  */
 void insertIngredientNode(const char* name)
 {
-    if (pHead == NULL) {        // check if there is no pHead
-        createInvRootNode();    // create pHead
-    }
     InvNode *pNewNode = createInvNode(name);  // create specified InvNode
     InvNode *pCurrNode = pHead->firstInvNode; // assign first node of data structure to pCurrNode
     InvNode *pPrevNode = NULL;                // declare pPrevNode
@@ -262,6 +259,9 @@ void insertIngredientNode(const char* name)
  */
 void registerIngredient(const char* name , int initialAmount)
 {
+    if (pHead == NULL) {        // check if there is no pHead
+        createInvRootNode();    // create pHead
+    }
     if (!containsIngred(name)) {        // if the ingredient has not yet been registered
         insertIngredientNode(name);     // create and insert a new InvNode with identifying attribute 'name'
     }
