@@ -4,51 +4,56 @@
 #include <semaphore.h>
 #include <sys/time.h>
 #include <limits.h>
+#include <string.h>
 
-#include "inventory_BinTree.h"
+#include "inventory_BinTree.h" // Include inventory datastructure
 
-#define FAIRLEARNERS 0
-#define FASTLEARNERS 1
-#define ARRIVALORDER 2
-#define PRELEARNERS 3
-
-int SCENARIO;
-#define SCENARIO1 1 //2 A add same Item
-#define SCENARIO2 2 //2 A access same Item
-#define SCENARIO3 3 //add and another retrieve the sam eitem at the sam etime
-
-#define timeType unsigned long  //the type we store time in, used for metric
-#define timeTypeMax ULONG_MAX
-
+// Different strategies to "schedule" apprentices to enter the inventory
 int scheduler_metric; 
+#define FAIRLEARNERS 0 // Schedule the apprentice with the smallest number of breads made
+#define FASTLEARNERS 1 // Schedule the apprentice with the largest number of breads made
+#define ARRIVALORDER 2 // Schedule the apprentice that arrived first (using timestamps)
+#define PRELEARNERS 3 // Schedule according to a predefined order
 
-int breads = 0;     // # of breads made
-int maxBread;
+// Different scenarios for testing
+int scenario;
+#define SCENARIO1 1 // Two apprentices add the same item to the inventory at the same time
+#define SCENARIO2 2 // Two apprentices get the same item from the inventory at the same time
+#define SCENARIO3 3 // One apprentices gets an item while, at the same time, another apprentice adds the same item
+
+// Timestamps
+#define timeType unsigned long
+#define timeTypeMax ULONG_MAX
+struct timeval tvbase, tvnow;
+
+// Global variables
+int breads = 0; // Number of breads made in total :: int
+int maxBread; // Number of breads were going to make today :: int
 int NBApprentices; // Number of apprentices :: int
-int NBIngredients; // Number of ingreditents :: int
-// char* ingredientNames[]; // Names of indredients :: Array of strings
 pthread_t *threadIndexes; // Array keeping track of apprentice IDs :: Array of int
 timeType *interested_array; // Array of size NBApprentices where apprentices can anounce interest in accessing the inventory :: Array of int
-// IngredNode *inventory; // Inventory :: Binary Tree of linked lists
-pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to inventory :: pthread_sem_t
-pthread_mutex_t *mutA; // Mutexes and condition variable (1 for each apprentice) to wake it up once they're allow to access the inventory
+pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to inventory :: pthread_mutex_t
+sem_t *semA; // Array of size NBApprentices containing a semaphore per apprentice to wake them up once they're allowed to access the inventory :: Array of pthread_sem_t
+sem_t semB; // Semaphore to wake up baker :: sem_t 
+sem_t semS; // Semaphore to wake up shopper :: sem_t
+int NBIngredients; 
+char **ingredientNames;
 
-sem_t *semA;
-sem_t bakers;
-sem_t semS;
+// Functions
+void *baker(void *j);
+void *shopper();
+void *apprentice(void *j);
+void access_inventory(int i);
 
-struct timeval tvbase, tvnow;
 
 void *baker(void *j){
 	int scenario2alt=0;
 	int scenario2j;
+	
 	while (breads < maxBread) {
 	
-		//printf("baker started loop\n");
-	
-		timeType min=timeTypeMax;
-		int j=-1;//the next A to be allowed into Inv
-		//printf("baker\n");
+		timeType min = timeTypeMax;
+		int j = -1;//the next A to be allowed into Inv
 		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
 			if (interested_array[i] < min) { 
 				j = i;
@@ -63,14 +68,14 @@ void *baker(void *j){
 		if (j>=0) {
 
 			//scenario handler
-			if (SCENARIO == SCENARIO2 && scenario2alt == 0) {
+			if (scenario == SCENARIO2 && scenario2alt == 0) {
 				
 				scenario2alt = 1;
 				scenario2j = j;
 				interested_array[j]=timeTypeMax;
 				continue;//dont sleep for one loop
 
-			} else if (SCENARIO == SCENARIO2) {
+			} else if (scenario == SCENARIO2) {
 				scenario2alt = 0; //to sleep after waking up 2 apprentices
 				//wakre up both A
 				interested_array[j]=timeTypeMax;
@@ -80,8 +85,8 @@ void *baker(void *j){
 				
 				//baker sleep until that one is finished
 				//printf("baker sleeping");
-				sem_wait(&bakers);
-				sem_wait(&bakers);
+				sem_wait(&semB);
+				sem_wait(&semB);
 				continue;
 			}
 
@@ -92,7 +97,7 @@ void *baker(void *j){
 			
 			//baker sleep until that one is finished
 			//printf("baker sleeping");
-			sem_wait(&bakers);	
+			sem_wait(&semB);	
 
 		}
 		
@@ -113,16 +118,6 @@ void *baker(void *j){
 // 		// restore_inventory();
 // 	}
 // }
-
-
-void access_inventory(int i){
-	// TODO Implement inventory
-	/*
-	- Take ingredients
-	- If one ingredient missing, wake up shopper and make it restore inventory.	
-	*/   
-    printf("Apprentice %d accesses the inventory.\n",i);
-}
 
 void *apprentice(void *j){
 
@@ -160,16 +155,16 @@ void *apprentice(void *j){
 	    access_inventory(i);
 	    if (breads>=maxBread) {
 	    	pthread_mutex_unlock(&mutex_inventory);	
-	    	printf("     Apprentice %d made bread #%d (her %dth bread).\n",i, breads, abread);
+	    	printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
 	    	pthread_exit(NULL);
 	    }
 	    breads++;
 	    abread++;
-	    printf("     Apprentice %d made bread #%d (her %dth bread).\n",i, breads, abread);
+	    printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
 	    pthread_mutex_unlock(&mutex_inventory);
 	    
 	    //tell baker you are out again
-	    sem_post(&bakers);
+	    sem_post(&semB);
         
 		sleep(rand()%3+1);
         
@@ -178,74 +173,69 @@ void *apprentice(void *j){
     printf("     Apprentice %d made %d breads today\n", i, abread);
 }
 
+void access_inventory(int i){
+	
+	printf("     Apprentice %d accesses the inventory\n",i);
+	printf("     Apprentice %d takes ",i);
+
+	for(int j = 0; j < NBIngredients; j++){
+		char* ingredient = ingredientNames[j];
+		for(int k = 0; ingredient[k] != '\0'; k++){
+			printf("%c", ingredient[k]);
+		}
+		if(j < NBIngredients - 2){
+			printf(", ");
+		}else if(j < NBIngredients - 1){
+			printf(" and ");
+		} else {
+			printf(" ");
+		}
+		takeIngredient(ingredient, 1);
+	}
+	printf("from the inventory and leaves\n");
+}
 
 int run (int nbAppr, int maxB, int nbIngr, char* ingNames[], int metric, int scen){
 	srand(time(NULL));
 	gettimeofday(&tvbase, NULL);
-	//gettimeofday(&tvnow, NULL);
-	printf("v3\n");
 
-    // /* INITIALIZE VARIABLES BASED ON USER INPUT */
-
-    // if (argc == 2) {// one argument given = # chairs
-    // 	maxBread = 100;
-    //     NBApprentices = atoi(argv[1]);
-    //     scheduler_metric = FASTLEARNERS;
-    //     if (NBApprentices < 1) {
-    //         printf("Please input a positive number for the # Apprentices as first argument\n");
-    //     	return;
-    // 	}
-    // } else if (argc == 3) {// 2 argument given = # chairs # maxBreads
-    // 	maxBread = atoi(argv[2]);
-    //     NBApprentices = atoi(argv[1]);
-    //     if (NBApprentices < 1 || maxBread < 1) {
-    //         printf("Please input a positive number for the # Apprentices as first argument\nand for the maximum amount of breads to be made as second arg\n");
-    //         return;
-    //     }
-    // } else { //Default values
-    //     NBApprentices = 30;
-    //     maxBread = 100;
-    //     scheduler_metric = ARRIVALORDER;
-	// 	NBIngredients = 3;
-
-	// 	//TODO get scenario
-	// }
+    /* INITIALIZE VARIABLES BASED ON USER INPUT */
 
 	NBApprentices = nbAppr;
 	maxBread = maxB;
 	NBIngredients = nbIngr;
-	// ingredientNames = ingNames;
 	scheduler_metric = metric;
-	SCENARIO = scen;
+	scenario = scen;
 
+	ingredientNames = malloc(nbIngr * sizeof(char*));
 	for (int i = 0; i < nbIngr; i++){
-		// const char *bla = "Salt";
-		// registerIngredient(ingNames[i], 50);
+		registerIngredient(ingNames[i], 50); // Register the ingredients and add 50 units per ingredient
+    	ingredientNames[i] = malloc((32 + 1) * sizeof(char)); // Max string length is 32 chars
+		strcpy(ingredientNames[i], ingNames[i]);
 	}
 
-	
-    
     interested_array = malloc(NBApprentices*sizeof(timeType));
     threadIndexes = malloc(NBApprentices*sizeof(pthread_t));
-    mutA = malloc(NBApprentices*sizeof(pthread_mutex_t));
     semA = malloc(NBApprentices*sizeof(sem_t));
 
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
+
     pthread_mutex_init(&mutex_inventory, NULL);
-    sem_init(&bakers, 0, 0);
+    sem_init(&semB, 0, 0);
 	sem_init(&semS, 0, 0);
 
     for(int i = 0; i < NBApprentices; i++){
-        pthread_mutex_init(&mutA[i], NULL);
         sem_init(&semA[i], 0, 0);
         interested_array[i]=timeTypeMax;
     }
 
 	/* CREATE THREADS */
 
+	// Baker
 	pthread_t bakert;
 	pthread_create(&bakert, NULL, baker, (void *) 0);
 
+	// Apprentices
     for (int i = 0; i < NBApprentices; i++){
         if(pthread_create(&threadIndexes[i], NULL, apprentice, (void *) i)){
             printf("Error in thread creation!\n");
@@ -255,17 +245,23 @@ int run (int nbAppr, int maxB, int nbIngr, char* ingNames[], int metric, int sce
         }
     }
 
+	// Shopper
 	// pthread_t shopper;
 	// pthread_create(&shopper, NULL, shopper, NULL);
 
-	int be = pthread_join(bakert, NULL);
-	//printf("baker joined %d\n", be);
+	/* CLEANUP */
 
-	//join threads so we see the printed output
+	// Join threads
+	pthread_join(bakert, NULL);
+
 	for (int i=0; i<NBApprentices; i++) { 
 		pthread_join(threadIndexes[i], NULL);
-		//printf("joined a thread\n");
 	}
+
+	// Free memory
+	free(interested_array);
+	free(threadIndexes);
+	free(semA);
 
 	return 0;
 
