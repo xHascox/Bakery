@@ -12,6 +12,8 @@
 int NbCustomers;
 int N;// # chairs
 
+int bakeryOpen;
+
 //Chairs (Queue of customers) and the corresponding mutex
 Queue* chairs;
 pthread_mutex_t mutex_chairs;
@@ -23,8 +25,15 @@ sem_t baker_semaphore;
 
 //baker
 void *baker(){
+    
     while(TRUE) {
+        if (!bakeryOpen) {
+            pthread_exit(NULL);
+        }
         sem_wait(&baker_semaphore);
+        if (!bakeryOpen) {
+            pthread_exit(NULL);
+        }
 
         //dequeue
         sem_t* customer = dequeue(chairs);
@@ -32,7 +41,7 @@ void *baker(){
 
 	printf("waking up %d\n", &customer);
         //wake up dequeued customer
-        sem_post(customer);
+        sem_post(&customer);
 
 
         //sell bread / friendy smalltalk
@@ -46,7 +55,7 @@ void *baker(){
 
 void *customer(void *id){
     
-    int cid = *(int *)id;
+    int cid = (int )id;
     pthread_mutex_lock(&mutex_chairs);
 
     //if Q full: kill
@@ -79,7 +88,7 @@ void *customer(void *id){
 
 
 int main(int argc, char const *argv[]) {
-
+    printf("started\n");
     
     if (argc == 1) {//Default valaues
         NbCustomers = 30;
@@ -115,7 +124,7 @@ int main(int argc, char const *argv[]) {
         sem_init(&customer_semaphore[i], 0, 0);
         
         
-        if(pthread_create(&threads[i], NULL, customer, (void *)&i)){
+        if(pthread_create(&threads[i], NULL, customer, (void *)i)){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
@@ -125,9 +134,9 @@ int main(int argc, char const *argv[]) {
 
     }
 
-
+    bakeryOpen = 1;
     pthread_t bakert;
-    //pthread_create(&bakert, NULL, baker, NULL);
+    pthread_create(&bakert, NULL, baker, NULL);
     
 
 
@@ -135,6 +144,11 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < N; i++){
         pthread_join(threads[i], NULL);
     }
-    printf("All threads joined!\n");
+    printf("All customers joined!\n");
+
+    bakeryOpen = 0;
+    sem_post(&baker_semaphore);
+    pthread_join(bakert, NULL);
+    printf("---closed---\n");
 
 }
