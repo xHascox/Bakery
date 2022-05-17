@@ -8,7 +8,7 @@
  *  It is a representation for actual stock of this ingredient.
  */
 struct IngredNode {
-    struct IngredNode* pNextIngred; // Pointer to the next Ingredient Node
+    struct IngredNode* pNextIngred;     // Pointer to the next Ingredient Node
 };
 typedef struct IngredNode IngredNode;
 
@@ -23,6 +23,7 @@ typedef struct IngredNode IngredNode;
  */
 struct InvNode {                    // An Inventory Node
     char* ingredName;               // The name of the item/ingredient
+    int restockTo;                  // Amount to be restocked to when restocking
     int count;                      // Remaining stock of this item
     struct InvNode* pLeft;          // Pointer to the left Inventory node
     struct InvNode* pRight;         // Pointer to the right Inventory node
@@ -84,6 +85,38 @@ int containsIngred(const char* name);
  * @return InvNode*
  */
 InvNode* getInvNode(const char* name);
+
+
+/**
+ * @brief Restocks the ingredients if a specified 'pNode' to its 'restockTo' value.
+ *
+ * @param pNode
+ */
+void restock(InvNode* pNode);
+
+
+/**
+ * @brief Restocks ingredients of every InvNode to the restockTo value.
+ */
+void restockIngredients();
+
+
+/**
+ * @brief Setter method for 'restockTo' (= 'targetStock') value of with 'name' specified InvNode.\n
+ * IMPORTANT: the 'targetStock' value should be >= 5 to ensure a certain performance of the inventory.\n
+ * A value > 10 is recommended. However, this value highly depends on the frequency in which this ingredient is used.
+ *
+ * @param name
+ * @param targetStock
+ */
+void setRestockTo(const char* name, int targetStock);
+
+
+/**
+ * @brief Lets the tree be printed in 'inorder traversal'.
+ */
+void printTree();
+
 
 
 #endif
