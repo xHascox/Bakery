@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-#include "Inventory_BinTree.c"
+#include "Inventory_BinTree.h"
 
 int main(/*int argc, char *argv[]*/) {
 
@@ -18,7 +18,7 @@ int main(/*int argc, char *argv[]*/) {
         i++;
     }
 
-    InvRootNode * Head = getHead();
+    InvNode* firstInvNode = getFirstInvNode();
 
 
     //*/
@@ -42,7 +42,7 @@ int main(/*int argc, char *argv[]*/) {
     printf("Registered some ingredients:\n");
     printf("------------------------------\n\n");
 
-    printTree(Head->firstInvNode);
+    printTree(firstInvNode);
     printf("------------------------------\n\n");
 
 
@@ -51,7 +51,7 @@ int main(/*int argc, char *argv[]*/) {
     printf("Restocked all the ingredients!\n");
     printf("------------------------------\n\n");
 
-    printTree(Head->firstInvNode);
+    printTree(firstInvNode);
     printf("------------------------------\n\n");
 
 
@@ -76,7 +76,7 @@ int main(/*int argc, char *argv[]*/) {
 
 
 
-    printTree(Head->firstInvNode);
+    printTree(firstInvNode);
     printf("------------------------------\n\n");
 
     return 0;

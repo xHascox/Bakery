@@ -119,4 +119,8 @@ void printTree();
 
 
 
+
+InvNode* getFirstInvNode();
+
+
 #endif

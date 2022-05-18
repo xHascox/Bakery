@@ -216,53 +216,6 @@ int takeIngredient(const char* name, int amount)
 
 
 /**
- *  @brief Creates and inserts a new InvNode specified by 'name'
- *  into the data structure, if not already present.
- *
- *  @param name
- */
-void insertInvNode(const char* name)
-{
-
-    InvNode *pNewNode = createInvNode(name);  // create specified InvNode
-    InvNode *pCurrNode = pHead->firstInvNode; // assign first node of data structure to pCurrNode
-    InvNode *pPrevNode = NULL;                // declare pPrevNode
-
-    // No element in the data structure
-    if (pCurrNode == NULL) {            // Check for no element
-        pHead->firstInvNode = pNewNode; // make the newly created node the first node fo the data structure
-        pHead->nbInvElem += 1;          // increment the counter for the different ingredients
-        return;
-
-    // > 0 elements in the data structure
-    } else {
-        int state;  // state variable to keep track of the sides 'LEFT' and 'RIGHT'
-        while (pCurrNode) { // until the place for the new node to be inserted is found
-            if (strcmp(pNewNode->ingredName, pCurrNode->ingredName) < 0) {  // if the pNewNode is lexically smaller compared to the pCurrNode
-                pPrevNode = pCurrNode;          // set pPrevNode
-                pCurrNode = pCurrNode->pLeft;   // go into left subtree
-                state = LEFT;                   // set state to 'LEFT'
-            } else {    // if the pNewNode is lexically bigger compared to the pCurrNode
-                pPrevNode = pCurrNode;          // set pPrevNode
-                pCurrNode = pCurrNode->pRight;  // go into right subtree
-                state = RIGHT;                  // set state to 'RIGHT'
-            }
-        }
-        // Final insertion step
-        if (state == LEFT) {    // if the last move was into the left subtree
-            pPrevNode->pLeft = pNewNode;    // insert pNewNode at the left leave of the pPrevNode
-            pHead->nbInvElem += 1;          // increment the stock counter
-            return;
-        } else { // if the last move was into the right subtree
-            pPrevNode->pRight = pNewNode;   // insert pNewNode at the right leave of the pPrevNode
-            pHead->nbInvElem += 1;          // increment the stock counter
-            return;
-        }
-    }
-}
-
-
-/**
  * @brief Restocks the ingredients if a specified 'pNode' to its 'restockTo' value.
  *
  * @param pNode
@@ -328,6 +281,51 @@ void setRestockTo(const char* name, int targetStock)
 
 
 /**
+ *  @brief Creates and inserts a new InvNode specified by 'name'
+ *  into the data structure, if not already present.
+ *
+ *  @param name
+ */
+void insertInvNode(const char* name)
+{
+
+    InvNode *pNewNode = createInvNode(name);  // create specified InvNode
+    InvNode *pCurrNode = pHead->firstInvNode; // assign first node of data structure to pCurrNode
+    InvNode *pPrevNode = NULL;                // declare pPrevNode
+
+    // No element in the data structure
+    if (pCurrNode == NULL) {            // Check for no element
+        pHead->firstInvNode = pNewNode; // make the newly created node the first node fo the data structure
+        pHead->nbInvElem += 1;          // increment the counter for the different ingredients
+        return;
+
+    // > 0 elements in the data structure
+    } else {
+        int state;  // state variable to keep track of the sides 'LEFT' and 'RIGHT'
+        while (pCurrNode) { // until the place for the new node to be inserted is found
+            if (strcmp(pNewNode->ingredName, pCurrNode->ingredName) < 0) {  // if the pNewNode is lexically smaller compared to the pCurrNode
+                pPrevNode = pCurrNode;          // set pPrevNode
+                pCurrNode = pCurrNode->pLeft;   // go into left subtree
+                state = LEFT;                   // set state to 'LEFT'
+            } else {    // if the pNewNode is lexically bigger compared to the pCurrNode
+                pPrevNode = pCurrNode;          // set pPrevNode
+                pCurrNode = pCurrNode->pRight;  // go into right subtree
+                state = RIGHT;                  // set state to 'RIGHT'
+            }
+        }
+        // Final insertion step
+        if (state == LEFT) {    // if the last move was into the left subtree
+            pPrevNode->pLeft = pNewNode;    // insert pNewNode at the left leave of the pPrevNode
+            pHead->nbInvElem += 1;          // increment the stock counter
+        } else { // if the last move was into the right subtree
+            pPrevNode->pRight = pNewNode;   // insert pNewNode at the right leave of the pPrevNode
+            pHead->nbInvElem += 1;          // increment the stock counter
+        }
+    }
+}
+
+
+/**
  * @brief Register a new Ingredient in the inventory.
  * Upper and lower case letters are differentiated.\n
  * The initialAmount, if not set to '0', gets added to the
@@ -379,8 +377,8 @@ void printTree()
 ///////////////////////////////////////
 //  FOR DEBUG PURPOSES
 
-InvRootNode* getHead() {
-    return pHead;
+InvNode* getFirstInvNode() {
+    return pHead->firstInvNode;
 }
 
 
