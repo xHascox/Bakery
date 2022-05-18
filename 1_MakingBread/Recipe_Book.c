@@ -74,6 +74,7 @@ void createRecipeRootNode()
  * Returns NULL if no such bread type is known.
  *
  * @param name
+ * @return BreadType*
  */
 BreadType* getBreadType(const char* name)
 {
@@ -95,6 +96,7 @@ BreadType* getBreadType(const char* name)
  * @brief Returns the ingredients array of a bread type specified by 'breadName'.
  *
  * @param breadName
+ * @return char**
  */
 char** getIngredArray(const char* breadName)
 {
@@ -103,10 +105,35 @@ char** getIngredArray(const char* breadName)
 
 
 /**
+ * @brief Get the the amount of different bread types.
+ * 
+ * @return int 
+ */
+int getNbBreadTypes()
+{
+    return pHead->nbRecElem;
+}
+
+
+/**
+ * @brief Get number of different ingredients required for a with 'name' specified bread type.
+ * 
+ * @param name 
+ * @return int 
+ */
+int getNbIngredOfBreadType(const char* name) 
+{
+    return getBreadType(name)->nbIngred;
+}
+
+
+
+/**
  * @brief Checks if the bread type specified already exists in
  * the data structure. Returns '1' it exists, '0' otherwise. \n
  *
  * @param name
+ * @return int
  */
 int containsBreadType(const char* name)
 {
@@ -178,6 +205,7 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
  * @param name
  * @param nbIngred
  * @param ingredArr
+ * @return int
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr)
 {
