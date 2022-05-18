@@ -50,6 +50,14 @@ int containsBreadType(const char* name);
 BreadType* getBreadType(const char* name);
 
 
+/** 
+ * @brief Returns the ingredients array of a bread type specified by 'breadName'.
+ *
+ * @param breadName
+ */
+char** getIngredArray(const char* breadName);
+
+
 /**
  * @brief Lets the tree be printed in 'inorder traversal'. 
  * Values printed are the node's name and stock count.
