@@ -4,29 +4,70 @@
 //#include <ctype.h>
 #include <string.h>
 
-#include "inventory_BinTree.h"
+//#include "inventory_BinTree.h"
 
+void checkOption(int* option);
+void optionSelection();
 void makingBread();
 void tgtg();
 void sleepingBaker();
 void testingScripts();
 
+
+void checkOption(int* option) {
+    
+    printf("Please enter your option: ");
+    if (scanf("%d", option) != 1){
+ 
+        printf("ERROR: Please enter a NUMBER (int)!\n");
+        exit(1);
+    }
+    if (*option <= 0 || *option >= 5){
+        printf("Please choose from a number between one and four (1,2,3,4)!\n");
+        checkOption(option);
+    }
+}
+
+
+void optionSelection() {
+    int option = 0;
+    
+    checkOption(&option);
+ 
+    if (option == 1){
+        //makingBread();
+        printf("Option one: %d\n", option);
+    } else if (option == 2){
+        //tgtg();
+        printf("Option two: %d\n", option);
+    } else if (option == 3){
+        //sleepingBaker();
+        printf("Option three: %d\n", option);
+    } else if (option == 4){
+        //testingScripts();
+        printf("Option four: %d\n", option);
+    }
+}
+
 int main(/*int argc, char const *argv[]*/) {
 
     
-    // Please choose your program
-    // if 1: 
-        makingBread();
-    /*
-    if 2:
-        tgtg()
-    if 3:
-        sleepingBaker()
-    if 4:
-        Testing scripts()
+
+    printf("Hello World!\n");
+    printf("You have started v0.8 of the Bakery!\n");
+    printf("The following options are at your disposal:\n");
+    printf(" -> Option 1: 'Making Bread'.\n");
+    printf(" -> Option 2: 'To Good To Go'.\n");
+    printf(" -> Option 3: 'Additional Feature'.\n");
+    printf(" -> Option 4: 'Testing Scrips'.\n");
+    printf("\n\n");
 
 
-    */
+    printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
+    optionSelection();
+    
+    
+    
     
     
 
