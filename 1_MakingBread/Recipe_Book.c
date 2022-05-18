@@ -17,8 +17,7 @@
 /**
  *  @brief An InvRootNode (Inventory Root Node) is
  *  the root node of the data structure (binary tree)
- *  and stores the number of different ingredients. \n
- *  There is only one root node for each data structure.
+ *  and stores the count of different bread types. 
  */
 struct RecipeRootNode {
     struct BreadType* firstBreadType;   // Pointer to the first BreadType.
@@ -27,7 +26,7 @@ struct RecipeRootNode {
 typedef struct RecipeRootNode RecipeRootNode;
 
 
-RecipeRootNode* pHead = NULL; // The Head of the InvList
+RecipeRootNode* pHead = NULL; // The Head of the data struct
 
 
 /**
@@ -59,24 +58,22 @@ BreadType* createBreadType(const char* name, int nbIngred, char** ingredArr)
 
 /**
  *  @brief Initializes the RecipeRootNode.
- *
  */
 void createRecipeRootNode()
 {
     if (pHead == NULL) {    // check if no RecipeRootNode already exists
         pHead = malloc(sizeof(RecipeRootNode));    // allocate space in heap
         pHead->firstBreadType = NULL; // initialize pointer to first BreadType
-        pHead->nbRecElem = 0;    // initialize nbInvElem
+        pHead->nbRecElem = 0;    // initialize nbRecElem
     }
 }
 
 
 /**
  * @brief Get the BreadType identified by 'name'. \n
- * Returns NULL if no such ingredient is known.
+ * Returns NULL if no such bread type is known.
  *
  * @param name
- * @return BreadType*
  */
 BreadType* getBreadType(const char* name)
 {
@@ -94,26 +91,22 @@ BreadType* getBreadType(const char* name)
 }
 
 
-/** TODO: dOcUmEnTaTiOn AAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHH
- * @brief
+/** 
+ * @brief Returns the ingredients array of a bread type specified by 'breadName'.
  *
  * @param breadName
- * @return
  */
 char** getIngredArray(const char* breadName)
 {
-    return getBreadType(breadName)->pIngredArr;
+    return getBreadType(breadName)->pIngredArr;     // gets the ingredients array of bread type specified by 'breadName'
 }
 
 
 /**
- *  @brief Checks if the ingredient specified already exists in
- *  the data structure. Returns '1' it exists '0' otherwise. \n
- *  This function does not check the amount of a specific
- *  ingredient present.
+ * @brief Checks if the bread type specified already exists in
+ * the data structure. Returns '1' it exists, '0' otherwise. \n
  *
- *  @param name
- *  @return int
+ * @param name
  */
 int containsBreadType(const char* name)
 {
@@ -125,72 +118,16 @@ int containsBreadType(const char* name)
 }
 
 
-/*
 /**
- *  @brief Add items to the data structure. The BreadType for
- *  the specified ingredient to be added to has to already
- *  exist in the data structure.
- *
- *  @param name
- *  @param amount
- */
-/*
-void addRecipeIngred(const char* name, int ingredNumber, char** ingredArr)
-{
-    BreadType* pBreadType = getBreadType(name); // declare an BreadType
-    assert(pBreadType != NULL);             // check if != NULL
-    IngredNode* pIngredNode = getLastIngredNode(name);  // declare an IngredNode
-    if (pIngredNode == NULL) {  // if there is no stock of the specified ingredient
-        pBreadType->pIngred = createIngredNode(name); // create an IngredNode and link it to the BreadType
-        amount--;               // decrease function variable amount (important for the following for-loop)
-        pBreadType->count += 1;   // increment stock counter
-        pIngredNode = pBreadType->pIngred;    // move pIngredNode forward (important for the following for-loop)
-    }
-    for (int i = 0; i < amount; i++) {      // for the amount inserted
-        pIngredNode->pNextIngred = createIngredNode(name);  // create new IngredNodes and insert into stock
-        pBreadType->count += 1;                   // increment stock counter
-        pIngredNode = pIngredNode->pNextIngred; // move pIngredNode forward
-    }
-}
- */
-
-
-/*
-/**
- * @brief Remove specified amount of items from the stock
- * of the passed ingredient. \n
- * Returns '0' if stock could not be reduced due to \n
- *      - not enough ingredients present \n
- *      - no such ingredient existing \n
- * and '1' otherwise.
+ * @brief Creates and inserts a new BreadType specified by 'name'
+ * into the data structure, if not already present. \n
+ * The nbIngred value denotes the number of different
+ * ingredients necessary for this bread type. \n
+ * The ingredArr contains all the ingredients' 'names'.
  *
  * @param name
- * @return int
- */
- /*
-int takeIngredient(const char* name, int amount)
-{
-    BreadType* pBreadType = getBreadType(name);   // get the specified BreadType
-    if (pBreadType == NULL || pBreadType->count < amount || pBreadType->pIngred == NULL) { // do some checks
-        return FALSE;           // return '0' if this ingredient has not been registered or there is not enough stock present
-    }
-    IngredNode* pIngredNode = NULL;    // declare an IngredNode
-    for (int i = 0; i < amount; i++) {      // for the specified amount
-        pIngredNode = pBreadType->pIngred;    // get the first element of the stock
-        pBreadType->pIngred = pIngredNode->pNextIngred;   // make second element first element
-        free(pIngredNode);  // free previous first element
-        pBreadType->count -= 1;   // decrement stock counter
-    }
-    return TRUE;
-}
-  */
-
-
-/**
- *  @brief Creates and inserts a new BreadType specified by 'name'
- *  into the data structure, if not already present.
- *
- *  @param name
+ * @param nbIngred 
+ * @param ingredArr
  */
 void insertBreadType(const char* name, int nbIngred, char** ingredArr)
 {
@@ -201,8 +138,8 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
 
     // No element in the data structure
     if (pCurrNode == NULL) {            // Check for no element
-        pHead->firstBreadType = pNewNode; // make the newly created node the first node fo the data structure
-        pHead->nbRecElem += 1;          // increment the counter for the different ingredients
+        pHead->firstBreadType = pNewNode; // make the newly created node the first node of the data structure
+        pHead->nbRecElem += 1;          // increment the counter for the different bread types
         return;
 
     // > 0 elements in the data structure
@@ -210,7 +147,7 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
         int state;  // state variable to keep track of the sides 'LEFT' and 'RIGHT'
         while (pCurrNode) { // until the place for the new node to be inserted is found
             if (strcmp(pNewNode->breadName, pCurrNode->breadName) < 0) {  // if the pNewNode is lexically smaller compared to the pCurrNode
-                pPrevNode = pCurrNode;          // set pPrevNode
+                pPrevNode = pCurrNode;          // set pPrevNode 
                 pCurrNode = pCurrNode->pLeft;   // go into left subtree
                 state = LEFT;                   // set state to 'LEFT'
             } else {    // if the pNewNode is lexically bigger compared to the pCurrNode
@@ -222,31 +159,33 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
         // Final insertion step
         if (state == LEFT) {    // if the last move was into the left subtree
             pPrevNode->pLeft = pNewNode;    // insert pNewNode at the left leave of the pPrevNode
-            pHead->nbRecElem += 1;          // increment the stock counter
+            pHead->nbRecElem += 1;          // increment the bread type counter
         } else { // if the last move was into the right subtree
             pPrevNode->pRight = pNewNode;   // insert pNewNode at the right leave of the pPrevNode
-            pHead->nbRecElem += 1;          // increment the stock counter
+            pHead->nbRecElem += 1;          // increment the bread type counter
         }
     }
 }
 
 
 /**
- * @brief Register a new Ingredient in the inventory.
- * Upper and lower case letters are differentiated.\n
- * The initialAmount, if not set to '0', gets added to the
- * newly created BreadType.
+ * @brief Register a new bread type in the recipe book.
+ * Upper and lower case letters are differentiated. \n
+ * The nbIngred value denotes the number of different
+ * ingredients necessary for this bread type. \n
+ * The ingredArr contains all the ingredients' 'names'.
  *
  * @param name
- * @param initialAmount
+ * @param nbIngred
+ * @param ingredArr
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr)
 {
-    if (pHead == NULL) {            // check if there is no pHead
+    if (pHead == NULL) {           // check if there is no pHead
         createRecipeRootNode();    // create pHead
     }
 
-    if (!containsBreadType(name)) {            // if the ingredient has not yet been registered
+    if (!containsBreadType(name)) {            // if the bread type has not yet been registered
         insertBreadType(name, nbIngred, ingredArr);    // create and insert a new BreadType with identifying attribute 'name'
         return TRUE;
     } else {
@@ -262,33 +201,24 @@ int registerBreadType(const char* name , int nbIngred, char** ingredArr)
  */
 void printTreeRecursion(BreadType* pNode)
 {
-    if  (pNode == NULL) return;                 // return if pNode is NULL
-    printTreeRecursion(pNode->pLeft);     // traverse left subtree of pNode
+    if  (pNode == NULL) return;             // return if pNode is NULL
+    printTreeRecursion(pNode->pLeft);       // traverse left subtree of pNode
     printf("Node name & ingredients: '%s' -> ", pNode->breadName);  // prints pNode
-    for (int i = 0; i < pNode->nbIngred; i++) {                            // for every index in ingredient array
+    for (int i = 0; i < pNode->nbIngred; i++) {         // for every index in ingredient array
         printf("%s; ", pNode->pIngredArr[i]);
     }
     printf("\n");
-    printTreeRecursion(pNode->pRight);    // traverse right subtree of pNode
+    printTreeRecursion(pNode->pRight);      // traverse right subtree of pNode
 }
 
 
 /**
- * @brief Lets the tree be printed in 'inorder traversal'. Values printed are the node's name and stock count.
+ * @brief Lets the tree be printed in 'inorder traversal'. 
+ * Values printed are the node's name and stock count.
  */
 void printTree()
 {
     printTreeRecursion(pHead->firstBreadType);    // calls the recursive print function
-}
-
-
-
-
-///////////////////////////////////////
-//  FOR DEBUG PURPOSES
-
-RecipeRootNode* getHead() {
-    return pHead;
 }
 
 
