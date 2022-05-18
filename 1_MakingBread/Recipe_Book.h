@@ -28,6 +28,7 @@ typedef struct BreadType BreadType;
  * @param name
  * @param nbIngred
  * @param ingredArr
+ * @return int
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr);
 
@@ -37,6 +38,7 @@ int registerBreadType(const char* name , int nbIngred, char** ingredArr);
  * the data structure. Returns '1' it exists, '0' otherwise. 
  *
  * @param name
+ * @return int
  */
 int containsBreadType(const char* name);
 
@@ -46,8 +48,35 @@ int containsBreadType(const char* name);
  * Returns NULL if no such bread type is known.
  *
  * @param name
+ * @return BreadType*
  */
 BreadType* getBreadType(const char* name);
+
+
+/** 
+ * @brief Returns the ingredients array of a bread type specified by 'breadName'.
+ *
+ * @param breadName
+ * @return char**
+ */
+char** getIngredArray(const char* breadName);
+
+
+/**
+ * @brief Get the the amount of different bread types.
+ * 
+ * @return int 
+ */
+int getNbBreadTypes();
+
+
+/**
+ * @brief Get number of different ingredients required for a with 'name' specified bread type.
+ * 
+ * @param name 
+ * @return int 
+ */
+int getNbIngredOfBreadType(const char* name); 
 
 
 /**
