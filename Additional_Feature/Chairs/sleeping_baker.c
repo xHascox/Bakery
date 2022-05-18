@@ -14,7 +14,7 @@ int N;// # chairs
 
 int bakeryOpen;
 
-//Chairs (Queue of customers) and the corresponding mutex
+// Chairs (Queue of customers) and the corresponding mutex
 Queue* chairs;
 pthread_mutex_t mutex_chairs;
 
@@ -36,22 +36,17 @@ void *baker(){
         }
 
         //dequeue
-        sem_t* customer = dequeue(chairs);
+        sem_t* customer_sem = dequeue(chairs);
 
 
-	printf("waking up %d\n", &customer);
-        //wake up dequeued customer
-        sem_post(&customer);
+	    printf("waking up %d\n", &customer_sem);
 
+        sem_post(&customer_sem);
 
-        //sell bread / friendy smalltalk
         printf("That makes 2 Fr for that delicious fribourgeois bread\n");
-        
-
+    
     }
 }
-
-
 
 void *customer(void *id){
     
@@ -84,8 +79,6 @@ void *customer(void *id){
         pthread_exit(NULL);
     }
 }
-
-
 
 int main(int argc, char const *argv[]) {
     printf("started\n");

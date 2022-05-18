@@ -38,6 +38,8 @@ sem_t semB; // Semaphore to wake up baker :: sem_t
 sem_t semS; // Semaphore to wake up shopper :: sem_t
 int NBIngredients; 
 char **ingredientNames;
+char ** breadNames;
+int NBBreadtypes;
 
 // Functions
 void *baker(void *j);
@@ -130,7 +132,6 @@ void *apprentice(void *j){
 		
 		gettimeofday(&tvnow, NULL);
 	
-	    
 	    if (scheduler_metric == ARRIVALORDER) {//arrival order
 	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
 	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
@@ -176,22 +177,26 @@ void *apprentice(void *j){
 void access_inventory(int i){
 	
 	printf("     Apprentice %d accesses the inventory\n",i);
-	printf("     Apprentice %d takes ",i);
+	
+	// Choose which bread to make
+	char *breadName = breadNames(rand()%NBBreadtypes+1);
+	char* ingredients = recipe_get(breadName);
+	int ingredients_len = get_len_recipe(breadName);
 
-	for(int j = 0; j < NBIngredients; j++){
-		char* ingredient = ingredientNames[j];
-		for(int k = 0; ingredient[k] != '\0'; k++){
-			printf("%c", ingredient[k]);
-		}
-		if(j < NBIngredients - 2){
-			printf(", ");
-		}else if(j < NBIngredients - 1){
-			printf(" and ");
+	printf("     Apprentice %d will make a %s",i, breadName);
+	printf("     For that they take: ");
+
+	for(int j = 0; j < ingredients_len; j++){
+		char *ingredient = ingredients[j];
+		int in_stock = takeIngredient(ingredient, 1);
+		if(in_stock){
+			printf("%s\n",ingredient);
 		} else {
-			printf(" ");
+			printf("Unfortunately, there is no more %s in stock. Somebody needs to go shopping.", ingredient);
+			// TODO Wake up shopper ans sleep
 		}
-		takeIngredient(ingredient, 1);
 	}
+
 	printf("from the inventory and leaves\n");
 }
 

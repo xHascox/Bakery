@@ -5,3 +5,6 @@ sleeping_baker: sleeping_baker.o queue.o
 
 queue.o: queue.c queue.h
 	gcc -c queue.c
+
+run:
+	./sleeping_baker
