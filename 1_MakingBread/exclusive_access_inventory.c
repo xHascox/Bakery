@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <string.h>
 
-#include "inventory_BinTree.h" // Include inventory datastructure
+#include "Inventory_BinTree.h" // Include inventory datastructure
 
 // Different strategies to "schedule" apprentices to enter the inventory
 int scheduler_metric; 
