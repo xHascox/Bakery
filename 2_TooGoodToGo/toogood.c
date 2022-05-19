@@ -6,13 +6,7 @@
 //#define BREAD_TYPES 5 // Number of different bread types
 #define BREADS_SOLD 20 // Must be less than MAX_BREAD
 #define TICKS 5 // Number of ticks before tgtg check
-/*
-#define CROISSANT 0
-#define ZOPF 1
-#define TESSINERLI 2
-#define BURLI 3
-#define PUMPERNIKEL 4
-*/
+
 #define NO 0
 #define YES 1
 
@@ -62,15 +56,6 @@ void printTypes() {
     }
 }
 
-// Types of bread the bakery offers
-//struct BreadType types[BREAD_TYPES];
-
-// Types sold in the last k TICKS
-//int Sold[BREAD_TYPES];
-
-// Types that are currently offered over TGTG
-//int TgtgBasket[BREAD_TYPES];
-
 // Function that gets called every k TICKS and decides whether a bread type is going to be offered via TGTG
 void tgtg(){
     for (int i = 0; i < dynTypes.count; i++){
@@ -85,41 +70,14 @@ void tgtg(){
 }
 
 
-int main(){
-    // Create bread types dynamically
-    initTypeList(10);
-    addType("Hartbrot", 4);
-    addType("Ruchbrot", 10);
-    addType("Muetschli", 5);
-    addType("Croissant", 4);
-    addType("Zopf", 4);
-    addType("Tessinerli", 4);
-    addType("Pumpernikel", 4);
-    printTypes(); // print types
+int run(char* breadTypes[], int numTypes, int amounts[]){
 
-    // (0) Initialization
-    /*for (int i = 0; i < BREAD_TYPES; i++){
-        Sold[i] = NO;
-        TgtgBasket[i] = NO;
-    }*/
-
-    //(1) Create bread
-  /*  strcpy(types[CROISSANT].name, "Croissant");
-    types[CROISSANT].nb = 4;
-
-    strcpy(types[ZOPF].name, "Zopf");
-    types[ZOPF].nb = 4;
-
-    strcpy(types[TESSINERLI].name, "Tessinerli");
-    types[TESSINERLI].nb = 4;
-
-    strcpy(types[BURLI].name, "Bürli");
-    types[BURLI].nb = 4;
-
-    strcpy(types[PUMPERNIKEL].name, "Pumpernikel");
-    types[PUMPERNIKEL].nb = 4;*/
-        
-            
+    // (0) Create bread types
+    initTypeList(numTypes);
+    for(int i = 0; i < numTypes; i++){
+        addType(breadTypes[i], amounts[i]);
+    }
+    
     //(2) Sell bread
     srand(time(NULL));
     int type = 0;
@@ -142,3 +100,8 @@ int main(){
 }
 
 
+int main(int argc, char const *argv[]){
+    char* breadtypes[] = {"Croissant", "Zopf", "Tessinerli"};
+    int num[3] = {8,9,10}; 
+    run(breadtypes,3,num);
+}
