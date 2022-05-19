@@ -56,7 +56,7 @@ void *baker(void *j){
 	int scenario2alt=0;
 	int scenario2j;
 	
-	while (breads < maxBread) {
+	while (breads < maxBread) { 
 	
 		timeType min = timeTypeMax;
 		int j = -1;//the next A to be allowed into Inv
@@ -125,7 +125,7 @@ void *baker(void *j){
 // 	}
 // }
 
-void *apprentice(void *j){
+void *apprentice(void *j){		// MAYBE JUST DO WHILE TRUE?  BECAUSE THERE IS A STOPPING CONDIITON ON LINE 161 !
 
     int i = (int ) j; // Apprentice ID
     int abread = 0;
