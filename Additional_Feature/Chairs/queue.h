@@ -1,5 +1,5 @@
 typedef struct Node {
-    sem_t customer_semaphore;
+    sem_t* customer_semaphore;
     struct Node* previous;
     struct Node* next;
 } Node;

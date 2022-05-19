@@ -9,74 +9,64 @@
 #define TRUE 1
 #define FALSE 0
 
-int NbCustomers;
-int N;// # chairs
+int NBCustomers;
+int NBChairs;
 
 int bakeryOpen;
 
-// Chairs (Queue of customers) and the corresponding mutex
 Queue* chairs;
 pthread_mutex_t mutex_chairs;
 
-sem_t* customer_semaphore;//array of semaphores
+sem_t* semC;
 
-//baker's semaphore
-sem_t baker_semaphore;
+sem_t semB;
 
-//baker
 void *baker(){
     
     while(TRUE) {
-        if (!bakeryOpen) {
+
+        sleep(1);
+
+        sem_wait(&semB);
+
+        if (!bakeryOpen)
             pthread_exit(NULL);
-        }
-        sem_wait(&baker_semaphore);
-        if (!bakeryOpen) {
-            pthread_exit(NULL);
-        }
 
-        //dequeue
-        sem_t* customer_sem = dequeue(chairs);
+        sem_t* customer_semaphore = dequeue(chairs);
 
+        sem_post(customer_semaphore);
 
-	    printf("waking up %d\n", &customer_sem);
+        printf("Hi, that makes 2 Fr.\n");
 
-        sem_post(&customer_sem);
-
-        printf("That makes 2 Fr for that delicious fribourgeois bread\n");
-    
     }
 }
 
 void *customer(void *id){
     
-    int cid = (int )id;
+    int cid = (int) id;
+
     pthread_mutex_lock(&mutex_chairs);
 
-    //if Q full: kill
-    if (length(chairs)>= N) {
-        printf("I'm leaving, 0 star, overcrowded\n");
+    if (length(chairs) >= NBChairs) { // There are no free chairs
+        printf("This place is overcrowded. I'm leaving!\n");
         pthread_mutex_unlock(&mutex_chairs);
         pthread_exit(NULL);
-    } 
-    else {
 
-        //sit down on free chair
-        enqueue(chairs, &customer_semaphore[cid]);
+    } else { // There are free chairs
 
-        //wake Baker up
-        sem_post(&baker_semaphore);
+        enqueue(chairs, &semC[cid]); // Sit down on free chair
+
+        sem_post(&semB); // Wake the baker
 
         pthread_mutex_unlock(&mutex_chairs);
 
-        printf("I %d waiting in a chair\n", cid);
+        printf("Customer %d is waiting in a chair\n", cid);
 
-        //wait to be served
-        sem_wait(&customer_semaphore[cid]);
+        sem_wait(&semC[cid]); // Wait to be served
 
-        printf("thanks for selling me bread\n");
+        printf("Thank you for selling me bread! Have a nice day!\n");
 
-        pthread_exit(NULL);
+        pthread_exit(NULL); // Leave the bakery
     }
 }
 
@@ -84,37 +74,36 @@ int main(int argc, char const *argv[]) {
     printf("started\n");
     
     if (argc == 1) {//Default valaues
-        NbCustomers = 30;
-        N=10;
+        NBCustomers = 20;
+        NBChairs = 10;
     } else if (argc == 2) {// one argument given = # chairs
-        N = atoi(argv[1]);
-        if (N < 1) {
+        NBChairs = atoi(argv[1]);
+        if (NBChairs < 1) {
             printf("Please input a positive number for the # chairs as first argument\n");
         }
     } else if (argc == 3) {
-        N = atoi(argv[1]);
-        NbCustomers = atoi(argv[2]);
-        if (N < 1 || NbCustomers < 1) {
+        NBChairs = atoi(argv[1]);
+        NBCustomers = atoi(argv[2]);
+        if (NBChairs < 1 || NBCustomers < 1) {
             printf("Please input a positive number for the # chairs as first argument\n");
             printf("Please input a positive number for the # customers as second argument\n");
 
         }
     }
   
-    sem_init(&baker_semaphore, 0, 0);
+    sem_init(&semB, 0, 0);
 
     chairs = init_queue();
 
-    pthread_t threads[NbCustomers];
+    pthread_t threads[NBCustomers];
     
-    //sem_t customer_s[NbCustomers];
-    customer_semaphore = malloc(NbCustomers*sizeof(sem_t));
+    semC = malloc(NBCustomers*sizeof(sem_t));
     
     //Customers
-    for (int i=0; i < NbCustomers  ; i++) {
+    for (int i=0; i < NBCustomers  ; i++) {
         //create customers thread
 
-        sem_init(&customer_semaphore[i], 0, 0);
+        sem_init(&semC[i], 0, 0);
         
         
         if(pthread_create(&threads[i], NULL, customer, (void *)i)){
@@ -134,13 +123,13 @@ int main(int argc, char const *argv[]) {
 
 
     /* JOINING THREADS */
-    for (int i = 0; i < N; i++){
+    for (int i = 0; i < NBCustomers; i++){
         pthread_join(threads[i], NULL);
     }
     printf("All customers joined!\n");
 
     bakeryOpen = 0;
-    sem_post(&baker_semaphore);
+    sem_post(&semB);
     pthread_join(bakert, NULL);
     printf("---closed---\n");
 
