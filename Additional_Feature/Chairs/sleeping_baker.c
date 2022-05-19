@@ -72,6 +72,7 @@ int run(int nbcustomers, int nbchairs){
     printf("---start---\n");
 
     /* INITIALIZE VARIABLES BASED ON USER INPUT */
+    
     NBCustomers = nbcustomers;
     NBChairs = nbchairs;
     bakeryOpen = TRUE;
@@ -111,7 +112,7 @@ int run(int nbcustomers, int nbchairs){
     }
     printf("All customers joined!\n");
 
-    bakeryOpen = 0;
+    bakeryOpen = FALSE;
     sem_post(&semB);
     pthread_join(bakert, NULL);
     printf("---closed---\n");
