@@ -83,7 +83,7 @@ int getNbIngredOfBreadType(const char* name);
  * @brief Lets the tree be printed in 'inorder traversal'. 
  * Values printed are the node's name and stock count.
  */
-void printTree();
+void printRecipeBook();
 
 
 

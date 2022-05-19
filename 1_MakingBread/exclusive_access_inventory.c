@@ -5,7 +5,10 @@
 #include <sys/time.h>
 #include <limits.h>
 #include <string.h>
+#include <unistd.h>
 
+#include "exclusive_access_inventory.h"
+#include "Recipe_Book.h"
 #include "Inventory_BinTree.h" // Include inventory datastructure
 
 // Different strategies to "schedule" apprentices to enter the inventory
@@ -36,10 +39,11 @@ pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to i
 sem_t *semA; // Array of size NBApprentices containing a semaphore per apprentice to wake them up once they're allowed to access the inventory :: Array of pthread_sem_t
 sem_t semB; // Semaphore to wake up baker :: sem_t 
 sem_t semS; // Semaphore to wake up shopper :: sem_t
-int NBIngredients; 
-char **ingredientNames;
+int* NBIngredients; 
+char ***ingredientNames;
 char ** breadNames;
 int NBBreadtypes;
+int restockToVal;
 
 // Functions
 void *baker(void *j);
@@ -179,9 +183,9 @@ void access_inventory(int i){
 	printf("     Apprentice %d accesses the inventory\n",i);
 	
 	// Choose which bread to make
-	char *breadName = breadNames(rand()%NBBreadtypes+1);
-	char* ingredients = recipe_get(breadName);
-	int ingredients_len = get_len_recipe(breadName);
+	char* breadName = breadNames[rand()%NBBreadtypes/* +1 ??*/];
+	char** ingredients = getIngredArray(breadName);
+	int ingredients_len = getNbIngredOfBreadType(breadName);
 
 	printf("     Apprentice %d will make a %s",i, breadName);
 	printf("     For that they take: ");
@@ -193,14 +197,19 @@ void access_inventory(int i){
 			printf("%s\n",ingredient);
 		} else {
 			printf("Unfortunately, there is no more %s in stock. Somebody needs to go shopping.", ingredient);
+
 			// TODO Wake up shopper ans sleep
+
 		}
 	}
 
 	printf("from the inventory and leaves\n");
 }
 
-int run (int nbAppr, int maxB, int nbIngr, char* ingNames[], int metric, int scen){
+void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int stonks, int nbBT, char** breadNamesArr, int metric, int scen){
+	
+	printf("Beginning\n");
+
 	srand(time(NULL));
 	gettimeofday(&tvbase, NULL);
 
@@ -208,16 +217,43 @@ int run (int nbAppr, int maxB, int nbIngr, char* ingNames[], int metric, int sce
 
 	NBApprentices = nbAppr;
 	maxBread = maxB;
-	NBIngredients = nbIngr;
+	NBIngredients = nbIngrArr;
+	ingredientNames = ingNames;
+	restockToVal = stonks;
+	NBBreadtypes = nbBT;
+	breadNames = breadNamesArr;
 	scheduler_metric = metric;
 	scenario = scen;
+	
+	printf("Before Recipe Book\n");
 
-	ingredientNames = malloc(nbIngr * sizeof(char*));
-	for (int i = 0; i < nbIngr; i++){
-		registerIngredient(ingNames[i], 50); // Register the ingredients and add 50 units per ingredient
-    	ingredientNames[i] = malloc((32 + 1) * sizeof(char)); // Max string length is 32 chars
-		strcpy(ingredientNames[i], ingNames[i]);
+	/* RECIPE BOOK CREATION */
+	for (int i = 0; i < NBBreadtypes; i++){
+		registerBreadType(breadNames[i], NBIngredients[i], ingredientNames[i]);
 	}
+
+	printf("Before IngredInv\n");
+	
+	/* INGREDIENTS INVENTORY CREATION */
+	for (int i = 0; i < NBBreadtypes; i++){
+		for (int j = 0; j < NBIngredients[i]; j++){
+			registerIngredient(ingredientNames[i][j], restockToVal);
+		}
+	}
+
+
+	/* -----------------DEBUG--------------------- */
+	/*
+	printf("\n\n");
+	printf("_____________________________________________");
+	printRecipeBook();
+
+	printf("\n\n");
+	printf("_____________________________________________");
+	printInvTree();
+	*/
+	/* ------------------------------------------- */
+
 
     interested_array = malloc(NBApprentices*sizeof(timeType));
     threadIndexes = malloc(NBApprentices*sizeof(pthread_t));
@@ -268,12 +304,59 @@ int run (int nbAppr, int maxB, int nbIngr, char* ingNames[], int metric, int sce
 	free(threadIndexes);
 	free(semA);
 
-	return 0;
-
 }
 
+/*
 int main(int argc, char const *argv[]){
-	char* ingr[] = {"Salt", "BP", "Water"};
-	run(30, 100, 3, ingr, FAIRLEARNERS, 0);
+	
+	int nbBT = 2;
+	char* ingr01[] = {"Salt", "BP", "Water"};
+	char* ingr02[] = {"Shit","Kek"};
+	char** ingr[] = {ingr01, ingr02};
+	int nbI[] = {3,2};
+	char* BT[] = {"HHH", "KKK"};
+	
+	int toTheMoon = 10;
+	
+
+	int maxLen = 32;
+    char*** IArr;
+    int nbBT = 2;
+    int nbIng01 = 2;
+    int nbIng02 = 3;
+    char** btName;
+	int* nbI;
+	int toTheMoon = 200;
+
+	nbI = (int*)malloc(nbBT*sizeof(int));
+	nbI[0] = nbIng01;
+	nbI[1] = nbIng02;
+
+    btName = malloc(nbBT*sizeof(char*));
+    btName[0] = malloc(maxLen*sizeof(char));
+    btName[1] = malloc(maxLen*sizeof(char));
+
+    strcpy(btName[0],"Bread01");
+    strcpy(btName[1],"Bread02");
+
+
+    IArr = malloc(nbBT*sizeof(char*));
+    IArr[0] = malloc(nbIng01*sizeof(char*));
+    IArr[0][0] = malloc(maxLen*sizeof(char));
+    IArr[0][1] = malloc(maxLen*sizeof(char));
+    IArr[1] = malloc(nbIng02*sizeof(char*));
+    IArr[1][0] = malloc(maxLen*sizeof(char));
+    IArr[1][1] = malloc(maxLen*sizeof(char));
+    IArr[1][2] = malloc(maxLen*sizeof(char));
+
+    strcpy(IArr[0][0],"flour");
+    strcpy(IArr[0][1],"oil");
+    strcpy(IArr[1][0],"oil");
+    strcpy(IArr[1][1],"bp");
+    strcpy(IArr[1][2],"flour");
+
+	runMakingBread(30, 100, nbI, IArr, toTheMoon, nbBT, btName, FAIRLEARNERS, 0);
 	return 0;
 }
+*/
+

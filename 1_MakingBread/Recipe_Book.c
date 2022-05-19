@@ -26,7 +26,7 @@ struct RecipeRootNode {
 typedef struct RecipeRootNode RecipeRootNode;
 
 
-RecipeRootNode* pHead = NULL; // The Head of the data struct
+RecipeRootNode* pHeadRecBook  = NULL; // The Head of the data struct
 
 
 /**
@@ -61,10 +61,10 @@ BreadType* createBreadType(const char* name, int nbIngred, char** ingredArr)
  */
 void createRecipeRootNode()
 {
-    if (pHead == NULL) {    // check if no RecipeRootNode already exists
-        pHead = malloc(sizeof(RecipeRootNode));    // allocate space in heap
-        pHead->firstBreadType = NULL; // initialize pointer to first BreadType
-        pHead->nbRecElem = 0;    // initialize nbRecElem
+    if (pHeadRecBook  == NULL) {    // check if no RecipeRootNode already exists
+        pHeadRecBook  = malloc(sizeof(RecipeRootNode));    // allocate space in heap
+        pHeadRecBook ->firstBreadType = NULL; // initialize pointer to first BreadType
+        pHeadRecBook ->nbRecElem = 0;    // initialize nbRecElem
     }
 }
 
@@ -78,7 +78,7 @@ void createRecipeRootNode()
  */
 BreadType* getBreadType(const char* name)
 {
-    BreadType* pCurrNode = pHead->firstBreadType;   // set pCurrNode to the first node in data structure
+    BreadType* pCurrNode = pHeadRecBook ->firstBreadType;   // set pCurrNode to the first node in data structure
     while(pCurrNode != NULL) {                  // do until pCurrNode == NULL
         if (strcmp(name, pCurrNode->breadName) < 0) {  // if 'name' is smaller than the current 'ingredName'
             pCurrNode = pCurrNode->pLeft;               // set pCurrNode to left
@@ -111,7 +111,7 @@ char** getIngredArray(const char* breadName)
  */
 int getNbBreadTypes()
 {
-    return pHead->nbRecElem;
+    return pHeadRecBook ->nbRecElem;
 }
 
 
@@ -160,13 +160,13 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
 {
 
     BreadType *pNewNode = createBreadType(name, nbIngred, ingredArr);  // create specified BreadType
-    BreadType *pCurrNode = pHead->firstBreadType; // assign first node of data structure to pCurrNode
+    BreadType *pCurrNode = pHeadRecBook ->firstBreadType; // assign first node of data structure to pCurrNode
     BreadType *pPrevNode = NULL;                // declare pPrevNode
 
     // No element in the data structure
     if (pCurrNode == NULL) {            // Check for no element
-        pHead->firstBreadType = pNewNode; // make the newly created node the first node of the data structure
-        pHead->nbRecElem += 1;          // increment the counter for the different bread types
+        pHeadRecBook ->firstBreadType = pNewNode; // make the newly created node the first node of the data structure
+        pHeadRecBook ->nbRecElem += 1;          // increment the counter for the different bread types
         return;
 
     // > 0 elements in the data structure
@@ -186,10 +186,10 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
         // Final insertion step
         if (state == LEFT) {    // if the last move was into the left subtree
             pPrevNode->pLeft = pNewNode;    // insert pNewNode at the left leave of the pPrevNode
-            pHead->nbRecElem += 1;          // increment the bread type counter
+            pHeadRecBook ->nbRecElem += 1;          // increment the bread type counter
         } else { // if the last move was into the right subtree
             pPrevNode->pRight = pNewNode;   // insert pNewNode at the right leave of the pPrevNode
-            pHead->nbRecElem += 1;          // increment the bread type counter
+            pHeadRecBook ->nbRecElem += 1;          // increment the bread type counter
         }
     }
 }
@@ -209,8 +209,8 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr)
 {
-    if (pHead == NULL) {           // check if there is no pHead
-        createRecipeRootNode();    // create pHead
+    if (pHeadRecBook  == NULL) {           // check if there is no pHeadRecBook 
+        createRecipeRootNode();    // create pHeadRecBook 
     }
 
     if (!containsBreadType(name)) {            // if the bread type has not yet been registered
@@ -227,16 +227,16 @@ int registerBreadType(const char* name , int nbIngred, char** ingredArr)
  *
  * @param pNode
  */
-void printTreeRecursion(BreadType* pNode)
+void printRecipeBookRecursion(BreadType* pNode)
 {
     if  (pNode == NULL) return;             // return if pNode is NULL
-    printTreeRecursion(pNode->pLeft);       // traverse left subtree of pNode
+    printRecipeBookRecursion(pNode->pLeft);       // traverse left subtree of pNode
     printf("Node name & ingredients: '%s' -> ", pNode->breadName);  // prints pNode
     for (int i = 0; i < pNode->nbIngred; i++) {         // for every index in ingredient array
         printf("%s; ", pNode->pIngredArr[i]);
     }
     printf("\n");
-    printTreeRecursion(pNode->pRight);      // traverse right subtree of pNode
+    printRecipeBookRecursion(pNode->pRight);      // traverse right subtree of pNode
 }
 
 
@@ -244,9 +244,10 @@ void printTreeRecursion(BreadType* pNode)
  * @brief Lets the tree be printed in 'inorder traversal'. 
  * Values printed are the node's name and stock count.
  */
-void printTree()
+void printRecipeBook()
 {
-    printTreeRecursion(pHead->firstBreadType);    // calls the recursive print function
+    printf("\nPrinting Recipe Book: \n");
+    printRecipeBookRecursion(pHeadRecBook->firstBreadType);    // calls the recursive print function
 }
 
 

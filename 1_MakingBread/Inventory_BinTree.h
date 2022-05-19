@@ -115,7 +115,7 @@ void setRestockTo(const char* name, int targetStock);
 /**
  * @brief Lets the tree be printed in 'inorder traversal'.
  */
-void printTree();
+void printInvTree();
 
 
 

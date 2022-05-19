@@ -333,11 +333,16 @@ void registerIngredient(const char* name , int initialAmount)
         createInvRootNode();    // create pHead
     }
 
-    if (!containsIngred(name)) {        // if the ingredient has not yet been registered
-        insertInvNode(name);            // create and insert a new InvNode with identifying attribute 'name'
-    }
-    if (initialAmount) {            // if the initialAmount > 0
-        addIngredient(name, initialAmount); // inserts initialAmount of IngredNodes
+    InvNode* pNode = getInvNode(name);
+    if (!pNode) {                           // if the ingredient has not yet been registered
+        insertInvNode(name);                // create and insert a new InvNode with identifying attribute 'name'
+        addIngredient(name, initialAmount); // inserts initialAmount of IngredNodes 
+    } else {
+        if (initialAmount) {                // if the initialAmount > 0
+            if (pNode->count == 0) {
+                addIngredient(name, initialAmount); // inserts initialAmount of IngredNodes        
+            }
+        }
     }
 }
 
@@ -359,8 +364,9 @@ void printTreeRecursion(InvNode* pNode)
 /**
  * @brief Lets the tree be printed in 'inorder traversal'. Values printed are the node's name and stock count.
  */
-void printTree()
+void printInvTree()
 {
+    printf("\nPrinting Inventory Tree: \n");
     printTreeRecursion(pHead->firstInvNode);    // calls the recursive print function
 }
 
