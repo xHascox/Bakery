@@ -69,10 +69,9 @@ void tgtg(){
     }
 }
 
-
 int run(char* breadTypes[], int numTypes, int amounts[]){
 
-    // (0) Create bread types
+    // (0) Create bread types according to user input
     initTypeList(numTypes);
     for(int i = 0; i < numTypes; i++){
         addType(breadTypes[i], amounts[i]);
@@ -98,7 +97,6 @@ int run(char* breadTypes[], int numTypes, int amounts[]){
                  
     return 0;
 }
-
 
 int main(int argc, char const *argv[]){
     char* breadtypes[] = {"Croissant", "Zopf", "Tessinerli"};
