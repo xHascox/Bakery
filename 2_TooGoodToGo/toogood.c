@@ -69,10 +69,10 @@ void tgtg(){
     }
 }
 
-int run(char* breadTypes[], int numTypes, int amounts[]){
+int runTGTG(char** breadTypes, int nbTypes, int* amounts){
 
     // (0) Create bread types according to user input
-    initTypeList(numTypes);
+    initTypeList(nbTypes);
     for(int i = 0; i < numTypes; i++){
         addType(breadTypes[i], amounts[i]);
     }
