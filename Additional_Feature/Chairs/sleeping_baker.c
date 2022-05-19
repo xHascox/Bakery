@@ -29,8 +29,9 @@ void *baker(){
 
         sem_wait(&semB);
 
-        if (!bakeryOpen)
+        if (bakeryOpen == FALSE)
             pthread_exit(NULL);
+        
 
         sem_t* customer_semaphore = dequeue(chairs);
 
