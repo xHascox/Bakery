@@ -1,3 +1,6 @@
+#ifndef INV
+#define INV
+
 #include <stdbool.h>
 
 /**
@@ -40,3 +43,6 @@ InventoryNode* GetIngredientNode(const char* name);
  * @return int 
  */
 bool TakeIngredient(const char* name);
+
+
+#endif

@@ -19,8 +19,8 @@ Variables:
 * mutA :: pthread_mutex_t ::
 
 Possible improvements:
-* [] Dynamic datastructure for ingredients
-* [] A way to test dynamic data structure.
+* [x] Dynamic datastructure for ingredients
+* [no] A way to test dynamic data structure.
 * [] Testing script
 
 # 2 Too good to go
@@ -71,8 +71,8 @@ Pizza:
 
 
 # Todos
-* (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
-* (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo).
+*  [DONE]: (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
+* (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo). Implement scenarios.
 * (iii) Implement CLI to start all the scripts and input parameters (Lukas).
 * (iv) Write testing scripts.
 * (v) Code cleaning.
