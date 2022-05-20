@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./1_MakingBread/exclusive_access_inventory.h"
+#include "exclusive_access_inventory.h"
 
 void checkOption(int* option);
 void optionSelection();

@@ -67,7 +67,7 @@ void *customer(void *id){
     }
 }
 
-int run(int nbcustomers, int nbchairs){
+void runAddF(int nbcustomers, int nbchairs){
 
     printf("---start---\n");
 
@@ -118,6 +118,8 @@ int run(int nbcustomers, int nbchairs){
     printf("---closed---\n");
 }
 
+/*
 int main(int argc, char const *argv[]) {
     run(30,10);
 }
+*/
