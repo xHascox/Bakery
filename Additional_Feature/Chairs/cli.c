@@ -149,7 +149,7 @@ void makingBread() {
 
 
 void tgtg() {
-    printf("Work in progress!\n");
+
 
 
 
@@ -159,7 +159,7 @@ void tgtg() {
 
 
 void sleepingBaker() {
-    printf("Work in progress!\n");
+
 
 
 
@@ -213,7 +213,6 @@ void testAdditional();
 void testScenarios();
 
 void testingScripts() {
-    printf("Work in progress!\n");
 
     /*
     please choose which part you would like to test
@@ -233,7 +232,7 @@ void testingScripts() {
 
 
 void testBaking() {
-    printf("Work in progress!\n");
+
 
 
 
@@ -242,14 +241,14 @@ void testBaking() {
 
 void testTgtg() {
 
-    printf("Work in progress!\n");
+
 
 
 }
 
 
 void testAdditional() {
-    printf("Work in progress!\n");
+
 
 
 
@@ -257,7 +256,6 @@ void testAdditional() {
 
 
 void testScenarios() {
-    printf("Work in progress!\n");
 
     // adding the same item to the inventory
 

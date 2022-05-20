@@ -2,12 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "./1_MakingBread/exclusive_access_inventory.h"
+/*
+#include "exclusive_access_inventory.h"
+*/
+#include "toogood.h"
 
 void checkOption(int* option);
 void optionSelection();
 void makingBread();
-void tgtg();
+void tooGood();
 void sleepingBaker();
 void testingScripts();
 
@@ -33,7 +36,7 @@ int main(/*int argc, char const *argv[]*/) {
     return 0;
 }
 
-
+/***************************************  MAKING BREAD  *********************************************/
 void makingBread() {
 
     int nbAppr;
@@ -59,6 +62,7 @@ void makingBread() {
     for (int i = 0; i < nbBreadTypes; i++) {
         breadTypesArr[i] = malloc(maxStrLen*sizeof(char));
     }
+    nbIngrArr = malloc(nbBreadTypes*sizeof(int));
 
     printf("\n\n");
 
@@ -75,7 +79,6 @@ void makingBread() {
         }
         strcpy(breadTypesArr[i], inputString);         // copy input to the data structure 
     }
-    nbIngrArr = malloc(nbBreadTypes*sizeof(int));
     
     printf("\n\n");
 
@@ -142,28 +145,80 @@ void makingBread() {
 
     printf("\n\n");
 
+    printf("Function call for Making Bread disabled for testing TGTG!\n");
+    /* ----------------------------------------- */
+    // runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    /* ----------------------------------------- */
+}
+/***************************************  MAKING BREAD  *********************************************/
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+/******************************************  TGTG  **************************************************/
+void tooGood() {
+
+    char** breadTypesArr;
+    int nbBreadTypes;
+    int* nbBreads;
+
+    int maxStrLen = 32;
+
+    
+    /* ENTERING AMOUNT OF BREAD TYPES */
+    printf("Please enter the amount of bread types: ");
+    if (scanf("%d", &nbBreadTypes) != 1) {       // Get user input for amount of bread (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    // If no int, print error
+        exit(1);                                            // and exit program
+    }
+    breadTypesArr = malloc(nbBreadTypes*sizeof(char*));
+    for (int i = 0; i < nbBreadTypes; i++) {
+        breadTypesArr[i] = malloc(maxStrLen*sizeof(char));
+    }
+    nbBreads = malloc(nbBreadTypes*sizeof(int));
+    
+    printf("\n\n");
+
+
+    /* ENTERING BREAD TYPES */
+    char* inputString = malloc(maxStrLen*sizeof(char));     // malloc inputString for later removal
+    printf("Great! Next, please enter a name for each bread type (max length %d).\n",maxStrLen);  
+    for (int i = 0; i < nbBreadTypes; i++) {                // For amount of bread types entered
+        printf("Name for Bread type %d : ",i+1);            // 
+        scanf("%s", inputString);                           // get bread name
+        if (strlen(inputString) > maxStrLen) {              // If the input for bread type name is greater than maxStrLen
+            printf("ERROR: Your String is too long! It should not be greater than %d.\n", maxStrLen);   
+            exit(1);                                                                                    
+        }
+        strcpy(breadTypesArr[i], inputString);              // copy input to the data structure 
+    }
+    free(inputString);
+    
+    printf("\n\n");
+
+
+    /* ENTERING AMOUNT OF DIFFERENT INGREDIENTS NECESSARY FOR EACH BREAD TYPE */
+    printf("Next, for each bread type, please enter the amount of breads in stock, i.e., to be sold.\n");
+    for (int i = 0; i < nbBreadTypes; i++) {
+        printf("For bread type '%s': ", breadTypesArr[i]);
+        if (scanf("%d", &nbBreads[i]) != 1) {       // Get user input for amount of ingredients (int)
+            printf("ERROR: Please enter a NUMBER (int)!\n");    
+            exit(1);                                            
+        }
+    }
+    
+
+
+    runTGTG(breadTypesArr, nbBreadTypes, nbBreads);
 
 }
+/******************************************  TGTG  **************************************************/
 
-
-void tgtg() {
-    printf("Work in progress!\n");
-
-
-
-
-
-}
-
-
+/*************************************  SLEEPING BAKER  *********************************************/
 void sleepingBaker() {
     printf("Work in progress!\n");
 
 
 
 }
+/*************************************  SLEEPING BAKER  *********************************************/
 
 
 void checkOption(int* option) {
@@ -193,7 +248,7 @@ void optionSelection() {
     } else if (option == 2) {
         printf("You have chosen option two: %d\n", option);
         printf("\n\n");
-        tgtg();
+        tooGood();
     } else if (option == 3) {
         printf("You have chosen option three: %d\n", option);
         printf("\n\n");
@@ -213,7 +268,6 @@ void testAdditional();
 void testScenarios();
 
 void testingScripts() {
-    printf("Work in progress!\n");
 
     /*
     please choose which part you would like to test
@@ -241,8 +295,8 @@ void testBaking() {
 
 
 void testTgtg() {
-
     printf("Work in progress!\n");
+
 
 
 }
@@ -257,7 +311,7 @@ void testAdditional() {
 
 
 void testScenarios() {
-    printf("Work in progress!\n");
+    printf("Work in progress!\n");  
 
     // adding the same item to the inventory
 

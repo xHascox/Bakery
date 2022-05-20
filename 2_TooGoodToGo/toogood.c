@@ -69,15 +69,15 @@ void tgtg(){
     }
 }
 
-int runTGTG(char** breadTypes, int nbTypes, int* amounts){
+void runTGTG(char** breadTypes, int nbTypes, int* amounts){
 
-    // (0) Create bread types according to user input
+    /* Create bread types according to user input */
     initTypeList(nbTypes);
-    for(int i = 0; i < numTypes; i++){
+    for(int i = 0; i < nbTypes; i++){
         addType(breadTypes[i], amounts[i]);
     }
     
-    //(2) Sell bread
+    /* Sell bread */
     srand(time(NULL));
     int type = 0;
 
@@ -94,12 +94,12 @@ int runTGTG(char** breadTypes, int nbTypes, int* amounts){
             }
         }
     }
-                 
-    return 0;
 }
 
+/*
 int main(int argc, char const *argv[]){
     char* breadtypes[] = {"Croissant", "Zopf", "Tessinerli"};
     int num[3] = {8,9,10}; 
-    run(breadtypes,3,num);
+    runTGTG(breadtypes,3,num);
 }
+*/

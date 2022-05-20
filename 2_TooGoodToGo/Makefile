@@ -1,7 +1,9 @@
 default:	
-	gcc -o toogood.o toogood.c
+	gcc -Wall -o tgtg.o cli.c toogood.o
+precompile:
+	gcc -Wall -o toogood.o -c toogood.c	
 run:
-	./toogood.o
+	./tgtg.o
 clean:
 	rm *.o
 rm:
