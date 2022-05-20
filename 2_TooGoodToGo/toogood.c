@@ -17,6 +17,10 @@ struct BreadType {
     int nb; // Number of breads of this type
 };
 
+/**
+ * @brief 
+ * The definition of the types
+ */
 struct TypeList {
   struct BreadType** types; // dynamic array
   int max;  // max number of dynamic types supported (todo: grow automatically)
@@ -26,7 +30,11 @@ struct TypeList {
 };
 
 struct TypeList dynTypes;
-
+/**
+ * @brief Initialize a new Type list. The supported number
+ * of different types is fixed by parameter max.
+ * @param max 
+ */
 void initTypeList(int max) {
     dynTypes.max = max;
     dynTypes.count = 0;
@@ -35,6 +43,14 @@ void initTypeList(int max) {
     dynTypes.TgtgBasket = (int*) malloc(sizeof(int) * max);
 }
 
+/**
+ * @brief Add a new bread-type with passed name 
+ * and the passed amount of this bread-type.
+ * If the underlying type-list has reached maximum
+ * of supported types, the addType request is ignored.
+ * @param name 
+ * @param nb 
+ */
 void addType(const char* name, int nb) {
     if(dynTypes.max == dynTypes.count) {
         return;
@@ -49,6 +65,9 @@ void addType(const char* name, int nb) {
     dynTypes.count++;
 }
 
+/**
+ * @brief Just a helper to print all registered bread-types.
+ */
 void printTypes() {
     for(int i = 0; i < dynTypes.count; i++) {
         struct BreadType* bt = dynTypes.types[i];
