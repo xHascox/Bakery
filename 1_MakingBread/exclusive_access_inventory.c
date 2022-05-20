@@ -127,7 +127,7 @@ void *baker(void *j){
 
 void *apprentice(void *j){		// MAYBE JUST DO WHILE TRUE?  BECAUSE THERE IS A STOPPING CONDIITON ON LINE 161 !
 
-    int i = (int ) j; // Apprentice ID
+    int i = *(int*) j; // Apprentice ID
     int abread = 0;
     
 	timeType metric;
@@ -176,6 +176,7 @@ void *apprentice(void *j){		// MAYBE JUST DO WHILE TRUE?  BECAUSE THERE IS A STO
         
     }
     printf("     Apprentice %d made %d breads today\n", i, abread);
+	pthread_exit(NULL);
 }
 
 void access_inventory(int i){
@@ -187,7 +188,7 @@ void access_inventory(int i){
 	char** ingredients = getIngredArray(breadName);
 	int ingredients_len = getNbIngredOfBreadType(breadName);
 
-	printf("     Apprentice %d will make a %s",i, breadName);
+	printf("     Apprentice %d will make a %s\n",i, breadName);
 	printf("     For that they take: ");
 
 	for(int j = 0; j < ingredients_len; j++){
@@ -196,7 +197,7 @@ void access_inventory(int i){
 		if(in_stock){
 			printf("%s\n",ingredient);
 		} else {
-			printf("Unfortunately, there is no more %s in stock. Somebody needs to go shopping.", ingredient);
+			printf("Unfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
 
 			// TODO Wake up shopper ans sleep
 
@@ -277,8 +278,10 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	pthread_create(&bakert, NULL, baker, (void *) 0);
 
 	// Apprentices
+	int iVals[nbAppr];
     for (int i = 0; i < NBApprentices; i++){
-        if(pthread_create(&threadIndexes[i], NULL, apprentice, (void *) i)){
+		iVals[i] = i;
+        if(pthread_create(&threadIndexes[i], NULL, apprentice, (void *) &iVals[i])){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
