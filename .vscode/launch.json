@@ -4,6 +4,27 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+          {
+            "name": "C++ Launch LinkedListTest (Windows)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\1_MakingBread\\LinkedListTest.exe",
+            "args": [],
+            "stopAtEntry": false,            
+            "cwd": "${workspaceFolder}\\1_MakingBread" ,
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+              {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+              }
+            ],
+            "preLaunchTask": "C/C++: Compile LinkedListTest"                    
+        },      
         {
             "name": "C++ Launch InventoryTest (Windows)",
             "type": "cppdbg",
@@ -25,6 +46,27 @@
             ],
             "preLaunchTask": "C/C++: Compile InventoryTest"                    
         },
+        {
+          "name": "C++ Launch cli (Windows)",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}\\1_MakingBread\\cli.exe",
+          "args": [],
+          "stopAtEntry": false,            
+          "cwd": "${workspaceFolder}\\1_MakingBread" ,
+          "environment": [],
+          "externalConsole": false,
+          "MIMode": "gdb",
+          "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
+          "setupCommands": [
+            {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+            }
+          ],
+          "preLaunchTask": "C/C++: Compile cli"                    
+        },        
         {
             "name": "C++ Launch MakingBread (Windows)",
             "type": "cppdbg",

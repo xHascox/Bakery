@@ -45,6 +45,27 @@
         },
         {
             "type": "cppbuild",
+            "label": "C/C++: Compile LinkedListTest",
+            "command": "C:/msys64/mingw64/bin/gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}\\1_MakingBread\\LinkedList.c",
+                "${workspaceFolder}\\1_MakingBread\\LinkedListTest.c",
+                "-o",
+                "${workspaceFolder}\\1_MakingBread\\LinkedListTest.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
+        },        
+        {
+            "type": "cppbuild",
             "label": "C/C++: Compile InventoryTest",
             "command": "C:/msys64/mingw64/bin/gcc.exe",
             "args": [
@@ -64,6 +85,27 @@
             "group": "build",
             "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
         },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: Compile cli",
+            "command": "C:/msys64/mingw64/bin/gcc.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${workspaceFolder}\\1_MakingBread\\LinkedList.c",
+                "${workspaceFolder}\\1_MakingBread\\cli.c",
+                "-o",
+                "${workspaceFolder}\\1_MakingBread\\cli.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "compiler: C:/msys64/mingw64/bin/gcc.exe"
+        },        
         {
             "type": "cppbuild",
             "label": "C/C++: Compile MakingBread",
