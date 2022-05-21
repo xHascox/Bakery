@@ -1,8 +1,8 @@
 default:	
-	gcc -Wall -o tgtg.o cli.c toogood.o
+	gcc -Wall -o tgtg.o cli.c toogood.o linkedlist.o
 
 precompile:
-	gcc -Wall -o toogood.o -c toogood.c	
+	gcc -Wall -o linkedlist.o -c linkedlist.c && gcc -Wall -o toogood.o -c toogood.c
 
 run:
 	./tgtg.o

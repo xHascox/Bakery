@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "stdio.h": "c",
-        "inventory.h": "c"
+        "inventory.h": "c",
+        "stdlib.h": "c"
     }
 }

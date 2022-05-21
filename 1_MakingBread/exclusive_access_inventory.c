@@ -39,6 +39,8 @@ pthread_mutex_t mutex_inventory; // Mutex to ensure mutual exclusive access to i
 sem_t *semA; // Array of size NBApprentices containing a semaphore per apprentice to wake them up once they're allowed to access the inventory :: Array of pthread_sem_t
 sem_t semB; // Semaphore to wake up baker :: sem_t 
 sem_t semS; // Semaphore to wake up shopper :: sem_t
+sem_t semEmpty; // Condition variable for apprentice that has to wait for shopper :: sem_t
+
 int* NBIngredients; 
 char ***ingredientNames;
 char ** breadNames;
@@ -115,15 +117,22 @@ void *baker(void *j){
     }
 	
 	int ret = 0;
+	sem_post(&semS);
 	pthread_exit(&ret);
 }
 
-// void *shopper(){
-// 	while (breads < maxBread){
-// 		sem_wait(semS);
-// 		// restore_inventory();
-// 	}
-// }
+void *shopper_func(){
+	while(1){
+		sem_wait(&semS);
+		if(breads >= maxBread){
+			pthread_exit(NULL);
+		}
+		printf("Alright, will restock.\n");
+		restockIngredients();
+		printf("Inventory succesfully restocked.\n");
+		sem_post(&semEmpty);
+	}
+}
 
 void *apprentice(void *j){		// MAYBE JUST DO WHILE TRUE?  BECAUSE THERE IS A STOPPING CONDIITON ON LINE 161 !
 
@@ -195,16 +204,21 @@ void access_inventory(int i){
 		char *ingredient = ingredients[j];
 		int in_stock = takeIngredient(ingredient, 1);
 		if(in_stock){
-			printf("%s\n",ingredient);
+			printf("%s ",ingredient);
 		} else {
-			printf("Unfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
+			printf("    \nUnfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
 
-			// TODO Wake up shopper ans sleep
+			sem_post(&semS);
+			sem_wait(&semEmpty);
 
+			printf("    Thanks for restocking!\n");
+			takeIngredient(ingredient, 1);
+			printf("    %s",ingredient);
 		}
 	}
+	printf("\n");
 
-	printf("from the inventory and leaves\n");
+	printf("     from the inventory and leave\n");
 }
 
 void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int stonks, int nbBT, char** breadNamesArr, int metric, int scen){
@@ -265,6 +279,7 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
     pthread_mutex_init(&mutex_inventory, NULL);
     sem_init(&semB, 0, 0);
 	sem_init(&semS, 0, 0);
+	sem_init(&semEmpty, 0, 0);
 
     for(int i = 0; i < NBApprentices; i++){
         sem_init(&semA[i], 0, 0);
@@ -290,8 +305,8 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
     }
 
 	// Shopper
-	// pthread_t shopper;
-	// pthread_create(&shopper, NULL, shopper, NULL);
+	pthread_t shopper;
+	pthread_create(&shopper, NULL, shopper_func, NULL);
 
 	/* CLEANUP */
 
@@ -362,4 +377,3 @@ int main(int argc, char const *argv[]){
 	return 0;
 }
 */
-
