@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May  9 17:07:57 2022
+# Make data base, printed on Sat May 21 21:53:47 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SNAP_INSTANCE_KEY =
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-67d786c9-d7c4-45b7-a966-9db255d3455f.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0d8a8db1-dbab-44c9-b0e7-dc77dbf18bfb.sock
 # environment
 VSCODE_CWD = /home/grischu
 # environment
@@ -37,7 +37,7 @@ QT_ACCESSIBILITY = 1
 # environment
 SNAP_INSTANCE_NAME = code
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/95/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/96/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -55,11 +55,11 @@ VSCODE_LOG_STACK = false
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/57fd6d0195bb9b9d1b49f6da5db789060795de47
+VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.P83TL1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.5E8AM1
 # default
 .LOADED := 
 # default
@@ -95,7 +95,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 8295
+VSCODE_PID = 3068
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -103,7 +103,7 @@ XDG_SESSION_TYPE = wayland
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # environment
-SESSION_MANAGER = local/Grischu:@/tmp/.ICE-unix/1244,unix/Grischu:/tmp/.ICE-unix/1244
+SESSION_MANAGER = local/Grischu:@/tmp/.ICE-unix/1247,unix/Grischu:/tmp/.ICE-unix/1247
 # automatic
 *F = $(notdir $*)
 # environment
@@ -147,11 +147,11 @@ LANGUAGE = en_GB:en
 # environment
 SNAP_USER_COMMON = /home/grischu/snap/code/common
 # environment
-SNAP = /snap/code/95
+SNAP = /snap/code/96
 # environment
-INVOCATION_ID = 9f10563cb1334c9eac74952521a10eb0
+INVOCATION_ID = 377b3ee4b90f4ef9bb9d3bd17406053e
 # environment
-SNAP_REVISION = 95
+SNAP_REVISION = 96
 # environment
 SNAP_REAL_HOME = /home/grischu
 # environment
@@ -193,21 +193,21 @@ MAKE_VERSION := 4.3
 # environment
 DISABLE_WAYLAND = 1
 # environment
-SNAP_DATA = /var/snap/code/95
+SNAP_DATA = /var/snap/code/96
 # environment
 SNAP_CONTEXT = 14MvNVAaIpP4Mftf4UdBMUnjPO1JPjgBoLPjqyEMcYo_liC00Qjr
 # environment
-MANAGERPID = 1103
+MANAGERPID = 1105
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 8249
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3022
 # environment
-_ = /snap/code/95/usr/share/code/code
+_ = /snap/code/96/usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/grischu/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:18098
+JOURNAL_STREAM = 8:19483
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -219,11 +219,11 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-1ec5cf0e-1.67.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-1ec5cf0e-1.67.1-main.sock
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/95/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/96/usr/share/glib-2.0/schemas
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -231,7 +231,7 @@ IM_CONFIG_PHASE = 1
 # automatic
 <F = $(notdir $<)
 # environment
-SNAP_VERSION = 57fd6d01
+SNAP_VERSION = da15b6fd
 # default
 SUFFIXES := 
 # environment
@@ -243,7 +243,7 @@ SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
 # environment
-SNAP_USER_DATA = /home/grischu/snap/code/95
+SNAP_USER_DATA = /home/grischu/snap/code/96
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -318,6 +318,6 @@ GNUmakefile:
 # strcache performance: lookups = 22 / hit rate = 13%
 # hash-table stats:
 # Load=19/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Mon May  9 17:07:57 2022
+# Finished Make data base on Sat May 21 21:53:47 2022
 
  
