@@ -81,3 +81,7 @@ Pizza:
 * (viii) Prepare presentation.
 * (ix) Upload stuff to gitlab.
 
+Log: 
+22.5 added mutex to shopper
+Welche metric als default?
+Todo: Code Comments, Cleaning, Default testing scripts, restocking

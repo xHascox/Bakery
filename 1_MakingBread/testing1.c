@@ -38,6 +38,8 @@ int main(/*int argc, char const *argv[]*/) {
     breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
     strcpy(ingrNames[0][0], "BreadX");
 
+    metric = 3 //prelearners = fast learners in documentation
+
     runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
 
 }
