@@ -128,8 +128,11 @@ void *shopper_func(){
 			pthread_exit(NULL);
 		}
 		printf("Alright, will restock.\n");
+		pthread_mutex_lock(&mutex_inventory);
 		restockIngredients();
-		printf("Inventory succesfully restocked.\n");
+		printInvTree();
+		pthread_mutex_unlock(&mutex_inventory);
+		printf("________________________________\nInventory succesfully restocked.\n");
 		sem_post(&semEmpty);
 	}
 }
@@ -208,8 +211,10 @@ void access_inventory(int i){
 		} else {
 			printf("    \nUnfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
 
+			pthread_mutex_unlock(&mutex_inventory);
 			sem_post(&semS);
 			sem_wait(&semEmpty);
+			pthread_mutex_lock(&mutex_inventory);
 
 			printf("    Thanks for restocking!\n");
 			takeIngredient(ingredient, 1);
