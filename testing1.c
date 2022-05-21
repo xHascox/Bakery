@@ -15,7 +15,7 @@ int main(/*int argc, char const *argv[]*/) {
     //call
 
     int nbAppr = 5000;
-    int maxBreads; = 1000; 
+    int maxBreads = 1000; 
     int* nbIngrArr; 
     char*** ingrNames;
     int stonks = 20; 
@@ -38,7 +38,7 @@ int main(/*int argc, char const *argv[]*/) {
     breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
     strcpy(ingrNames[0][0], "BreadX");
 
-    metric = 3 //prelearners = fast learners in documentation
+    metric = 3; //prelearners = fast learners in documentation
 
     runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
 
