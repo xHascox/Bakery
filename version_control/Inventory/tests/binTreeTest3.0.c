@@ -9,6 +9,7 @@ int main(/*int argc, char *argv[]*/) {
 
     //int len = 3;
 
+    /*
     char* testArr[] = {"hello", "test", "Nope", NULL};
 
     int i = 0;
@@ -17,36 +18,41 @@ int main(/*int argc, char *argv[]*/) {
         setRestockTo(testArr[i],20);
         i++;
     }
+    InvNode* firstInvNode = getFirstInvNode();
 
     printInvTree();
+     */
 
-    //InvNode* firstInvNode = getFirstInvNode();
 
 
-    /*/
-    registerIngredient("Oil",0); 
+
+
+
+    registerIngredient("Oil",5);
     setRestockTo("Oil",10);
     //printf("sdasd\n");
-    registerIngredient("urDuck", 0);
+    registerIngredient("urDuck", 5);
     setRestockTo("urDuck",10);
     //printf("sdasd\n");
-    registerIngredient("In", 0);
+    registerIngredient("In", 5);
     setRestockTo("In",10);
     //printf("sdasd\n");
-    registerIngredient("Beethoven's", 0);
+    registerIngredient("Beethoven's", 5);
     setRestockTo("Beethoven's",10);
     //printf("sdasd\n");
-    registerIngredient("Anus", 0);
+    registerIngredient("Anus", 5);
     setRestockTo("Anus",10);
     //printf("sdasd\n");
-    registerIngredient("flour", 0);
+    registerIngredient("flour", 5);
     setRestockTo("flour",10);
     printf("Registered some ingredients:\n");
     printf("------------------------------\n\n");
 
-    printTree(firstInvNode);
+    InvNode* firstInvNode = getFirstInvNode();
+
+    printInvTree();
     printf("------------------------------\n\n");
-    */
+    //*/
 
 
 
@@ -58,9 +64,9 @@ int main(/*int argc, char *argv[]*/) {
     printf("------------------------------\n\n");
 
 
-    
+
     takeIngredient("flour",3);
-    if (takeIngredient("Oil",11)){
+    if (takeIngredient("Oil",9)){
         printf("Oil successfully removed!\n");
     } else {
         printf("Could not remove Oil; NEED TO INVADE! GOD PRAISE MMMMMMMUUURRRRRRRICAAA!!!!\n");

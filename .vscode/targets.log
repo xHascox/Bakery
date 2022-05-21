@@ -2,110 +2,214 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target 'all'.  Stop.
 
 # GNU Make 4.3
+ 
 # Built for x86_64-pc-linux-gnu
+ 
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
+ 
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+ 
 # This is free software: you are free to change and redistribute it.
+ 
 # There is NO WARRANTY, to the extent permitted by law.
+ 
 
-# Make data base, printed on Sat May 21 21:53:47 2022
+ 
+# Make data base, printed on Sat May 21 22:07:21 2022
+ 
 
 # Variables
+ 
 
+ 
 # environment
+ 
 GDK_BACKEND = x11
+ 
 # environment
+ 
 LC_ALL = C
+ 
 # environment
+ 
 SSH_AGENT_LAUNCHER = openssh
+ 
 # environment
+ 
 SNAP_INSTANCE_KEY = 
+ 
 # environment
+ 
 GJS_DEBUG_OUTPUT = stderr
+ 
 # environment
+ 
 VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0d8a8db1-dbab-44c9-b0e7-dc77dbf18bfb.sock
+ 
 # environment
+ 
 VSCODE_CWD = /home/grischu
+ 
 # environment
+ 
 GDM_LANG = en_GB.UTF-8
+ 
 # default
+ 
 MAKE_COMMAND := make
+ 
 # environment
+ 
 QT_ACCESSIBILITY = 1
+ 
 # automatic
+ 
 @D = $(patsubst %/,%,$(dir $@))
+ 
 # environment
+ 
 SNAP_INSTANCE_NAME = code
+ 
 # environment
+ 
 GDK_PIXBUF_MODULEDIR = /snap/code/96/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+ 
 # environment
+ 
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+ 
 # default
+ 
 .VARIABLES := 
+ 
 # environment
+ 
 PWD = /home/grischu/Documents/OS/Project/Bakery
+ 
 # automatic
+ 
 %D = $(patsubst %/,%,$(dir $%))
+ 
 # environment
+ 
 XDG_DATA_DIRS = /usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+ 
 # automatic
+ 
 ^D = $(patsubst %/,%,$(dir $^))
+ 
 # environment
+ 
 VSCODE_LOG_STACK = false
+ 
 # automatic
+ 
 %F = $(notdir $%)
+ 
 # environment
+ 
 VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
+ 
 # environment
+ 
 LANG = C
+ 
 # environment
+ 
 XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.5E8AM1
+ 
 # default
+ 
 .LOADED := 
+ 
 # default
+ 
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
+ 
 # makefile
+ 
 MAKEFLAGS = pqrR
+ 
 # makefile
+ 
 CURDIR := /home/grischu/Documents/OS/Project/Bakery
+ 
 # environment
+ 
 VSCODE_PIPE_LOGGING = true
+ 
 # environment
+ 
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+ 
 # automatic
+ 
 *D = $(patsubst %/,%,$(dir $*))
+ 
 # environment
+ 
 MFLAGS = -pqrR
+ 
 # environment
+ 
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+ 
 # default
+ 
 .SHELLFLAGS := -c
+ 
 # environment
+ 
 WAYLAND_DISPLAY = wayland-0
+ 
 # automatic
+ 
 +D = $(patsubst %/,%,$(dir $+))
+ 
 # environment
+ 
 XDG_SESSION_DESKTOP = gnome
+ 
 # makefile
+ 
 MAKEFILE_LIST := 
+ 
 # environment
+ 
 SNAP_REEXEC = 
+ 
 # automatic
+ 
 @F = $(notdir $@)
+ 
 # environment
+ 
 VSCODE_VERBOSE_LOGGING = true
+ 
 # environment
+ 
 VSCODE_PID = 3068
+ 
 # environment
+ 
 XDG_SESSION_TYPE = wayland
+ 
 # automatic
+ 
 ?D = $(patsubst %/,%,$(dir $?))
+ 
 # environment
+ 
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
+ 
 # environment
+ 
 SESSION_MANAGER = local/Grischu:@/tmp/.ICE-unix/1247,unix/Grischu:/tmp/.ICE-unix/1247
+ 
 # automatic
+ 
 *F = $(notdir $*)
+ 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
@@ -281,7 +385,6 @@ Makefile:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 
 # Not a target:
 all:
@@ -318,6 +421,6 @@ GNUmakefile:
 # strcache performance: lookups = 22 / hit rate = 13%
 # hash-table stats:
 # Load=19/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Sat May 21 21:53:47 2022
+# Finished Make data base on Sat May 21 22:07:21 2022
 
  
