@@ -73,11 +73,11 @@ Pizza:
 # Todos
 *  [DONE]: (i) Implement dynamic data structure for exercise 1 (Thirit; Sehr nice wäre, wenn du ein einen dynamischen Array implementieren könntest, der in jedem Index einen linked list hat. Damit könnte der user eine Zahl als input geben (bspw. 2 welches dann für Mehl stehen würde) und dann hätte man im index 2 des arrays eine linked list, in der jeder Node 1 kg Mehl darstellt. Jeder Node der linked list sollte eine ID enthalten, und die Linked List sollte die üblichen Funktionalitäten haben (append, remove, getLength, etc.).)
 * (ii) (Re)implement ex.1 as an analogy to mutual exclusion on shared resources (Marco/Pablo). Implement scenarios.
-* (iii) Implement CLI to start all the scripts and input parameters (Lukas).
-* (iv) Write testing scripts.
+* (iii) Implement CLI to start all the scripts and input parameters (Lukas). (TODO: add defualt values, restock all ingredients doenst qworkj)
+* (iv) Write testing scripts. (automated testing -> defualts (give "default" as comand arguemtn, then dont ask for inputs, chose defaults))
 * (v) Code cleaning.
 * (vi) Code commenting.
-* (vii) Write documentation.
+* (vii) Write documentation. (dont forget to comment about Nathans remark about the tgtg baskets, dont forget scenarios)
 * (viii) Prepare presentation.
 * (ix) Upload stuff to gitlab.
 
