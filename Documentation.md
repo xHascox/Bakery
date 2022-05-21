@@ -77,7 +77,7 @@ Pizza:
 * (iv) Write testing scripts.
 * (v) Code cleaning.
 * (vi) Code commenting.
-* (vii) Write documentation.
+* (vii) Write documentation. (dont forget to comment about Nathans remark about the tgtg baskets)
 * (viii) Prepare presentation.
 * (ix) Upload stuff to gitlab.
 
