@@ -10,29 +10,79 @@ void makingBread();
 void tgtg();
 void sleepingBaker();
 void testingScripts();
+void autoMakingBread();
 
 
 
-int main(/*int argc, char const *argv[]*/) {
+int main(int argc, char const *argv[]) {
+    if (argc > 1) { //automated testing when an argument is given
+        //SYNTAX: ./main.o X [Y] 
+        // X = 1 // Making Bread
+
+        // Y = 0 // Fairlearners
+        // Y = 1 // Fastlearners
+        // Y = 2 // Arrivalorder
+        // Y = 3 // default, Prelearners (called fast learners in the project description)
+        // Y = 4 // Scenario 2
+
+        // X = 2 // Too Good To Go
+
+        // X = 3 // Additional Feature Sleeping Baker
 
 
-    printf("Hello World!\n");
-    printf("You have started v0.8 of the Bakery!\n");
-    printf("The following options are at your disposal:\n");
-    printf(" -> Option 1: 'Making Bread'.\n");
-    printf(" -> Option 2: 'To Good To Go'.\n");
-    printf(" -> Option 3: 'Additional Feature'.\n");
-    printf(" -> Option 4: 'Testing Scrips'.\n");
-    printf("\n");
+        if (argv[1]==)
+    }
+    else { //manual testing
+        printf("Hello World!\n");
+        printf("You have started v0.8 of the Bakery!\n");
+        printf("The following options are at your disposal:\n");
+        printf(" -> Option 1: 'Making Bread'.\n");
+        printf(" -> Option 2: 'To Good To Go'.\n");
+        printf(" -> Option 3: 'Additional Feature'.\n");
+        printf(" -> Option 4: 'Testing Scrips'.\n");
+        printf("\n");
 
 
-    printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
-    optionSelection();
+        printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
+        optionSelection();
+    }
+    
     
 
     return 0;
 }
 
+void autoMakingBread() {
+    int nbAppr = 5000;
+    int maxBreads = 1000; 
+    int* nbIngrArr; 
+    char*** ingrNames;
+    int stonks = 20; 
+    int nbBreadTypes = 1;
+    char** breadTypesArr;
+    int metric; 
+    int scen;
+
+    int maxStrLen = 32;
+
+    nbIngrArr = malloc(nbBreadTypes*sizeof(int));
+    nbIngrArr[0] = 1;
+
+    ingrNames = malloc(nbBreadTypes*sizeof(char*));
+    ingrNames[0] = malloc((nbIngrArr[0])*sizeof(char*)); 
+    ingrNames[0][0] = malloc(maxStrLen*sizeof(char));
+    strcpy(ingrNames[0][0], "IngredientY");
+
+    breadTypesArr = malloc(nbBreadTypes*sizeof(char*));
+    breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
+    strcpy(ingrNames[0][0], "BreadX");
+
+    metric = 3; //prelearners = fast learners in documentation
+
+    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+
+
+}
 
 void makingBread() {
 
