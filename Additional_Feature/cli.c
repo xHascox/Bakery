@@ -17,21 +17,65 @@ void testingScripts();
 
 
 
-int main(/*int argc, char const *argv[]*/) {
+int main(int argc, char const *argv[]) {
 
 
-    printf("Hello World!\n");
-    printf("You have started v0.8 of the Bakery!\n");
-    printf("The following options are at your disposal:\n");
-    printf(" -> Option 1: 'Making Bread'.\n");
-    printf(" -> Option 2: 'To Good To Go'.\n");
-    printf(" -> Option 3: 'Additional Feature'.\n");
-    printf(" -> Option 4: 'Testing Scrips'.\n");
-    printf("\n");
+    if (argc > 1) { //automated testing when an argument is given
+        //SYNTAX: ./main.o X [Y] [Z]
+        // X = 1 // Making Bread
+        if (atoi(argv[1]) == 1) {
+        	int option = 3;
+        	if (argc > 2) {
+        		option = atoi(argv[2]);
+        	}
+        	//autoMakingBread(option); //TODO uncomment
+        }
+
+        // Y = 0 // Fairlearners
+        // Y = 1 // Fastlearners
+        // Y = 2 // Arrivalorder
+        // Y = 3 // default, Prelearners (called fast learners in the project description)
+        // Y = 4 // Scenario 2
+
+        // X = 2 // Too Good To Go
+        
+        if (atoi(argv[1]) == 2) {
+        	printf("tbd\n");
+        }
+
+        // X = 3 // Additional Feature Sleeping Baker
+        
+        // Y = Number of Customers
+        // Z = Number of Chairs
+        
+        if (atoi(argv[1]) == 3) {
+        	int nbCustomers = 30;
+        	int nbChairs = 10;
+        	if (argc > 2) {
+        		nbCustomers = atoi(argv[2]);
+        	}
+        	if (argc > 3) {
+        		nbChairs = atoi(argv[3]);
+        	}
+        	runAddF(nbCustomers, nbChairs);
+        }
+
+        
+    }
+    else { //manual testing
+        printf("Hello World!\n");
+        printf("You have started v0.8 of the Bakery!\n");
+        printf("The following options are at your disposal:\n");
+        printf(" -> Option 1: 'Making Bread'.\n");
+        printf(" -> Option 2: 'To Good To Go'.\n");
+        printf(" -> Option 3: 'Additional Feature'.\n");
+        printf(" -> Option 4: 'Testing Scrips'.\n");
+        printf("\n");
 
 
-    printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
-    optionSelection();
+        printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
+        optionSelection();
+    }
     
 
     return 0;

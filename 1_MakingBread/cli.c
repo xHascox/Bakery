@@ -18,6 +18,13 @@ int main(int argc, char const *argv[]) {
     if (argc > 1) { //automated testing when an argument is given
         //SYNTAX: ./main.o X [Y] 
         // X = 1 // Making Bread
+        if (atoi(argv[1]) == 1) {
+        	int option = 3;
+        	if (argc > 2) {
+        		option = atoi(argv[2]);
+        	}
+        	autoMakingBread(option);
+        }
 
         // Y = 0 // Fairlearners
         // Y = 1 // Fastlearners
@@ -26,11 +33,18 @@ int main(int argc, char const *argv[]) {
         // Y = 4 // Scenario 2
 
         // X = 2 // Too Good To Go
+        
+        if (atoi(argv[1]) == 2) {
+        	printf("tbd\n");
+        }
 
         // X = 3 // Additional Feature Sleeping Baker
+        
+        if (atoi(argv[2]) == 3) {
+        
+        }
 
-
-        autoMakingBread();
+        
     }
     else { //manual testing
         printf("Hello World!\n");
@@ -52,18 +66,25 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
-void autoMakingBread() {
-    int nbAppr = 5000;
-    int maxBreads = 1000; 
+void autoMakingBread(int option) {
+    int nbAppr = 3;
+    int maxBreads = 10; 
     int* nbIngrArr; 
     char*** ingrNames;
     int stonks = 20; 
     int nbBreadTypes = 1;
     char** breadTypesArr;
-    int metric; 
-    int scen;
+    int metric = 3; 
+    int scen = 0;
 
     int maxStrLen = 32;
+    
+    if (option == 4) {
+    	scen = 2;
+    }
+    else {
+    	metric = option;
+    }
 
     nbIngrArr = malloc(nbBreadTypes*sizeof(int));
     nbIngrArr[0] = 1;
