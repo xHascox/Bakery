@@ -30,7 +30,7 @@ int main(int argc, char const *argv[]) {
         // X = 3 // Additional Feature Sleeping Baker
 
 
-        if (argv[1]==)
+        autoMakingBread();
     }
     else { //manual testing
         printf("Hello World!\n");
