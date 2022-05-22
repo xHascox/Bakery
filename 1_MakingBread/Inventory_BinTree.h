@@ -35,16 +35,20 @@ typedef struct InvNode InvNode;
 
 /**
  * @brief Register a new Ingredient in the inventory.
+ * Upper and lower case letters are differentiated. \n
+ * The initialAmount, if not set to '0', gets added to the
+ * newly created InvNode. 
  *
  * @param name
- * @param initialCount
+ * @param initialAmount
  */
-void registerIngredient(const char* name, int initialAmount);
+void registerIngredient(const char* name , int initialAmount);
 
 
 /**
- *  @brief Add items to the data structure. Respective
- *  ingredients are already registered.
+ *  @brief Add items to the data structure. The InvNode for
+ *  the specified ingredient to be added has to already
+ *  exist in the data structure.
  *
  *  @param name
  *  @param amount
@@ -54,22 +58,23 @@ void addIngredient(const char* name, int amount);
 
 /**
  * @brief Remove specified amount of items from the stock
- * of the passed ingredient.
+ * of the passed ingredient. \n
  * Returns '0' if stock could not be reduced due to \n
  *      - not enough ingredients present \n
  *      - no such ingredient existing \n
  * and '1' otherwise.
- * @param name 
- * @return int 
+ *
+ * @param name
+ * @return int
  */
 int takeIngredient(const char* name, int amount);
 
 
 /**
- *  @brief Checks if the ingredient specified already
- *  exists in the data structure. Returns '1' it exists
- *  '0' otherwise. This function does not check the amount
- *  of a specific ingredient present.
+ *  @brief Checks if the ingredient specified already exists in
+ *  the data structure. Returns '1' if it exists '0' otherwise. \n
+ *  This function does not check the amount of a specific
+ *  ingredient present.
  *
  *  @param name
  *  @return int
@@ -78,7 +83,7 @@ int containsIngred(const char* name);
 
 
 /**
- * @brief Get the InvNode identified by name.
+ * @brief Get the InvNode identified by 'name'. \n
  * Returns NULL if no such ingredient is known.
  *
  * @param name
@@ -102,8 +107,8 @@ void restockIngredients();
 
 
 /**
- * @brief Setter method for 'restockTo' (= 'targetStock') value of with 'name' specified InvNode.\n
- * IMPORTANT: the 'targetStock' value should be >= 5 to ensure a certain performance of the inventory.\n
+ * @brief Setter method for 'restockTo' (= 'targetStock') value of with 'name' specified InvNode. \n
+ * IMPORTANT: the 'targetStock' value should be >= 5 to ensure a certain performance of the inventory. \n
  * A value > 10 is recommended. However, this value highly depends on the frequency in which this ingredient is used.
  *
  * @param name
@@ -113,7 +118,7 @@ void setRestockTo(const char* name, int targetStock);
 
 
 /**
- * @brief Lets the tree be printed in 'inorder traversal'.
+ * @brief Lets the tree be printed in 'inorder traversal'. Values printed are the node's name, stock count and restockTo value.
  */
 void printInvTree();
 

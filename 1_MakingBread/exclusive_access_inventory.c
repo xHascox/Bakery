@@ -244,6 +244,7 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	breadNames = breadNamesArr;
 	scheduler_metric = metric;
 	scenario = scen;
+
 	
 	printf("Before Recipe Book\n");
 
@@ -263,7 +264,7 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 
 
 	/* -----------------DEBUG--------------------- */
-	/*
+	//*
 	printf("\n\n");
 	printf("_____________________________________________");
 	printRecipeBook();
@@ -271,8 +272,9 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	printf("\n\n");
 	printf("_____________________________________________");
 	printInvTree();
-	*/
+	//*/
 	/* ------------------------------------------- */
+
 
 
     interested_array = malloc(NBApprentices*sizeof(timeType));
@@ -341,21 +343,22 @@ int main(int argc, char const *argv[]){
 	
 	int toTheMoon = 10;
 	
+	
 
 	int maxLen = 32;
     char*** IArr;
-    int nbBT = 2;
+    int nbBTy = 2;
     int nbIng01 = 2;
     int nbIng02 = 3;
     char** btName;
-	int* nbI;
-	int toTheMoon = 200;
+	int* nbIn;
+	int toTheMooon = 10;
 
-	nbI = (int*)malloc(nbBT*sizeof(int));
-	nbI[0] = nbIng01;
-	nbI[1] = nbIng02;
+	nbIn = (int*)malloc(nbBTy*sizeof(int));
+	nbIn[0] = nbIng01;
+	nbIn[1] = nbIng02;
 
-    btName = malloc(nbBT*sizeof(char*));
+    btName = malloc(nbBTy*sizeof(char*));
     btName[0] = malloc(maxLen*sizeof(char));
     btName[1] = malloc(maxLen*sizeof(char));
 
@@ -363,7 +366,7 @@ int main(int argc, char const *argv[]){
     strcpy(btName[1],"Bread02");
 
 
-    IArr = malloc(nbBT*sizeof(char*));
+    IArr = malloc(nbBTy*sizeof(char*));
     IArr[0] = malloc(nbIng01*sizeof(char*));
     IArr[0][0] = malloc(maxLen*sizeof(char));
     IArr[0][1] = malloc(maxLen*sizeof(char));
@@ -378,7 +381,7 @@ int main(int argc, char const *argv[]){
     strcpy(IArr[1][1],"bp");
     strcpy(IArr[1][2],"flour");
 
-	runMakingBread(30, 100, nbI, IArr, toTheMoon, nbBT, btName, FAIRLEARNERS, 0);
+	runMakingBread(30, 100, nbIn, IArr, toTheMooon, nbBTy, btName, FAIRLEARNERS, 0);
 	return 0;
 }
 */

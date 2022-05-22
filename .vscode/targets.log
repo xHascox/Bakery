@@ -2,214 +2,110 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 make: *** No rule to make target 'all'.  Stop.
 
 # GNU Make 4.3
- 
 # Built for x86_64-pc-linux-gnu
- 
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
- 
 # License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
- 
 # This is free software: you are free to change and redistribute it.
- 
 # There is NO WARRANTY, to the extent permitted by law.
- 
 
- 
-# Make data base, printed on Sat May 21 22:07:21 2022
- 
+# Make data base, printed on Sun May 22 09:48:08 2022
 
 # Variables
- 
 
- 
 # environment
- 
 GDK_BACKEND = x11
- 
 # environment
- 
 LC_ALL = C
- 
 # environment
- 
 SSH_AGENT_LAUNCHER = openssh
- 
 # environment
- 
 SNAP_INSTANCE_KEY = 
- 
 # environment
- 
 GJS_DEBUG_OUTPUT = stderr
- 
 # environment
- 
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0d8a8db1-dbab-44c9-b0e7-dc77dbf18bfb.sock
- 
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fb2ade04-63ce-4718-9418-74c042324a18.sock
 # environment
- 
 VSCODE_CWD = /home/grischu
- 
 # environment
- 
 GDM_LANG = en_GB.UTF-8
- 
 # default
- 
 MAKE_COMMAND := make
- 
 # environment
- 
 QT_ACCESSIBILITY = 1
- 
 # automatic
- 
 @D = $(patsubst %/,%,$(dir $@))
- 
 # environment
- 
 SNAP_INSTANCE_NAME = code
- 
 # environment
- 
-GDK_PIXBUF_MODULEDIR = /snap/code/96/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
- 
+GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
- 
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
- 
 # default
- 
 .VARIABLES := 
- 
 # environment
- 
 PWD = /home/grischu/Documents/OS/Project/Bakery
- 
 # automatic
- 
 %D = $(patsubst %/,%,$(dir $%))
- 
 # environment
- 
 XDG_DATA_DIRS = /usr/local/share/:/usr/share/:/var/lib/snapd/desktop
- 
 # automatic
- 
 ^D = $(patsubst %/,%,$(dir $^))
- 
 # environment
- 
 VSCODE_LOG_STACK = false
- 
 # automatic
- 
 %F = $(notdir $%)
- 
 # environment
- 
-VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/da15b6fd3ef856477bf6f4fb29ba1b7af717770d
- 
+VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
- 
 LANG = C
- 
 # environment
- 
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.5E8AM1
- 
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.5OWOM1
 # default
- 
 .LOADED := 
- 
 # default
- 
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
- 
 # makefile
- 
 MAKEFLAGS = pqrR
- 
 # makefile
- 
 CURDIR := /home/grischu/Documents/OS/Project/Bakery
- 
 # environment
- 
 VSCODE_PIPE_LOGGING = true
- 
 # environment
- 
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
- 
 # automatic
- 
 *D = $(patsubst %/,%,$(dir $*))
- 
 # environment
- 
 MFLAGS = -pqrR
- 
 # environment
- 
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
- 
 # default
- 
 .SHELLFLAGS := -c
- 
 # environment
- 
 WAYLAND_DISPLAY = wayland-0
- 
 # automatic
- 
 +D = $(patsubst %/,%,$(dir $+))
- 
 # environment
- 
 XDG_SESSION_DESKTOP = gnome
- 
-# makefile
- 
-MAKEFILE_LIST := 
- 
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
 # environment
- 
 SNAP_REEXEC = 
- 
 # automatic
- 
 @F = $(notdir $@)
- 
 # environment
- 
 VSCODE_VERBOSE_LOGGING = true
- 
 # environment
- 
-VSCODE_PID = 3068
- 
+VSCODE_PID = 2621
 # environment
- 
 XDG_SESSION_TYPE = wayland
- 
 # automatic
- 
 ?D = $(patsubst %/,%,$(dir $?))
- 
 # environment
- 
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
- 
 # environment
- 
-SESSION_MANAGER = local/Grischu:@/tmp/.ICE-unix/1247,unix/Grischu:/tmp/.ICE-unix/1247
- 
+SESSION_MANAGER = local/Grischu:@/tmp/.ICE-unix/1238,unix/Grischu:/tmp/.ICE-unix/1238
 # automatic
- 
 *F = $(notdir $*)
- 
 # environment
 CHROME_DESKTOP = code-url-handler.desktop
 # environment
@@ -251,11 +147,11 @@ LANGUAGE = en_GB:en
 # environment
 SNAP_USER_COMMON = /home/grischu/snap/code/common
 # environment
-SNAP = /snap/code/96
+SNAP = /snap/code/97
 # environment
-INVOCATION_ID = 377b3ee4b90f4ef9bb9d3bd17406053e
+INVOCATION_ID = 72466dc021774836ab55d55a537cf767
 # environment
-SNAP_REVISION = 96
+SNAP_REVISION = 97
 # environment
 SNAP_REAL_HOME = /home/grischu
 # environment
@@ -285,7 +181,7 @@ GIO_LAUNCHED_DESKTOP_FILE = /var/lib/snapd/desktop/applications/code_code.deskto
 # environment
 SNAP_ARCH = amd64
 # makefile
-.DEFAULT_GOAL := 
+.DEFAULT_GOAL := default
 # environment
 DISPLAY = :0
 # environment
@@ -297,21 +193,21 @@ MAKE_VERSION := 4.3
 # environment
 DISABLE_WAYLAND = 1
 # environment
-SNAP_DATA = /var/snap/code/96
+SNAP_DATA = /var/snap/code/97
 # environment
 SNAP_CONTEXT = 14MvNVAaIpP4Mftf4UdBMUnjPO1JPjgBoLPjqyEMcYo_liC00Qjr
 # environment
-MANAGERPID = 1105
+MANAGERPID = 1092
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3022
+GIO_LAUNCHED_DESKTOP_FILE_PID = 2544
 # environment
-_ = /snap/code/96/usr/share/code/code
+_ = /snap/code/97/usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/grischu/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:19483
+JOURNAL_STREAM = 8:19567
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -323,11 +219,11 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-1ec5cf0e-1.67.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-1ec5cf0e-1.67.2-main.sock
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/96/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/97/usr/share/glib-2.0/schemas
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -335,7 +231,7 @@ IM_CONFIG_PHASE = 1
 # automatic
 <F = $(notdir $<)
 # environment
-SNAP_VERSION = da15b6fd
+SNAP_VERSION = c3511e6c
 # default
 SUFFIXES := 
 # environment
@@ -347,7 +243,7 @@ SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
 # environment
-SNAP_USER_DATA = /home/grischu/snap/code/96
+SNAP_USER_DATA = /home/grischu/snap/code/97
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -355,7 +251,7 @@ GDMSESSION = gnome
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=119/1024=12%, Rehash=0, Collisions=5/146=3%
+# Load=119/1024=12%, Rehash=0, Collisions=5/149=3%
 
 # Pattern-specific Variable Values
 
@@ -363,9 +259,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Directories
 
-# . (device 2049, inode 142436): 11 files, no impossibilities.
+# . (device 2049, inode 142436): 13 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -373,15 +269,44 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Files
 
+default:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 2):
+	gcc -pthread -o testing1.o testing1.c && gcc -pthread -o	./1_MakingBread/main.o ./1_MakingBread/cli.c ./1_MakingBread/ExclAccInv.o ./1_MakingBread/BinTreeInv.o ./1_MakingBread/RecipeBook.o && make precompile
+
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  File does not exist.
+#  Last modified 2022-05-22 09:32:47.452628993
 #  File has been updated.
-#  Failed to be updated.
+#  Successfully updated.
+
+rm:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 14):
+	rm *.o
+
+precompile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 5):
+	gcc -Wall -o ./1_MakingBread/BinTreeInv.o -c ./1_MakingBread/Inventory_BinTree.c && gcc -Wall -o ./1_MakingBread/RecipeBook.o -c ./1_MakingBread/Recipe_Book.c && gcc -Wall -o ./1_MakingBread/ExclAccInv.o -c ./1_MakingBread/exclusive_access_inventory.c
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 11):
+	rm *.o rm
 
 # Not a target:
 .DEFAULT:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -393,34 +318,27 @@ all:
 #  File does not exist.
 #  File has not been updated.
 
-# Not a target:
-makefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
-
-# Not a target:
-GNUmakefile:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+run:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 8):
+	./main.o
 
 # files hash-table stats:
-# Load=6/1024=1%, Rehash=0, Collisions=0/15=0%
+# Load=9/1024=1%, Rehash=0, Collisions=0/19=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 19 / storage = 217 B / avg = 11 B
-# current buf: size = 8162 B / used = 217 B / count = 19 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 23 / storage = 239 B / avg = 10 B
+# current buf: size = 8162 B / used = 239 B / count = 23 / avg = 10 B
 
-# strcache performance: lookups = 22 / hit rate = 13%
+# strcache performance: lookups = 32 / hit rate = 28%
 # hash-table stats:
-# Load=19/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Sat May 21 22:07:21 2022
+# Load=23/8192=0%, Rehash=0, Collisions=0/32=0%
+# Finished Make data base on Sun May 22 09:48:08 2022
 
  
