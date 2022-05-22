@@ -85,3 +85,8 @@ Log:
 22.5 added mutex to shopper
 Welche metric als default?
 Todo: Code Comments, Cleaning, Default testing scripts, restocking
+
+WIe möchemer das mit de testing scripts, nur 1 cli, aber denn alli fodlers zu eim? oder wtf?
+d default testings mömmer zeme merge, im MakingBread heds d autoMakeBread funcntion, im AddFeature die für sleeping
+Speicherzugriffsfehler wenn ich maing bread ./mainn.o 1
+mache ganz am schluss, lol wtf?
