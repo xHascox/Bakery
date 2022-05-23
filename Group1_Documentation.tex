@@ -1,4 +1,4 @@
-% Created 2022-05-23 Mo 15:45
+% Created 2022-05-23 Mo 16:12
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -12,6 +12,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage[a4paper, margin=1in]{geometry}
 \author{Group 1: Gabriel, Odermatt, Wey \& Yang}
 \date{\today}
 \title{OS Project - Fribourgeois Bakery}
@@ -30,17 +31,17 @@
 \setlength\parindent{0pt}
 
 \section{Introduction}
-\label{sec:org5f1f83f}
+\label{sec:orgd5ac86a}
 
 The present documentation reports on the solution to the \emph{Fribourgeois Bakery} project elaborated by Group 1.\\
 
 The discussion of the solution will be structured as follows: Chapter one will present the datastructure that represents our inventory as well as our solution to the task ``Learning to make bread''. Chapter two will focus on ``Too good to go'' and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.\\
 
 \section{Inventory and Making Bread}
-\label{sec:org61be58e}
+\label{sec:orgb8b50e4}
 
 \subsection{Inventory}
-\label{sec:orgefa0750}
+\label{sec:org7e54d28}
 \begin{itemize}
 \item Binary tree where each node represents an ingredient type. Each of those nodes holds a linked list where each node represents one unit of that ingredient type.\\
 \item Building and searching of tree: Tree is lexographically sorted -- meaning that that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. ``Smaller'' and ``bigger'' in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently\(\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}\).\\
@@ -64,7 +65,7 @@ The discussion of the solution will be structured as follows: Chapter one will p
 \end{itemize}
 
 \subsection{Making Bread}
-\label{sec:orgd65960b}
+\label{sec:orgac53115}
 
 \begin{itemize}
 \item Synchronization:\\
@@ -81,7 +82,7 @@ The discussion of the solution will be structured as follows: Chapter one will p
 \end{itemize}
 
 \subsection{Scenarios}
-\label{sec:orgff74c0c}
+\label{sec:orgb90574b}
 \begin{itemize}
 \item Scenarios:\\
 \begin{itemize}
@@ -92,13 +93,13 @@ The discussion of the solution will be structured as follows: Chapter one will p
 \end{itemize}
 
 \section{Too Good To Go}
-\label{sec:org77d5be8}
+\label{sec:org626b7a7}
 \begin{itemize}
 \item Analogy to NRU\\
 \end{itemize}
 
 \section{Additional Feature}
-\label{sec:org289e06e}
+\label{sec:org8151c41}
 \begin{itemize}
 \item Chairs: Queue, mutexted.\\
 \item Synchronization: Semaphores (one for the baker and one for each chair).\\

@@ -86,7 +86,7 @@ Log:
 Welche metric als default?
 Todo: Code Comments, Cleaning, Default testing scripts, restocking
 
-WIe möchemer das mit de testing scripts, nur 1 cli, aber denn alli fodlers zu eim? oder wtf?
+Wee möchemer das mit de testing scripts, nur 1 cli, aber denn alli fodlers zu eim? oder wtf?
 d default testings mömmer zeme merge, im MakingBread heds d autoMakeBread funcntion, im AddFeature die für sleeping
 Speicherzugriffsfehler wenn ich maing bread ./mainn.o 1
 mache ganz am schluss, lol wtf?
@@ -95,3 +95,5 @@ In CLI muss noch metric exposed werden.
 In baker() muss noch metric implementiert werden. Können wir "scenarios" löschen?
 Doctypes in allen files (ausser BinaryTree)
 Output von exclusive access noch clean machen.
+Too good to go ist sehr minimal
+What about testing scripts?

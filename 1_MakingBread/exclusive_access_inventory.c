@@ -9,7 +9,7 @@
 
 #include "exclusive_access_inventory.h"
 #include "Recipe_Book.h"
-#include "Inventory_BinTree.h" // Include inventory datastructure
+#include "Inventory_BinTree.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -23,9 +23,7 @@ int scheduler_metric;
 
 // Different scenarios for testing
 int scenario;
-#define SCENARIO1 1 // Two apprentices add the same item to the inventory at the same time
 #define SCENARIO2 2 // Two apprentices get the same item from the inventory at the same time
-#define SCENARIO3 3 // One apprentices gets an item while, at the same time, another apprentice adds the same item
 
 // Timestamps
 #define timeType unsigned long
@@ -43,12 +41,11 @@ sem_t *semA; // Array of size NBApprentices containing a semaphore per apprentic
 sem_t semB; // Semaphore to wake up baker :: sem_t 
 sem_t semS; // Semaphore to wake up shopper :: sem_t
 sem_t semEmpty; // Condition variable for apprentice that has to wait for shopper :: sem_t
-
-int* NBIngredients; 
-char ***ingredientNames;
-char ** breadNames;
-int NBBreadtypes;
-int restockToVal;
+int* NBIngredients; // Number of ingredients per bread type :: Array of int
+char ***ingredientNames; // Ingredient names per bread type :: Array of arrays of strings
+char **breadNames; // Names of bread types :: Array of strings
+int NBBreadtypes; // Number of bread types :: int
+int restockToVal; // Initial number of units per ingredient and restock target :: int
 
 // Functions
 void *baker(void *j);
@@ -103,7 +100,6 @@ void *baker(void *j){
 
 			// Wake up A
 			interested_array[j]=timeTypeMax;
-			printf("Baker wakes up %d with metric: %lu\n", j, min);
 			sem_post(&semA[j]);
 			
 			//baker sleep until that one is finished
@@ -130,12 +126,12 @@ void *shopper_func(){
 		if(breads >= maxBread){
 			pthread_exit(NULL);
 		}
-		printf("Alright, will restock.\n");
+		printf("\nAlright, will restock.\n");
 		pthread_mutex_lock(&mutex_inventory);
 		restockIngredients();
 		printInvTree();
 		pthread_mutex_unlock(&mutex_inventory);
-		printf("________________________________\nInventory succesfully restocked.\n");
+		printf("________________________________\nInventory succesfully restocked.\n\n");
 		sem_post(&semEmpty);
 	}
 }
@@ -167,7 +163,7 @@ void *apprentice(void *j){
 	    interested_array[i] = metric; // Announce interest
 	    
 	    sem_wait(&semA[i]); // Wait until its my turn
-		printf("     Apprentice %d woke up\n", i);
+		printf("Apprentice %d woke up:\n", i);
 
 	    pthread_mutex_lock(&mutex_inventory);
 	    access_inventory(i);
@@ -175,7 +171,7 @@ void *apprentice(void *j){
 	    	pthread_mutex_unlock(&mutex_inventory);	
 	    	printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
 	    	pthread_exit(NULL);
-	    } else { // Bakey still open
+	    } else { // Bakery still open
 			breads++;
 			abread++;
 			printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
@@ -208,7 +204,7 @@ void access_inventory(int i){
 		if(in_stock){
 			printf("%s ",ingredient);
 		} else {
-			printf("\n    Unfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
+			printf("\n     Unfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
 
 			pthread_mutex_unlock(&mutex_inventory);
 			sem_post(&semS);

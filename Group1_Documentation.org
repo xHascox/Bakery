@@ -1,13 +1,16 @@
-#+Title: OS Project - Fribourgeois Bakery
-#+Author: Group 1: Gabriel, Odermatt, Wey & Yang
-#+options: \n:t
+#+TITLE: OS Project - Fribourgeois Bakery
+#+AUTHOR: Group 1: Gabriel, Odermatt, Wey & Yang
+#+OPTIONS: \n:t
 #+LATEX: \setlength\parindent{0pt}
+#+LATEX_HEADER: \usepackage[a4paper, margin=1in]{geometry}
 
 * Introduction
 
 The present documentation reports on the solution to the /Fribourgeois Bakery/ project elaborated by Group 1.
 
 The discussion of the solution will be structured as follows: Chapter one will present the datastructure that represents our inventory as well as our solution to the task "Learning to make bread". Chapter two will focus on "Too good to go" and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.
+
+- CLI to invoke scripts.
 
 * Inventory and Making Bread
 
