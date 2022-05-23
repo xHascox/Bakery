@@ -30,16 +30,11 @@ void *baker(){
         if (bakeryOpen == FALSE){ // Bakery closed --> exit
             pthread_exit(NULL);
         } else { // Bakery open --> Serve customers
-
-            sleep(1);
-
-            sem_t* customer_semaphore = dequeue(chairs);
-
+            sleep(1); // Just to make the output readable
+            sem_t* customer_semaphore = dequeue(chairs); 
             sem_post(customer_semaphore);
-
             printf("Hi, that makes 2 Fr.\n");
         }
-
     }
 }
 
@@ -52,19 +47,18 @@ void *customer(void *id){
     if (length(chairs) >= NBChairs) { // There are no free chairs
         printf("This place is overcrowded. I'm leaving! (Customer %d left).\n",cid);
         pthread_mutex_unlock(&mutex_chairs);
-        pthread_exit(NULL);
 
     } else { // There are free chairs
-        enqueue(chairs, &semC[cid]); // Sit down on free chair
-        sem_post(&semB); // Wake the baker
+        enqueue(chairs, &semC[cid]);
+        sem_post(&semB);
         pthread_mutex_unlock(&mutex_chairs);
         printf("Customer %d is waiting in a chair\n", cid);
 
         sem_wait(&semC[cid]); // Wait to be served
 
         printf("Thank you for selling me bread! Have a nice day!\n");
-        pthread_exit(NULL); // Leave the bakery
     }
+    pthread_exit(NULL); // Leave the bakery
 }
 
 void runAddF(int nbcustomers, int nbchairs){

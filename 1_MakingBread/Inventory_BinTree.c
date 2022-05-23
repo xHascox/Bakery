@@ -27,7 +27,7 @@ struct InvRootNode {
 typedef struct InvRootNode InvRootNode;
 
 
-InvRootNode* pHead = NULL; // The Head of the InvList
+InvRootNode* pHead = NULL; // The Root of the InvTree
 
 
 /**

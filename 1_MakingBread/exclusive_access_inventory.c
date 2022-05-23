@@ -11,6 +11,9 @@
 #include "Recipe_Book.h"
 #include "Inventory_BinTree.h" // Include inventory datastructure
 
+#define FALSE 0
+#define TRUE 1
+
 // Different strategies to "schedule" apprentices to enter the inventory
 int scheduler_metric; 
 #define FAIRLEARNERS 0 // Schedule the apprentice with the smallest number of breads made
@@ -58,8 +61,8 @@ void *baker(void *j){
 	int scenario2alt=0;
 	int scenario2j;
 	
-	while (breads < maxBread) { 
-	
+	while (breads < maxBread) {
+		
 		timeType min = timeTypeMax;
 		int j = -1;//the next A to be allowed into Inv
 		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
@@ -98,7 +101,7 @@ void *baker(void *j){
 				continue;
 			}
 
-			//wakre up A
+			// Wake up A
 			interested_array[j]=timeTypeMax;
 			printf("Baker wakes up %d with metric: %lu\n", j, min);
 			sem_post(&semA[j]);
@@ -137,55 +140,51 @@ void *shopper_func(){
 	}
 }
 
-void *apprentice(void *j){		// MAYBE JUST DO WHILE TRUE?  BECAUSE THERE IS A STOPPING CONDIITON ON LINE 161 !
+void *apprentice(void *j){
 
     int i = *(int*) j; // Apprentice ID
     int abread = 0;
     
 	timeType metric;
-    while(breads < maxBread){
+    while(TRUE){
         //printf("Apprentice %d wants to access the inventory.\n",i);
 		
 		gettimeofday(&tvnow, NULL);
 	
-	    if (scheduler_metric == ARRIVALORDER) {//arrival order
+	    if (scheduler_metric == ARRIVALORDER) {
 	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
 	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
-	    } else if (scheduler_metric == FASTLEARNERS) {//fast learners
+	    } else if (scheduler_metric == FASTLEARNERS) {
 	    	metric = timeTypeMax - abread - 1;
 			//printf("%d metric: %lu\n", i, metric);
-	    } else if (scheduler_metric == FAIRLEARNERS) {//fair learners
+	    } else if (scheduler_metric == FAIRLEARNERS) {
 	    	metric = abread;
-	    } else if (scheduler_metric == PRELEARNERS) {//pre defined learners
+	    } else if (scheduler_metric == PRELEARNERS) {
 	    	metric = i;
 	    } 
 	    
 	    
 	    interested_array[i] = metric; // Announce interest
 	    
-	     // Wait until it's my turn
-	    //printf("%d is sleeping\n", i);
-	    sem_wait(&semA[i]);//sleep on own semaphore
+	    sem_wait(&semA[i]); // Wait until its my turn
 		printf("     Apprentice %d woke up\n", i);
 
-	    pthread_mutex_lock(&mutex_inventory);// TODO dynamic inventory
+	    pthread_mutex_lock(&mutex_inventory);
 	    access_inventory(i);
-	    if (breads>=maxBread) {
+	    if (breads>=maxBread) { // Bakery closed for the day
 	    	pthread_mutex_unlock(&mutex_inventory);	
 	    	printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
 	    	pthread_exit(NULL);
-	    }
-	    breads++;
-	    abread++;
-	    printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
-	    pthread_mutex_unlock(&mutex_inventory);
-	    
-	    //tell baker you are out again
-	    sem_post(&semB);
-        
-		sleep(rand()%3+1);
-        
-        
+	    } else { // Bakey still open
+			breads++;
+			abread++;
+			printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
+			pthread_mutex_unlock(&mutex_inventory);
+			
+			sem_post(&semB); // Tell the baker I'm out again
+			
+			sleep(rand()%3+1);
+		}        
     }
     printf("     Apprentice %d made %d breads today\n", i, abread);
 	pthread_exit(NULL);
@@ -218,7 +217,7 @@ void access_inventory(int i){
 
 			printf("    Thanks for restocking!\n");
 			takeIngredient(ingredient, 1);
-			printf("    %s",ingredient);
+			printf("    %s ",ingredient);
 		}
 	}
 	printf("\n");
