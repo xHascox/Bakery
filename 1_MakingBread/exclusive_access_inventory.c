@@ -314,9 +314,7 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 
 	// Join threads
 	pthread_join(bakert, NULL);
-	printf("jb\n");
 	pthread_join(shopper, NULL);
-	printf("js\n");
 	
 
 	for (int i=0; i<NBApprentices; i++) { 
@@ -324,13 +322,10 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	}
 
 	// Free memory
-	printf("fm\n");
 	free(interested_array);
-	printf("1\n");
 	free(threadIndexes);
-	printf("1\n");
 	free(semA);
-	printf("1\n");
+
 
 }
 
