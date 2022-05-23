@@ -146,7 +146,7 @@ void *apprentice(void *j){
     int abread = 0;
     
 	timeType metric;
-    while(TRUE){
+    while(breads < maxBread){
         //printf("Apprentice %d wants to access the inventory.\n",i);
 		
 		gettimeofday(&tvnow, NULL);
@@ -208,7 +208,7 @@ void access_inventory(int i){
 		if(in_stock){
 			printf("%s ",ingredient);
 		} else {
-			printf("    \nUnfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
+			printf("\n    Unfortunately, there is no more %s in stock. Somebody needs to go shopping.\n", ingredient);
 
 			pthread_mutex_unlock(&mutex_inventory);
 			sem_post(&semS);

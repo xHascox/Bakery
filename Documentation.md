@@ -94,3 +94,4 @@ mache ganz am schluss, lol wtf?
 In CLI muss noch metric exposed werden.
 In baker() muss noch metric implementiert werden. Können wir "scenarios" löschen?
 Doctypes in allen files (ausser BinaryTree)
+Output von exclusive access noch clean machen.
