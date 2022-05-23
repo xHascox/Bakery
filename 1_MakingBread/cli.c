@@ -96,7 +96,7 @@ void autoMakingBread(int option) {
 
     breadTypesArr = malloc(nbBreadTypes*sizeof(char*));
     breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
-    strcpy(ingrNames[0][0], "BreadX");
+    strcpy(breadTypesArr[0], "BreadX");
 
     metric = 3; //prelearners = fast learners in documentation
 
