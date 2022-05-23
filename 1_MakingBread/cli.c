@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
 
         // X = 3 // Additional Feature Sleeping Baker
         
-        if (atoi(argv[2]) == 3) {
+        if (atoi(argv[1]) == 3) {
         
         }
 
