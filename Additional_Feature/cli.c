@@ -14,6 +14,8 @@ void makingBread();
 void tooGood();
 void sleepingBaker();
 void testingScripts();
+void autoMakingBread();
+
 
 
 
@@ -28,7 +30,7 @@ int main(int argc, char const *argv[]) {
         	if (argc > 2) {
         		option = atoi(argv[2]);
         	}
-        	//autoMakingBread(option); //TODO uncomment
+        	autoMakingBread(option); //TODO uncomment
         }
 
         // Y = 0 // Fairlearners
@@ -82,6 +84,46 @@ int main(int argc, char const *argv[]) {
 }
 
 /***************************************  MAKING BREAD  *********************************************/
+void autoMakingBread(int option) {
+    int nbAppr = 3;
+    int maxBreads = 10; 
+    int* nbIngrArr; 
+    char*** ingrNames;
+    int stonks = 20; 
+    int nbBreadTypes = 1;
+    char** breadTypesArr;
+    int metric = 3; 
+    int scen = 0;
+
+    int maxStrLen = 32;
+    
+    if (option == 4) {
+    	scen = 2;
+    }
+    else {
+    	metric = option;
+    }
+
+    nbIngrArr = malloc(nbBreadTypes*sizeof(int));
+    nbIngrArr[0] = 1;
+
+    ingrNames = malloc(nbBreadTypes*sizeof(char*));
+    ingrNames[0] = malloc((nbIngrArr[0])*sizeof(char*)); 
+    ingrNames[0][0] = malloc(maxStrLen*sizeof(char));
+    strcpy(ingrNames[0][0], "IngredientY");
+
+    breadTypesArr = malloc(nbBreadTypes*sizeof(char*));
+    breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
+    strcpy(breadTypesArr[0], "BreadX");
+
+    metric = 3; //prelearners = fast learners in documentation
+
+    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+
+
+}
+
+
 void makingBread() {
 
     int nbAppr;
