@@ -100,7 +100,7 @@ void autoMakingBread(int option) {
 
     metric = 3; //prelearners = fast learners in documentation
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 
 }
