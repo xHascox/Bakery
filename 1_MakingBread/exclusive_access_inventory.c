@@ -62,11 +62,7 @@ void access_inventory(int i);
  * @return void* 
  */
 void *baker(void *j){
-	int scenario2alt=0;
-	int scenario2j;
-	
 	while (breads < maxBread) {
-		
 		timeType min = timeTypeMax;
 		int j = -1;//the next A to be allowed into Inv
 		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
@@ -74,23 +70,53 @@ void *baker(void *j){
 				j = i;
 				min = interested_array[i];
 			}
-			//printf("cmp %lu > %lu\n", interested_array[i] ,min);
+		}
+				
+		if (j>=0) {
+			// Wake up A
+			interested_array[j]=timeTypeMax;
+			sem_post(&semA[j]);
 			
+			//baker sleep until that Apprentice is finished
+			sem_wait(&semB);	
+		}
+
+	}
+	//wake all A up
+	for(int i = 0; i < NBApprentices; i++){
+    	sem_post(&semA[i]);
+    }
+	
+	int ret = 0;
+	sem_post(&semS);
+	pthread_exit(&ret);
+}
+
+
+
+void *scenarioBaker(void *j){
+	int scenario2alt=0;
+	int scenario2j;
+	
+	while (breads < maxBread) {
+		timeType min = timeTypeMax;
+		int j = -1;//the next A to be allowed into Inv
+		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
+			if (interested_array[i] < min) { 
+				j = i;
+				min = interested_array[i];
+			}
 		}
 		
-		//printf("baker ended loop %d\n", j);
-		
 		if (j>=0) {
-
 			//scenario handler
-			if (scenario == SCENARIO2 && scenario2alt == 0) {
-				
+			if (scenario2alt == 0) {
 				scenario2alt = 1;
 				scenario2j = j;
 				interested_array[j]=timeTypeMax;
 				continue;//dont sleep for one loop
 
-			} else if (scenario == SCENARIO2) {
+			} else {
 				scenario2alt = 0; //to sleep after waking up 2 apprentices
 				//wakre up both A
 				interested_array[j]=timeTypeMax;
@@ -99,23 +125,12 @@ void *baker(void *j){
 				sem_post(&semA[scenario2j]);
 				
 				//baker sleep until that one is finished
-				//printf("baker sleeping");
 				sem_wait(&semB);
 				sem_wait(&semB);
 				continue;
 			}
-
-			// Wake up A
-			interested_array[j]=timeTypeMax;
-			sem_post(&semA[j]);
-			
-			//baker sleep until that one is finished
-			//printf("baker sleeping");
-			sem_wait(&semB);	
-
 		}
 		
-
 	}
 	//wake all A up
 	for(int i = 0; i < NBApprentices; i++){
@@ -342,9 +357,14 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 	/* CREATE THREADS */
 
 	// Baker
-	pthread_t bakert;
-	pthread_create(&bakert, NULL, baker, (void *) 0);
-
+	if (scenario == SCENARIO2) {
+		pthread_t bakert;
+		pthread_create(&bakert, NULL, scenarioBaker, (void *) 0);
+	} else {
+		pthread_t bakert;
+		pthread_create(&bakert, NULL, baker, (void *) 0);
+	}
+	
 	// Apprentices
 	int iVals[nbAppr];
     for (int i = 0; i < NBApprentices; i++){
