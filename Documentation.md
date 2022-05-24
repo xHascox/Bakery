@@ -97,3 +97,5 @@ Doctypes in allen files (ausser BinaryTree)
 Output von exclusive access noch clean machen.
 Too good to go ist sehr minimal
 What about testing scripts?
+
+FREE EVERY MALLOCED THING?
