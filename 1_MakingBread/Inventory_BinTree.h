@@ -1,6 +1,7 @@
 #ifndef INV_BINTREE
 #define INV_BINTREE
 
+
 /**
  *  @brief An IngredNode (Ingredient Node) stores a pointer
  *  to the next IngredNode. \n

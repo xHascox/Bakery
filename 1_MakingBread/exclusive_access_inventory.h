@@ -1,6 +1,7 @@
 #ifndef EXCL_ACC_INV
 #define EXCL_ACC_INV
 
+
 /**
  * @brief This is the main run function of 'learning to make bread' being passed all the necessary arguments. \n
  * First the function arguments are stored into local variables. Then, the recipe book and the invcentory are created. \n
@@ -19,5 +20,7 @@
  * @param scen The second scenario an be acivated by entering the specific value (2)
  */
 void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen);
+
+
 
 #endif
