@@ -5,7 +5,7 @@
 #include "linkedlist.h"
 
 // TODO (Lukas) Move BREADS_SOLD and TICKS to CLI
-#define BREADS_SOLD
+#define BREADS_SOLD 500
 #define TICKS 5 // Number of ticks before tgtg check
 
 #define NO 0
