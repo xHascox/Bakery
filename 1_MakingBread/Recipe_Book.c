@@ -124,7 +124,7 @@ int getNbBreadTypes()
  * @param name Name of the bread type
  * @return int 
  */
-int getNbIngredOfBreadType(const char* name);
+int getNbIngredOfBreadType(const char* name)
 {
     return getBreadType(name)->nbIngred;
 }
@@ -138,7 +138,7 @@ int getNbIngredOfBreadType(const char* name);
  * @param name Name of the bread type
  * @return int
  */
-int containsBreadType(const char* name);
+int containsBreadType(const char* name)
 {
     if (getBreadType(name) != NULL) { // check if return is != NULL
         return TRUE;    // if != NULL, return '1'
