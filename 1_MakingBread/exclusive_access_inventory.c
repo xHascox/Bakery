@@ -26,9 +26,9 @@ int scenario;
 #define SCENARIO2 2 // Two apprentices get the same item from the inventory at the same time
 
 // Timestamps
-#define timeType unsigned long
-#define timeTypeMax ULONG_MAX
-struct timeval tvbase, tvnow;
+#define timeType unsigned long //the type used to store timestamps
+#define timeTypeMax ULONG_MAX //the maximum value that timestamps can reach
+struct timeval tvbase, tvnow;//struct used for getting the current time
 
 // Global variables
 int breads = 0; // Number of breads made in total :: int
@@ -52,6 +52,7 @@ void *baker(void *j);
 void *shopper();
 void *apprentice(void *j);
 void access_inventory(int i);
+void *scenarioBaker(void *j);
 
 /**
  * @brief The 'baker' is a thread which handles the apprentices's access to the inventory.
@@ -62,83 +63,89 @@ void access_inventory(int i);
  * @return void* 
  */
 void *baker(void *j){
-	while (breads < maxBread) {
-		timeType min = timeTypeMax;
-		int j = -1;//the next A to be allowed into Inv
-		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
-			if (interested_array[i] < min) { 
+	while (breads < maxBread) {				//The baker runs as long as not enough breads have been made
+		timeType min = timeTypeMax;				//Start with the max value, since we search for the minimum
+		int j = -1;								//the next Apprentice to be allowed into the Inventory
+		for (int i=0; i<NBApprentices; i++) { 	//select which Apprentice is worthy to be next
+			if (interested_array[i] < min) {  	//the Apprentice with the lowest metric stored in the interested_array is chosen
 				j = i;
 				min = interested_array[i];
 			}
 		}
 				
 		if (j>=0) {
-			// Wake up A
-			interested_array[j]=timeTypeMax;
-			sem_post(&semA[j]);
+			interested_array[j]=timeTypeMax;//reset the interested_array at that index, so the apprentice is not anymore interested in accessing the inventory
+			sem_post(&semA[j]);				// Wake up Apprentice
 			
-			//baker sleep until that Apprentice is finished
-			sem_wait(&semB);	
+			sem_wait(&semB);				//baker sleeps until the Apprentice is finished and wakes him up
 		}
 
 	}
-	//wake all A up
-	for(int i = 0; i < NBApprentices; i++){
+	
+												//When enough breads are made, 
+	for(int i = 0; i < NBApprentices; i++){		//the baker wakes all apprentices up so they can finish
     	sem_post(&semA[i]);
     }
 	
 	int ret = 0;
-	sem_post(&semS);
+	sem_post(&semS); 							//and the shopper is woken up so he can finish
 	pthread_exit(&ret);
 }
 
 
-
-void *scenarioBaker(void *j){
-	int scenario2alt=0;
-	int scenario2j;
+/**
+ * @brief The 'scenarioBaker' is a thread which handles the apprentices's access to the inventory to resemble scenario 2 ("Apprentices access the same item in the inventory").
+ * 
+ * 	TODO: ADD MORE DESCRIPTION
+ * 
+ * @param j Specifying pointer some value identifying the baker
+ * @return void* 
+ */
+void *scenarioBaker(void *j){ 	//Wakes up two (2) Apprentices at the same time
+	int scenario2alt=0;			//used to have a different behaviour every second iteration of the while loop
+	int scenario2j;				//used to store the second apprentice
 	
-	while (breads < maxBread) {
-		timeType min = timeTypeMax;
-		int j = -1;//the next A to be allowed into Inv
-		for (int i=0; i<NBApprentices; i++) { //select which A is worthy to be next
-			if (interested_array[i] < min) { 
+	while (breads < maxBread) {			//The baker runs as long as not enough breads have been made
+		timeType min = timeTypeMax;			//Start with the max value, since we search for the minimum
+		int j = -1;								//the next Apprentice to be allowed into the Inventory
+		for (int i=0; i<NBApprentices; i++) { 	//select which Apprentice is worthy to be next
+			if (interested_array[i] < min) { 	//the Apprentice with the lowest metric stored in the interested_array is chosen
 				j = i;
 				min = interested_array[i];
 			}
 		}
 		
 		if (j>=0) {
-			//scenario handler
+			
 			if (scenario2alt == 0) {
-				scenario2alt = 1;
-				scenario2j = j;
-				interested_array[j]=timeTypeMax;
-				continue;//dont sleep for one loop
+				scenario2alt = 1;					//to indicate that at the next iteration, we already have one apprentice chosen to be woken up
+				scenario2j = j;						//store this chosen apprentice
+				interested_array[j]=timeTypeMax;	//reset the interested_array at that index
+				continue;	//dont sleep, since only one Apprentice is chosen until now
 
 			} else {
-				scenario2alt = 0; //to sleep after waking up 2 apprentices
-				//wakre up both A
+				scenario2alt = 0; //to indicate that at the next iteration, we need to chose an apprentice without waking him up
+				
+				//wakre up both Apprentices simultaneoously
 				interested_array[j]=timeTypeMax;
 				printf("Baker wakes up %d and %d simultaneously\n", j, scenario2j);
 				sem_post(&semA[j]);
 				sem_post(&semA[scenario2j]);
 				
-				//baker sleep until that one is finished
+				//baker sleep until both Apprentices have finished and wake him up
 				sem_wait(&semB);
 				sem_wait(&semB);
 				continue;
 			}
 		}
-		
 	}
-	//wake all A up
-	for(int i = 0; i < NBApprentices; i++){
+												//When enough breads are made, 
+	for(int i = 0; i < NBApprentices; i++){		//the baker wakes all apprentices up so they can finish
     	sem_post(&semA[i]);
     }
 	
 	int ret = 0;
-	sem_post(&semS);
+	sem_post(&semS); 							//and the shopper is woken up so he can finish
 	pthread_exit(&ret);
 }
 
@@ -152,17 +159,17 @@ void *scenarioBaker(void *j){
  */
 void *shopper_func(){
 	while(1){
-		sem_wait(&semS);
-		if(breads >= maxBread){
+		sem_wait(&semS);		//wait until someone wants the inventory to be restocked
+		if(breads >= maxBread){	//stop when enough breads have been made
 			pthread_exit(NULL);
 		}
 		printf("\nAlright, will restock.\n");
-		pthread_mutex_lock(&mutex_inventory);
-		restockIngredients();
-		printInvTree();
-		pthread_mutex_unlock(&mutex_inventory);
+		pthread_mutex_lock(&mutex_inventory);		//make sure no one else is in the inventory while restocking
+		restockIngredients();						//restock the whole inventory
+		printInvTree();								//print the current inventory
+		pthread_mutex_unlock(&mutex_inventory);		
 		printf("________________________________\nInventory succesfully restocked.\n\n");
-		sem_post(&semEmpty);
+		sem_post(&semEmpty);						//wake up whoever waited for the inventory to be restocked
 	}
 }
 
@@ -176,25 +183,33 @@ void *shopper_func(){
  */
 void *apprentice(void *j){
 
-    int i = *(int*) j; // Apprentice ID
-    int abread = 0;
+    int i = *(int*) j;  // Apprentice ID
+    int abread = 0;		// Number of breads that this apprentice has made
     
-	timeType metric;
-    while(breads < maxBread){
-        //printf("Apprentice %d wants to access the inventory.\n",i);
-		
-		gettimeofday(&tvnow, NULL);
+	timeType metric;	
+    while(breads < maxBread){		//run while not enough breads have been made		
+		gettimeofday(&tvnow, NULL);		//get the current time
 	
-	    if (scheduler_metric == ARRIVALORDER) {
-	    	metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);
-	    	//printf("%lu = %lu  . %lu\n", metric, tvnow.tv_sec, tvnow.tv_usec);  
-	    } else if (scheduler_metric == FASTLEARNERS) {
-	    	metric = timeTypeMax - abread - 1;
-			//printf("%d metric: %lu\n", i, metric);
-	    } else if (scheduler_metric == FAIRLEARNERS) {
-	    	metric = abread;
-	    } else if (scheduler_metric == PRELEARNERS) {
-	    	metric = i;
+		//handle the different scheduling metrics
+	    if (scheduler_metric == ARRIVALORDER) { 		
+	    	//if "arrival time" is used as the scheduling metric, apprentices store their arrival time into the interested_array
+			//the earliest apprentice will be woken up first, since his timestamp is the smallest
+			metric = (tvnow.tv_sec - tvbase.tv_sec)*1000000 + (tvnow.tv_usec - tvbase.tv_usec);  //get the current time in microseconds
+	    } 
+		else if (scheduler_metric == FASTLEARNERS) {
+			//if "fast learners" is used as the scheduling metric, apprentices store how many breads they have made so far into the interested_array
+			//the fastest apprentice will be woken up first, since he had the highest count of breads
+	    	metric = timeTypeMax - abread - 1; //the number of breads is subtracted from the max value, so that the smallest value resembles the fastest apprentice
+	    } 
+		else if (scheduler_metric == FAIRLEARNERS) {
+	    	//if "fair learners" is used as the scheduling metric, apprentices store how many breads they have made so far into the interested_array
+			//the slowest apprentice will be woken up first, since he had the lowest count of breads
+			metric = abread;
+	    } 
+		else if (scheduler_metric == PRELEARNERS) {
+	    	//if "pre learners" is used as the scheduling metric, apprentices store their ID into the interested_array
+			//the fastest apprentice will be woken up first, since he had the lowest count of breads
+			metric = i;
 	    } 
 	    
 	    
