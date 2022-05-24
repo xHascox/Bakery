@@ -18,7 +18,13 @@ void autoMakingBread();
 
 
 
-
+/**
+ * @brief 
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char const *argv[]) {
 
 
@@ -83,7 +89,68 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
+
+/**********************************  COMMAND LINE OPTIONS  ******************************************/
+/**
+ * @brief Checks the user input for selecting an option.
+ * 
+ * @param option Pointer to int
+ */ 
+void checkOption(int* option) {
+    
+    printf("Please enter your option: ");
+    if (scanf("%d", option) != 1) {
+ 
+        printf("ERROR: Please enter a NUMBER (int)!\n");
+        exit(1);
+    }
+    if (*option <= 0 || *option >= 5) {
+        printf("Please choose from a number between one and four (1,2,3,4)!\n");
+        checkOption(option);
+    }
+}
+
+/**
+ * @brief Handles the option selection for the command line interface (CLI). \n
+ * There are four main options which can be selected by teh user: \n
+ *  -> Learning to make bread; \n  
+ *  -> Too Good To Go; \n
+ *  -> Additional Feature - 'Sleeping Baker'; \n
+ *  -> Testing Scripts;
+ * 
+ */
+void optionSelection() {
+    int option = 0;
+    
+    checkOption(&option);
+ 
+    if (option == 1) {
+        printf("You have chosen option one: %d\n", option);
+        printf("\n\n");
+        makingBread();
+    } else if (option == 2) {
+        printf("You have chosen option two: %d\n", option);
+        printf("\n\n");
+        tooGood();
+    } else if (option == 3) {
+        printf("You have chosen option three: %d\n", option);
+        printf("\n\n");
+        sleepingBaker();
+    } else if (option == 4) {
+        printf("You have chosen option four: %d\n", option);
+        printf("\n\n");
+        testingScripts();
+    }
+}
+/**********************************  COMMAND LINE OPTIONS  ******************************************/
+
+
 /***************************************  MAKING BREAD  *********************************************/
+/**
+ * @brief Predefines the necessary arguments for the main run function for 'learning to make bread' and calls it. This funbction is mainly used for the testing scripts.
+ * 
+ * @param option 
+ */
 void autoMakingBread(int option) {
     int nbAppr = 3;
     int maxBreads = 10; 
@@ -118,22 +185,26 @@ void autoMakingBread(int option) {
 
     metric = 3; //prelearners = fast learners in documentation
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 
 }
 
 
+/**
+ * @brief This function is responsible for asking the user to enter the necessary arguments to run 'learning to make bread'. \n
+ * 
+ */
 void makingBread() {
 
-    int nbAppr;
-    int maxBreads; 
-    int* nbIngrArr; 
-    char*** ingrNames;
-    int stonks; 
-    int nbBreadTypes;
-    char** breadTypesArr;
-    int metric; 
+    int nbAppr;             // number of apprentices
+    int maxBreads;          // Total amount of bread to be made
+    int nbBreadTypes;       // number of different bread types
+    char** breadTypesArr;   // array for each bread type's name
+    int* nbIngrArr;         // array of int specifying the amount of ingredients each bread type needs; the index corresponds to the different bread types
+    char*** ingrNames;      // array with size equal to the number of bread types, pointing to the amount of ingredients (strings) each bread type has.
+    int stonks;             // amount of initial stock and 'restockTo'-value
+    int metric;             // 
     int scen;
 
     int maxStrLen = 32;
@@ -214,7 +285,7 @@ void makingBread() {
 
     printf("\n\n");
 
-
+    /* STOCK TO BE APPLIED/restockTo VALUE */
     printf("You also have to enter a desired amount of stock which is applied to each ingredient.\n");
     printf("Stock to be applied: ");
     if (scanf("%d", &stonks) != 1) {       
@@ -226,6 +297,7 @@ void makingBread() {
     } 
     printf("\n\n");
 
+    /* NUMBER OF APPRENTICES AND TOTAL NUMBER OF BREADS TO BE MADE */
     printf("Lastly, you have to provide some amounts for some variables.\n");
     printf("Please enter a desired amount for the number of apprentices: ");
     if (scanf("%d", &nbAppr) != 1) {       
@@ -249,10 +321,11 @@ void makingBread() {
 
     printf("Function call for Making Bread disabled for testing Sleeping Baker!\n");
     /* ----------------------------------------- */
-    // runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    // runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
     /* ----------------------------------------- */
 }
 /***************************************  MAKING BREAD  *********************************************/
+
 
 /******************************************  TGTG  **************************************************/
 void tooGood() {
@@ -309,19 +382,25 @@ void tooGood() {
         } else if (nbBreads[i] <= 0) {
         printf("Please only enter a positive number!\n");
         exit(1);
-    } 
+        } 
     }
     
+    printf("\n\n");
+
 
     printf("Function call for Making Bread disabled for testing Sleeping Baker!\n");
     /* ----------------------------------------- */
     // runTGTG(breadTypesArr, nbBreadTypes, nbBreads);
     /* ----------------------------------------- */
-
 }
 /******************************************  TGTG  **************************************************/
 
 /*************************************  SLEEPING BAKER  *********************************************/
+/**
+ * @brief Handling the CLI for the additional feature and calls its run function. \n
+ * Requested/Required arguments are the number of customers to be served and the amount of chairs for the customers to have a seat.
+ * 
+ */ 
 void sleepingBaker() {
 
     int nbCustomers;
@@ -349,51 +428,12 @@ void sleepingBaker() {
         exit(1);
     } 
 
+    printf("\n\n");
+
 
     runAddF(nbCustomers, nbChairs);
-
 }
 /*************************************  SLEEPING BAKER  *********************************************/
-
-
-void checkOption(int* option) {
-    
-    printf("Please enter your option: ");
-    if (scanf("%d", option) != 1) {
- 
-        printf("ERROR: Please enter a NUMBER (int)!\n");
-        exit(1);
-    }
-    if (*option <= 0 || *option >= 5) {
-        printf("Please choose from a number between one and four (1,2,3,4)!\n");
-        checkOption(option);
-    }
-}
-
-
-void optionSelection() {
-    int option = 0;
-    
-    checkOption(&option);
- 
-    if (option == 1) {
-        printf("You have chosen option one: %d\n", option);
-        printf("\n\n");
-        makingBread();
-    } else if (option == 2) {
-        printf("You have chosen option two: %d\n", option);
-        printf("\n\n");
-        tooGood();
-    } else if (option == 3) {
-        printf("You have chosen option three: %d\n", option);
-        printf("\n\n");
-        sleepingBaker();
-    } else if (option == 4) {
-        printf("You have chosen option four: %d\n", option);
-        printf("\n\n");
-        testingScripts();
-    }
-}
 
 
 

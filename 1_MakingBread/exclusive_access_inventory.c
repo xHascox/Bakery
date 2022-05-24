@@ -53,7 +53,14 @@ void *shopper();
 void *apprentice(void *j);
 void access_inventory(int i);
 
-
+/**
+ * @brief The 'baker' is a thread which handles the apprentices's access to the inventory.
+ * 
+ * 	TODO: ADD MORE DESCRIPTION
+ * 
+ * @param j Specifying pointer some value identifying the baker
+ * @return void* 
+ */
 void *baker(void *j){
 	int scenario2alt=0;
 	int scenario2j;
@@ -120,6 +127,14 @@ void *baker(void *j){
 	pthread_exit(&ret);
 }
 
+
+/**
+ * @brief The 'shopper' is a thread which handles the restocking of the ingredients. \n
+ * This thread is activated when an apprentice tries to take ingredients from the inventory but the amount of ingredients present (stock) is not sufficient. \n
+ * It then restocks the ingredients to the restockTo-value. Additionally, this thread locks the inventory befre accessing it.
+ * 
+ * @return void* 
+ */
 void *shopper_func(){
 	while(1){
 		sem_wait(&semS);
@@ -136,6 +151,14 @@ void *shopper_func(){
 	}
 }
 
+/**
+ * @brief The 'apprentice' is a thread which is accessing the inventory, retrieving the necessary ingredients and bakes bread. \n
+ * First, the chosen startegy for 'learnign to make bread' is applied. Then, it waits for the baker to post this apprentice's semaphore to wake it up. \n
+ * If is is woken up, the inventory mutex is locked to gain sole access to it. After the inventory access and bread baking, the stopping condition, the amount of breads baked, is checked.
+ * 
+ * @param j Specifying pointer to some value identifying the apprentice
+ * @return void* 
+ */
 void *apprentice(void *j){
 
     int i = *(int*) j; // Apprentice ID
@@ -186,11 +209,19 @@ void *apprentice(void *j){
 	pthread_exit(NULL);
 }
 
+/**
+ * @brief This function is called when an apprentice want to access the inventory. Here, a bread type is chosen \n
+ *  and this type's ingredients array and the amount of different ingredients fetched. \n
+ *  Then, for each ingredient required for this bread type, a unit is removed from the inventory. \n
+ *  When retrieving it is checked whether or not there are enough ingredients left. If no, the shopper is activated.
+ * 
+ * @param i int specifying entering apprentice
+ */
 void access_inventory(int i){
 	
 	printf("     Apprentice %d accesses the inventory\n",i);
 	
-	// Choose which bread to make
+	/* Choose which bread to make */
 	char* breadName = breadNames[rand()%NBBreadtypes/* +1 ??*/];
 	char** ingredients = getIngredArray(breadName);
 	int ingredients_len = getNbIngredOfBreadType(breadName);
@@ -198,6 +229,7 @@ void access_inventory(int i){
 	printf("     Apprentice %d will make a %s\n",i, breadName);
 	printf("     For that they take: ");
 
+	/* Taking ingredients and handling unsufficient stock */
 	for(int j = 0; j < ingredients_len; j++){
 		char *ingredient = ingredients[j];
 		int in_stock = takeIngredient(ingredient, 1);
@@ -221,7 +253,25 @@ void access_inventory(int i){
 	printf("     from the inventory and leave\n");
 }
 
-void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int stonks, int nbBT, char** breadNamesArr, int metric, int scen){
+
+/**
+ * @brief This is the main run function of 'learning to make bread' being passed all the necessary arguments. \n
+ * First the function arguments are stored into local variables. Then, the recipe book and the invcentory are created. \n
+ * Thirdly, the mutex, semaphore and index array for the apprentices are malloc'ed and initialized. \n
+ * After that, the threads (baker, shopper, and the apprentices) are created  ans start their operation. \n
+ * Lastly, after having baked enough breads, all the threads are joined together and some memory is freed.
+ * 
+ * @param nbAppr Number of apprentices
+ * @param maxB The total amount of bread to be baked
+ * @param nbBT Number of bread types
+ * @param breadNamesArr Array for each bread type's name
+ * @param nbIngrArr An array of int specifying the amount of ingredients each bread type needs; the index corresponds to the different bread types
+ * @param ingNames An array with size equal to the number of bread types, pointing to the amount of ingredients (strings) each bread type has.
+ * @param stonks Amount of initial stock and 'restockTo'-value
+ * @param metric Chosing scheduling algorithm for 'learning to make bread'
+ * @param scen The second scenario an be acivated by entering the specific value (2)
+ */
+void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen) {
 	
 	printf("Beginning\n");
 
@@ -229,7 +279,6 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	gettimeofday(&tvbase, NULL);
 
     /* INITIALIZE VARIABLES BASED ON USER INPUT */
-
 	NBApprentices = nbAppr;
 	maxBread = maxB;
 	NBIngredients = nbIngrArr;
@@ -271,10 +320,11 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	/* ------------------------------------------- */
 
 
-
+	
     interested_array = malloc(NBApprentices*sizeof(timeType));
     threadIndexes = malloc(NBApprentices*sizeof(pthread_t));
     semA = malloc(NBApprentices*sizeof(sem_t));
+
 
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
 
@@ -287,6 +337,7 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
         sem_init(&semA[i], 0, 0);
         interested_array[i]=timeTypeMax;
     }
+
 
 	/* CREATE THREADS */
 
@@ -310,13 +361,13 @@ void runMakingBread (int nbAppr, int maxB, int* nbIngrArr, char*** ingNames, int
 	pthread_t shopper;
 	pthread_create(&shopper, NULL, shopper_func, NULL);
 
+
 	/* CLEANUP */
 
 	// Join threads
 	pthread_join(bakert, NULL);
 	pthread_join(shopper, NULL);
 	
-
 	for (int i=0; i<NBApprentices; i++) { 
 		pthread_join(threadIndexes[i], NULL);
 	}

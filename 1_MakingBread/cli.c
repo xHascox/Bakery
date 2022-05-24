@@ -214,7 +214,7 @@ void makingBread() {
     printf("\n\n");
 
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 }
 

@@ -147,7 +147,7 @@ void makingBread() {
 
     printf("Function call for Making Bread disabled for testing TGTG!\n");
     /* ----------------------------------------- */
-    // runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    // runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
     /* ----------------------------------------- */
 }
 /***************************************  MAKING BREAD  *********************************************/

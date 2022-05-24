@@ -17,8 +17,8 @@ typedef struct IngredNode IngredNode;
  * @brief An InvNode (Inventory Node) stores one type of ingredient.
  * Every InvNode has a count of the remaining stock and a name.
  * As we implement the inventory as a binary tree with benefits,
- * every InvNode can point to a left (lexically smaller)
- * or right (lexically bigger) node and to the linked-list
+ * every InvNode can point to a left (lexicographically smaller)
+ * or right (lexicographically bigger) node and to the linked-list
  * containing the ingredients.
  */
 struct InvNode {                    // An Inventory Node
@@ -39,19 +39,19 @@ typedef struct InvNode InvNode;
  * The initialAmount, if not set to '0', gets added to the
  * newly created InvNode. 
  *
- * @param name
- * @param initialAmount
+ * @param name The name of the ingredient 
+ * @param initialAmount Amount of ingredients to be added to the new node
  */
 void registerIngredient(const char* name , int initialAmount);
 
 
 /**
  *  @brief Add items to the data structure. The InvNode for
- *  the specified ingredient to be added has to already
+ *  the specified ingredient to be added to has to already
  *  exist in the data structure.
  *
- *  @param name
- *  @param amount
+ *  @param name The name of the ingredient 
+ *  @param amount Amount to be added
  */
 void addIngredient(const char* name, int amount);
 
@@ -64,7 +64,7 @@ void addIngredient(const char* name, int amount);
  *      - no such ingredient existing \n
  * and '1' otherwise.
  *
- * @param name
+ * @param name The name of the ingredient 
  * @return int
  */
 int takeIngredient(const char* name, int amount);
@@ -72,11 +72,11 @@ int takeIngredient(const char* name, int amount);
 
 /**
  *  @brief Checks if the ingredient specified already exists in
- *  the data structure. Returns '1' if it exists '0' otherwise. \n
+ *  the data structure. Returns '1' it exists '0' otherwise. \n
  *  This function does not check the amount of a specific
  *  ingredient present.
  *
- *  @param name
+ *  @param name The name of the ingredient 
  *  @return int
  */
 int containsIngred(const char* name);
@@ -95,7 +95,7 @@ InvNode* getInvNode(const char* name);
 /**
  * @brief Restocks the ingredients if a specified 'pNode' to its 'restockTo' value.
  *
- * @param pNode
+ * @param pNode Specified InvNode*
  */
 void restock(InvNode* pNode);
 
@@ -111,8 +111,8 @@ void restockIngredients();
  * IMPORTANT: the 'targetStock' value should be >= 5 to ensure a certain performance of the inventory. \n
  * A value > 10 is recommended. However, this value highly depends on the frequency in which this ingredient is used.
  *
- * @param name
- * @param targetStock
+ * @param name The name of the ingredient 
+ * @param targetStock Value to which the restockTo value of 'name' should be set to
  */
 void setRestockTo(const char* name, int targetStock);
 
