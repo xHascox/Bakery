@@ -9,18 +9,22 @@
 #define TRUE 1
 #define FALSE 0
 
-int NBCustomers;
-int NBChairs;
+int NBCustomers;    // Number of customers
+int NBChairs;       // Number of chairs for customers to sit on
 
-int bakeryOpen;
+int bakeryOpen;     // Status variable for the baker to exit
 
-Queue* chairs;
-pthread_mutex_t mutex_chairs;
+Queue* chairs;      // Queue where the semaphores for the waiting customers are stored
+pthread_mutex_t mutex_chairs;   // The mutex lock for accessing the queue
 
 sem_t* semC; // Customer semaphore :: dynamic array of sem_t
-
 sem_t semB; // Baker semaphore
 
+/**
+ * @brief The baker is a thread which wakes up customer threads and serves them. The baker wakes one of them up by dequeuing a semaphore and posting it.
+ * 
+ * @return void* 
+ */
 void *baker(){
     
     while(TRUE) {
@@ -38,6 +42,13 @@ void *baker(){
     }
 }
 
+/**
+ * @brief This is a thread representing a customer. It is identified by the 'id'. This thread locks the chair mutex to enqueue its semaphore safely. \n
+ * This, however, can only be done if there are still chairs left in the bakery. The customer leaves if it has been served or it could not find a free chair. \n
+ * 
+ * @param id Identifyer
+ * @return void* 
+ */
 void *customer(void *id){
     
     int cid = (int) id;
@@ -61,7 +72,17 @@ void *customer(void *id){
     pthread_exit(NULL); // Leave the bakery
 }
 
-void runAddF(int nbcustomers, int nbchairs){
+
+/**
+ * @brief This is the main run-function of the additional feature (sleeping baker). \n
+ * It takes in the required arguments and declares some local variables with them. \n
+ * Then the queue and the semaphore array are created and initialized. After that, the customers and baker threads are also created. \n
+ * Lastly, the customer threads are joined, the bakery is closed and the baker is also joined.
+ * 
+ * @param nbcustomers Amount of customers to be served.
+ * @param nbchairs Amount of free places for a customer to sit in.
+ */
+void runAddF(int nbcustomers, int nbchairs) {
 
     printf("---start---\n");
 
