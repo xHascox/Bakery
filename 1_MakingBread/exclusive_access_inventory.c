@@ -357,11 +357,10 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 	/* CREATE THREADS */
 
 	// Baker
+	pthread_t bakert;
 	if (scenario == SCENARIO2) {
-		pthread_t bakert;
 		pthread_create(&bakert, NULL, scenarioBaker, (void *) 0);
 	} else {
-		pthread_t bakert;
 		pthread_create(&bakert, NULL, baker, (void *) 0);
 	}
 	
