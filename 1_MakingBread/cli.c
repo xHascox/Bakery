@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]) {
 
         // X = 3 // Additional Feature Sleeping Baker
         
-        if (atoi(argv[2]) == 3) {
+        if (atoi(argv[1]) == 3) {
         
         }
 
@@ -96,11 +96,11 @@ void autoMakingBread(int option) {
 
     breadTypesArr = malloc(nbBreadTypes*sizeof(char*));
     breadTypesArr[0] = malloc(maxStrLen*sizeof(char));
-    strcpy(ingrNames[0][0], "BreadX");
+    strcpy(breadTypesArr[0], "BreadX");
 
     metric = 3; //prelearners = fast learners in documentation
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 
 }
@@ -214,7 +214,7 @@ void makingBread() {
     printf("\n\n");
 
 
-    runMakingBread(nbAppr, maxBreads, nbIngrArr, ingrNames, stonks, nbBreadTypes, breadTypesArr, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 }
 

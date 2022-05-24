@@ -5,7 +5,7 @@
 /**
  * @brief A BreadType (Recipe) Node stores the necessary ingredients in an array. \n
  * As we implement the Recipe as a binary tree, every BreadType can point to a left \n
- * (lexically smaller) or right (lexically bigger) node and to the array containing the ingredients.
+ * (lexicographically smaller) or right (lexicographically bigger) node and to the array containing the ingredients.
  */
 struct BreadType {                      // A bread type Node
     char* breadName;                    // The name of the bread type
@@ -25,9 +25,9 @@ typedef struct BreadType BreadType;
  * ingredients necessary for this bread type. \n
  * The ingredArr contains all the ingredients' 'names'.
  *
- * @param name
- * @param nbIngred
- * @param ingredArr
+ * @param name Name of the bread type
+ * @param nbIngred number of different ingredients necessary for this bread type
+ * @param ingredArr array of ingredient's names (strings) 
  * @return int
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr);
@@ -37,7 +37,7 @@ int registerBreadType(const char* name , int nbIngred, char** ingredArr);
  * @brief Checks if the bread type specified already exists in
  * the data structure. Returns '1' it exists, '0' otherwise. 
  *
- * @param name
+ * @param name Name of the bread type
  * @return int
  */
 int containsBreadType(const char* name);
@@ -47,7 +47,7 @@ int containsBreadType(const char* name);
  * @brief Get the BreadType identified by 'name'. 
  * Returns NULL if no such bread type is known.
  *
- * @param name
+ * @param name Name of the bread type
  * @return BreadType*
  */
 BreadType* getBreadType(const char* name);
@@ -56,7 +56,7 @@ BreadType* getBreadType(const char* name);
 /** 
  * @brief Returns the ingredients array of a bread type specified by 'breadName'.
  *
- * @param breadName
+ * @param breadName Name of the bread type
  * @return char**
  */
 char** getIngredArray(const char* breadName);
@@ -73,7 +73,7 @@ int getNbBreadTypes();
 /**
  * @brief Get number of different ingredients required for a with 'name' specified bread type.
  * 
- * @param name 
+ * @param name Name of the bread type
  * @return int 
  */
 int getNbIngredOfBreadType(const char* name); 

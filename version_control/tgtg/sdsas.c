@@ -2,29 +2,31 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
-#include "linkedlist.h"
-#include "toogood.h"
+#include "ll.h"
+//#include "linkedlist.h"
 
+#define BREADS_SOLD 30 // Must be less than MAX_BREAD
 // TODO (Lukas) Move BREADS_SOLD and TICKS to CLI
-#define BREADS_SOLD 20
 #define TICKS 5 // Number of ticks before tgtg check
 
 #define NO 0
 #define YES 1
 
+//struct TypeList dynTypes;
 
 // Function that gets called every k TICKS and decides whether a bread type is going to be offered via TGTG
 void tgtg(){
-    for (int i = 0; i < dynTypes->count; i++){
-        if (dynTypes->TgtgBasket[i] == NO){
-            if (dynTypes->Sold[i] == NO) {
-                dynTypes->TgtgBasket[i]= YES;
-                printf("%s was flagged for TGTG\n", dynTypes->types[i]->name);
+    for (int i = 0; i < dynTypes.count; i++){
+        if (dynTypes.TgtgBasket[i] == NO){
+            if (dynTypes.Sold[i] == NO) {
+                dynTypes.TgtgBasket[i]= YES;
+                printf("%s was flagged for TGTG\n", dynTypes.types[i]->name);
             }
         }
-        dynTypes->Sold[i] = NO;
+        dynTypes.Sold[i] = NO;
     }
 }
+
 
 void runTGTG(char** breadTypes, int nbTypes, int* amounts){
 
@@ -39,13 +41,13 @@ void runTGTG(char** breadTypes, int nbTypes, int* amounts){
     int type = 0;
 
     for (int i=1; i <= BREADS_SOLD; i++) {
-        type = rand() % dynTypes->count;
-        if (dynTypes->types[type]->nb > 0){
-            dynTypes->types[type]->nb -= 1;
-            if (dynTypes->TgtgBasket[type] == NO){
-                dynTypes->Sold[type] = YES;
+        type = rand() % dynTypes.count;
+        if (dynTypes.types[type]->nb > 0){
+            dynTypes.types[type]->nb -= 1;
+            if (dynTypes.TgtgBasket[type] == NO){
+                dynTypes.Sold[type] = YES;
             }
-            printf("A bread was sold! Type: %s, TGTG: %d\n", dynTypes->types[type]->name, dynTypes->TgtgBasket[type]);
+            printf("A bread was sold! Type: %s, TGTG: %d\n", dynTypes.types[type]->name, dynTypes.TgtgBasket[type]);
             if (i % TICKS == 0){
                 tgtg();
             }
@@ -53,10 +55,9 @@ void runTGTG(char** breadTypes, int nbTypes, int* amounts){
     }
 }
 
-/*
+
 int main(int argc, char const *argv[]){
     char* breadtypes[] = {"Croissant", "Zopf", "Tessinerli"};
-    int num[3] = {8,9,10}; 
+    int num[3] = {10,12,14}; 
     runTGTG(breadtypes,3,num);
 }
-*/

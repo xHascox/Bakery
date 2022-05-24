@@ -21,18 +21,20 @@
  */
 struct RecipeRootNode {
     struct BreadType* firstBreadType;   // Pointer to the first BreadType.
-    int nbRecElem;                  // Number of different bread types.
+    int nbRecElem;                      // Number of different bread types.
 };
 typedef struct RecipeRootNode RecipeRootNode;
 
 
-RecipeRootNode* pHeadRecBook  = NULL; // The Head of the data struct
+RecipeRootNode* pHeadRecBook  = NULL;   // The Head of the data struct
 
 
 /**
  * @brief Create a new BreadType with passed parameter.
  * 
- * @param name const char*
+ * @param name Name of the bread type
+ * @param nbIngred number of different ingredients necessary for this bread type
+ * @param ingredArr array of ingredient's names (strings) 
  * @return BreadType*
  */
 BreadType* createBreadType(const char* name, int nbIngred, char** ingredArr)
@@ -58,34 +60,35 @@ BreadType* createBreadType(const char* name, int nbIngred, char** ingredArr)
 
 /**
  *  @brief Initializes the RecipeRootNode.
+ * 
  */
 void createRecipeRootNode()
 {
-    if (pHeadRecBook  == NULL) {    // check if no RecipeRootNode already exists
+    if (pHeadRecBook  == NULL) {        // check if no RecipeRootNode already exists
         pHeadRecBook  = malloc(sizeof(RecipeRootNode));    // allocate space in heap
-        pHeadRecBook ->firstBreadType = NULL; // initialize pointer to first BreadType
-        pHeadRecBook ->nbRecElem = 0;    // initialize nbRecElem
+        pHeadRecBook ->firstBreadType = NULL;   // initialize pointer to first BreadType
+        pHeadRecBook ->nbRecElem = 0;           // initialize nbRecElem
     }
 }
 
 
 /**
- * @brief Get the BreadType identified by 'name'. \n
+ * @brief Get the BreadType identified by 'name'. 
  * Returns NULL if no such bread type is known.
  *
- * @param name
+ * @param name Name of the bread type
  * @return BreadType*
  */
 BreadType* getBreadType(const char* name)
 {
     BreadType* pCurrNode = pHeadRecBook ->firstBreadType;   // set pCurrNode to the first node in data structure
-    while(pCurrNode != NULL) {                  // do until pCurrNode == NULL
-        if (strcmp(name, pCurrNode->breadName) < 0) {  // if 'name' is smaller than the current 'ingredName'
-            pCurrNode = pCurrNode->pLeft;               // set pCurrNode to left
+    while(pCurrNode != NULL) {                          // do until pCurrNode == NULL
+        if (strcmp(name, pCurrNode->breadName) < 0) {   // if 'name' is smaller than the current 'ingredName'
+            pCurrNode = pCurrNode->pLeft;                   // set pCurrNode to left
         } else if (strcmp(name, pCurrNode->breadName) > 0) {   // if 'name' is bigger than the current 'ingredName'
-            pCurrNode = pCurrNode->pRight;  // set pCurrNode to right
-        } else {                //  if 'name' is equal to the current 'ingredName', i.e., found
-            return pCurrNode;   // return the respective node
+            pCurrNode = pCurrNode->pRight;                     // set pCurrNode to right
+        } else {                    //  if 'name' is equal to the current 'ingredName', i.e., found
+            return pCurrNode;       // return the respective node
         }
     }
     return NULL;    // if no node or node not found
@@ -95,7 +98,7 @@ BreadType* getBreadType(const char* name)
 /** 
  * @brief Returns the ingredients array of a bread type specified by 'breadName'.
  *
- * @param breadName
+ * @param breadName Name of the bread type
  * @return char**
  */
 char** getIngredArray(const char* breadName)
@@ -118,10 +121,10 @@ int getNbBreadTypes()
 /**
  * @brief Get number of different ingredients required for a with 'name' specified bread type.
  * 
- * @param name 
+ * @param name Name of the bread type
  * @return int 
  */
-int getNbIngredOfBreadType(const char* name) 
+int getNbIngredOfBreadType(const char* name)
 {
     return getBreadType(name)->nbIngred;
 }
@@ -130,9 +133,9 @@ int getNbIngredOfBreadType(const char* name)
 
 /**
  * @brief Checks if the bread type specified already exists in
- * the data structure. Returns '1' it exists, '0' otherwise. \n
+ * the data structure. Returns '1' it exists, '0' otherwise. 
  *
- * @param name
+ * @param name Name of the bread type
  * @return int
  */
 int containsBreadType(const char* name)
@@ -152,9 +155,9 @@ int containsBreadType(const char* name)
  * ingredients necessary for this bread type. \n
  * The ingredArr contains all the ingredients' 'names'.
  *
- * @param name
- * @param nbIngred 
- * @param ingredArr
+ * @param name Name of the bread type
+ * @param nbIngred number of different ingredients necessary for this bread type
+ * @param ingredArr array of ingredient's names (strings) 
  */
 void insertBreadType(const char* name, int nbIngred, char** ingredArr)
 {
@@ -202,9 +205,9 @@ void insertBreadType(const char* name, int nbIngred, char** ingredArr)
  * ingredients necessary for this bread type. \n
  * The ingredArr contains all the ingredients' 'names'.
  *
- * @param name
- * @param nbIngred
- * @param ingredArr
+ * @param name Name of the bread type
+ * @param nbIngred number of different ingredients necessary for this bread type
+ * @param ingredArr array of ingredient's names (strings) 
  * @return int
  */
 int registerBreadType(const char* name , int nbIngred, char** ingredArr)
@@ -225,7 +228,7 @@ int registerBreadType(const char* name , int nbIngred, char** ingredArr)
 /**
  * @brief Prints the tree in 'inorder traversal'. Prints the node's name and stock count.
  *
- * @param pNode
+ * @param pNode Specified BreadType*
  */
 void printRecipeBookRecursion(BreadType* pNode)
 {
@@ -243,6 +246,7 @@ void printRecipeBookRecursion(BreadType* pNode)
 /**
  * @brief Lets the tree be printed in 'inorder traversal'. 
  * Values printed are the node's name and stock count.
+ * 
  */
 void printRecipeBook()
 {

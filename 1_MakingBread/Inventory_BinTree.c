@@ -33,8 +33,8 @@ InvRootNode* pHead = NULL; // The Root of the InvTree
 /**
  * @brief Create a new InvNode with passed parameter.
  * 
- * @param name 
- * @param restock
+ * @param name The name of the new ingredient 
+ * @param restock The to be restocked to value
  * @return InvNode*
  */
 InvNode* createInvNode(const char* name, int restock)
@@ -56,7 +56,6 @@ InvNode* createInvNode(const char* name, int restock)
 /**
  *  @brief Create and return a pointer to the IngredNode.
  *
- *  @param name
  *  @return IngredNode*
  */
 IngredNode* createIngredNode()
@@ -70,7 +69,7 @@ IngredNode* createIngredNode()
 
 /**
  *  @brief Initializes the InvRootNode.
- *
+ * 
  */
 void createInvRootNode()
 {
@@ -86,7 +85,7 @@ void createInvRootNode()
  * @brief Get the InvNode identified by 'name'. \n
  * Returns NULL if no such ingredient is known.
  *
- * @param name
+ * @param name The name of the ingredient 
  * @return InvNode*
  */
 InvNode* getInvNode(const char* name)
@@ -112,8 +111,8 @@ InvNode* getInvNode(const char* name)
  *      - no respective InvNode exists; thus has to be registered first \n
  *      - an InvNode exists but no stock present
  *
- *  @param name
- *  @return IngredNode*
+ *  @param name The name of the ingredient 
+ *  @return IngredNode* 
  */
 IngredNode* getLastIngredNode(const char* name)
 {
@@ -139,15 +138,15 @@ IngredNode* getLastIngredNode(const char* name)
  *  This function does not check the amount of a specific
  *  ingredient present.
  *
- *  @param name
+ *  @param name The name of the ingredient 
  *  @return int
  */
 int containsIngred(const char* name)
 {
-    if (getInvNode(name) != NULL) { // check if return is != NULL
-        return TRUE;    // if != NULL, return '1'
+    if (getInvNode(name) != NULL) {     // check if node is present 
+        return TRUE;    
     } else {
-        return FALSE;   // if == NULL, return '0'
+        return FALSE;   
     }
 }
 
@@ -157,8 +156,8 @@ int containsIngred(const char* name)
  *  the specified ingredient to be added to has to already
  *  exist in the data structure.
  *
- *  @param name
- *  @param amount
+ *  @param name The name of the ingredient 
+ *  @param amount Amount to be added
  */
 void addIngredient(const char* name, int amount)
 {
@@ -167,8 +166,8 @@ void addIngredient(const char* name, int amount)
     IngredNode* pIngredNode = getLastIngredNode(name);  // declare an IngredNode
     if (pIngredNode == NULL) {  // if there is no stock of the specified ingredient
         pInvNode->pIngred = createIngredNode(name); // create an IngredNode and link it to the InvNode
-        amount--;               // decrease function variable amount (important for the following for-loop)
-        pInvNode->count += 1;   // increment stock counter
+        amount--;                           // decrease function variable amount (important for the following for-loop)
+        pInvNode->count += 1;               // increment stock counter
         pIngredNode = pInvNode->pIngred;    // move pIngredNode forward (important for the following for-loop)
     }
     for (int i = 0; i < amount; i++) {      // for the amount inserted
@@ -187,13 +186,14 @@ void addIngredient(const char* name, int amount)
  *      - no such ingredient existing \n
  * and '1' otherwise.
  *
- * @param name
+ * @param name The name of the ingredient 
+ * @param amount Amount to take
  * @return int
  */
 int takeIngredient(const char* name, int amount)
 {
     InvNode* pInvNode = getInvNode(name);   // get the specified InvNode
-    if (pInvNode == NULL || pInvNode->count < amount || pInvNode->pIngred == NULL) { // do some checks
+    if (pInvNode == NULL || pInvNode->count < amount || pInvNode->pIngred == NULL) { 
         return FALSE;           // return '0' if this ingredient has not been registered or there is not enough stock present
     }
     IngredNode* pIngredNode = NULL;    // declare an IngredNode
@@ -204,7 +204,7 @@ int takeIngredient(const char* name, int amount)
             free(pIngredNode);  // free previous first element
         } else {
             free(pIngredNode);
-            pInvNode->pIngred = NULL;
+            pInvNode->pIngred = NULL; // set to NULL, since first node has been freed
         }
         pInvNode->count -= 1;   // decrement stock counter
     }
@@ -215,13 +215,13 @@ int takeIngredient(const char* name, int amount)
 /**
  * @brief Restocks the ingredients if a specified 'pNode' to its 'restockTo' value.
  *
- * @param pNode
+ * @param pNode Specified InvNode*
  */
 void restock(InvNode* pNode)
 {
     int diff = pNode->restockTo - pNode->count;     // calculate the difference between the actual stock count and the restockTo amount
     if (diff != 0) {                                // when diff == 0, nothing to add
-        addIngredient(pNode->ingredName, diff); // add the respective amount of ingredients
+        addIngredient(pNode->ingredName, diff);     // add the respective amount of ingredients
     }
 }
 
@@ -229,7 +229,7 @@ void restock(InvNode* pNode)
 /**
  * @brief Traverses the tree in 'inorder' and restocks every Node of it.
  *
- * @param pNode
+ * @param pNode Specified InvNode
  */
 void restockRecursion(InvNode* pNode)
 {
@@ -242,6 +242,7 @@ void restockRecursion(InvNode* pNode)
 
 /**
  * @brief Restocks ingredients of every InvNode to the restockTo value.
+ * 
  */
 void restockIngredients()
 {
@@ -252,8 +253,8 @@ void restockIngredients()
 /**
  * @brief Sets the 'restockTo' value of the pNode to the 'targetValue'.\n
  *
- * @param pNode
- * @param targetStock
+ * @param pNode Specified InvNode*
+ * @param targetStock Value to which the restockTo value of 'name' should be set to
  */
 void setRestockToNode(InvNode* pNode, int targetStock)
 {
@@ -266,12 +267,12 @@ void setRestockToNode(InvNode* pNode, int targetStock)
  * IMPORTANT: the 'targetStock' value should be >= 5 to ensure a certain performance of the inventory. \n
  * A value > 10 is recommended. However, this value highly depends on the frequency in which this ingredient is used.
  *
- * @param name
- * @param targetStock
+ * @param name The name of the ingredient 
+ * @param targetStock Value to which the restockTo value of 'name' should be set to
  */
 void setRestockTo(const char* name, int targetStock)
 {
-    if (containsIngred(name)) {     // The ingredient defined by 'name' should already be in the data structure!
+    if (containsIngred(name)) {                             // The ingredient defined by 'name' should already be in the data structure!
         setRestockToNode(getInvNode(name), targetStock);    // call to the actual setter method
     }
 }
@@ -282,8 +283,8 @@ void setRestockTo(const char* name, int targetStock)
  *  into the data structure, if not already present. \n
  *  The restock value of this node is also set.
  *
- *  @param name
- *  @param restock
+ *  @param name The name of the ingredient 
+ *  @param restock The restockTo value for the InvNode creation
  */
 void insertInvNode(const char* name, int restock)
 {
@@ -292,13 +293,13 @@ void insertInvNode(const char* name, int restock)
     InvNode *pCurrNode = pHead->firstInvNode; // assign first node of data structure to pCurrNode
     InvNode *pPrevNode = NULL;                // declare pPrevNode
 
-    // No element in the data structure
+    /* No element in the data structure */
     if (pCurrNode == NULL) {            // Check for no element
         pHead->firstInvNode = pNewNode; // make the newly created node the first node fo the data structure
         pHead->nbInvElem += 1;          // increment the counter for the different ingredients
         return;
 
-    // > 0 elements in the data structure
+    /* > 0 elements in the data structure */
     } else {
         int state;  // state variable to keep track of the sides 'LEFT' and 'RIGHT'
         while (pCurrNode) { // until the place for the new node to be inserted is found
@@ -306,14 +307,14 @@ void insertInvNode(const char* name, int restock)
                 pPrevNode = pCurrNode;          // set pPrevNode
                 pCurrNode = pCurrNode->pLeft;   // go into left subtree
                 state = LEFT;                   // set state to 'LEFT'
-            } else {    // if the pNewNode is lexically bigger compared to the pCurrNode
+            } else {            // if the pNewNode is lexically bigger compared to the pCurrNode
                 pPrevNode = pCurrNode;          // set pPrevNode
                 pCurrNode = pCurrNode->pRight;  // go into right subtree
                 state = RIGHT;                  // set state to 'RIGHT'
             }
         }
-        // Final insertion step
-        if (state == LEFT) {    // if the last move was into the left subtree
+        /* Final insertion step */
+        if (state == LEFT) {                // if the last move was into the left subtree
             pPrevNode->pLeft = pNewNode;    // insert pNewNode at the left leave of the pPrevNode
             pHead->nbInvElem += 1;          // increment the stock counter
             return;
@@ -332,8 +333,8 @@ void insertInvNode(const char* name, int restock)
  * The initialAmount, if not set to '0', gets added to the
  * newly created InvNode. 
  *
- * @param name
- * @param initialAmount
+ * @param name The name of the ingredient 
+ * @param initialAmount Amount of ingredients to be added to the new node
  */
 void registerIngredient(const char* name , int initialAmount)
 {
@@ -343,8 +344,8 @@ void registerIngredient(const char* name , int initialAmount)
 
     InvNode* pNode = getInvNode(name);
     if (!pNode) {                           // if the ingredient has not yet been registered
-        insertInvNode(name, initialAmount);                // create and insert a new InvNode with identifying attribute 'name'
-        addIngredient(name, initialAmount);
+        insertInvNode(name, initialAmount);         // create and insert a new InvNode with identifying attribute 'name'
+        addIngredient(name, initialAmount);         // add the amount of ingredients to the newly created node
     } else {
         if (initialAmount) {                // if the initialAmount > 0
             if (pNode->count == 0) {
@@ -358,19 +359,20 @@ void registerIngredient(const char* name , int initialAmount)
 /**
  * @brief Prints the tree in 'inorder traversal'. Prints the node's name, stock count and restockTo value.
  *
- * @param pNode
+ * @param pNode Specified InvNode*
  */
 void printTreeRecursion(InvNode* pNode)
 {
-    if  (pNode == NULL) return;                 // return if pNode is NULL
-    printTreeRecursion(pNode->pLeft);     // traverse left subtree of pNode
+    if  (pNode == NULL) return;             // return if pNode is NULL
+    printTreeRecursion(pNode->pLeft);       // traverse left subtree of pNode
     printf("Node name & count & restock: '%s' -> %d -> %d\n", pNode->ingredName, pNode->count, pNode->restockTo);  // prints pNode
-    printTreeRecursion(pNode->pRight);    // traverse right subtree of pNode
+    printTreeRecursion(pNode->pRight);      // traverse right subtree of pNode
 }
 
 
 /**
  * @brief Lets the tree be printed in 'inorder traversal'. Values printed are the node's name, stock count and restockTo value.
+ * 
  */
 void printInvTree()
 {

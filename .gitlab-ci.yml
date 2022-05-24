@@ -1,0 +1,45 @@
+-# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/C++.gitlab-ci.yml
+
+# use the official gcc image, based on debian
+# can use versions as well, like gcc:5.2
+# see https://hub.docker.com/_/gcc/
+
+stages:
+  - build
+  - makingBread
+  - additionalFeature
+
+image: gcc
+
+build:
+  stage: build
+  # instead of calling g++ directly you can also use some build toolkit like make
+  # install the necessary build tools when needed
+  #before_script:
+  #   - apt update && apt -y install make autoconf
+  script:
+    - ./1_MakingBread/make
+    - ./Additional_Feature/make
+  artifacts:
+    paths:
+      # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
+      # cache:
+      #   paths:
+      #     - "*.o"
+
+# run tests using the binary built before
+test:
+  stage: makingBread
+  script:
+  #  - ./gitci_sleeping
+    - ./1_MakingBread/main.o 1
+
+
+test:
+  stage: additionalFeature
+  script:
+  #  - ./gitci_sleeping
+    - ./Additional_Feature/main.o 3
