@@ -1,6 +1,7 @@
 #ifndef LINKED_LIST
 #define LINKED_LIST
 
+
 struct TypeList dynTypes;
 
 // Blueprint for different types of breads
@@ -43,5 +44,7 @@ void addType(const char* name, int nb);
  * @brief Just a helper to print all registered bread-types.
  */
 void printTypes();
+
+
 
 #endif
