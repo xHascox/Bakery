@@ -206,8 +206,17 @@ void tooGood() {
     }
     
 
+    /* ENTERING AMOUNT OF BREADS SOLD */
+    int breadsSold;
+    printf("Next, please enter the amount of breads sold.\n");
+    if (scanf("%d", &breadsSold) != 1) {       // Get user input for amount of ingredients (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
+    
 
-    runTGTG(breadTypesArr, nbBreadTypes, nbBreads);
+
+    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold);
 
 }
 /******************************************  TGTG  **************************************************/

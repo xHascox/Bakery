@@ -87,7 +87,7 @@ void tgtg(){
     }
 }
 
-void runTGTG(char** breadTypes, int nbTypes, int* amounts, int maxBread, int ticks) {
+void runTGTG(char** breadTypes, int nbTypes, int* amounts, int breadsSold, int ticks) {
 
     /* Create bread types according to user input */
     initTypeList(nbTypes);
@@ -99,7 +99,7 @@ void runTGTG(char** breadTypes, int nbTypes, int* amounts, int maxBread, int tic
     srand(time(NULL));
     int type = 0;
 
-    for (int i=1; i <= BREADS_SOLD; i++) {
+    for (int i=1; i <= breadsSold; i++) {
         type = rand() % dynTypes.count;
         if (dynTypes.types[type]->nb > 0){
             dynTypes.types[type]->nb -= 1;
