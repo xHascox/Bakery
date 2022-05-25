@@ -8,7 +8,7 @@
  * @param nbTypes 
  * @param amounts 
  */
-void runTGTG(char** breadTypes, int nbTypes, int* amounts, int maxBread, int ticks);
+void runTGTG(char** breadTypes, int nbTypes, int* amounts, int max, int ticks);
 
 
 #endif

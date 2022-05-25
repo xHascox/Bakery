@@ -98,5 +98,6 @@ Output von exclusive access noch clean machen.
 Too good to go ist sehr minimal
 What about testing scripts?
 In TGTG: Move BREADS_SOLD and TICKS to CLI
+Wir freen noch nicht in allen script memory. Für jeden malloc call brauchts ein free.
 
 FREE EVERY MALLOCED THING?
