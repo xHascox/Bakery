@@ -209,14 +209,21 @@ void tooGood() {
     /* ENTERING AMOUNT OF BREADS SOLD */
     int breadsSold;
     printf("Next, please enter the amount of breads sold.\n");
-    if (scanf("%d", &breadsSold) != 1) {       // Get user input for amount of ingredients (int)
+    if (scanf("%d", &breadsSold) != 1) {       // Get user input for amount of sold Bread (int)
         printf("ERROR: Please enter a NUMBER (int)!\n");    
         exit(1);                                            
     }
     
+    /* ENTERING AMOUNT OF ITERATIONS USED FOR APPLYING TOO GOOD TO GO "TICKS" */
+    int ticks;
+    printf("Next, please enter the amount of breads sold until the too good to go algorithm is applied, e.g. Ticks.\n");
+    if (scanf("%d", &ticks) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
 
 
-    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold);
+    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold, ticks);
 
 }
 /******************************************  TGTG  **************************************************/
