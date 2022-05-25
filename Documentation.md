@@ -97,5 +97,6 @@ Doctypes in allen files (ausser BinaryTree)
 Output von exclusive access noch clean machen.
 Too good to go ist sehr minimal
 What about testing scripts?
+In TGTG: Move BREADS_SOLD and TICKS to CLI
 
 FREE EVERY MALLOCED THING?
