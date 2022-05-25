@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "toogood.h"
+#include <limits.h>
+// #include "toogood.h"
 
 // TODO (Lukas) Move BREADS_RecentlySold and TICKS to CLI
 #define BREADS_RecentlySold 20
@@ -11,6 +12,11 @@
 
 #define NO 0
 #define YES 1
+
+int strategy;
+#define FIFO 0
+#define SecondChance 1
+#define NRU 2
 
 char **BreadTypeNames;
 int *RecentlySold;
@@ -37,9 +43,9 @@ struct Node {
 struct LinkedList* newList(){
     struct LinkedList* list = malloc(sizeof(struct LinkedList));
     list->head = malloc(sizeof(struct Node));
-    list->head->timestamp = -3;
+    list->head->timestamp = INT_MAX;
     list->head->next = NULL;
-    list->oldestBread = 0;
+    list->oldestBread = INT_MAX;
     list->recentlySold = NO;
     list->tgtgBasket = NO;
     return list;
@@ -61,7 +67,7 @@ int removeNode(struct LinkedList* list){
     struct Node* second = first->next;
     list->head->next = second;
     int t = first->timestamp;
-    list->oldestBread = t;
+    list->oldestBread = second->timestamp;
     list->recentlySold = YES;
     free(first);
     return t;
@@ -77,16 +83,25 @@ int length(struct LinkedList* list){
     return i;
 }
 
-void bakeBreads(int* amounts, int timestamp){
-    for(int i = 0; i < NBBreadTypes; i++){
-        struct LinkedList* BreadType = Breads[i];
-        for(int j = 0; j < amounts[i]; j++){
-            addNode(BreadType,timestamp);
-        }
+void bakeBreads(struct LinkedList* BreadType, int amount, int timestamp){
+    for(int i = 0; i < amount; i++){
+        addNode(BreadType,timestamp);
     }
 }
 
-void tgtg(int i){
+void fifo(int i){
+    for (int i = 0; i < NBBreadTypes; i++){
+        struct LinkedList* BreadType = Breads[i];
+        int donate_counter = 0; // TODO Continue here
+        while(BreadType->oldestBread <= i-2 && BreadType->oldestBread != INT_MAX){ // Donate bread that is older than two ticks
+            donate_counter += 1;
+            removeNode(BreadType);
+        }
+        printf("We donated %d %ss\n", donate_counter, BreadTypeNames[i]);
+    }
+}
+
+void secondchance(int i){
     for (int i = 0; i < NBBreadTypes; i++){
         struct LinkedList* BreadType = Breads[i];
         if(BreadType->tgtgBasket == NO){
@@ -101,7 +116,11 @@ void tgtg(int i){
     }
 }
 
-void runTGTG(char** names, int nbTypes, int* amounts, int max, int t) {
+void nru(int i){
+
+}
+
+void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int s) {
 
     /* INITIALIZE VARIABLES BASED ON USER INPUT */
     BreadTypeNames = names;
@@ -112,13 +131,15 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t) {
     RecentlySold = malloc(sizeof(int)*NBBreadTypes);
     TgtgBasket = malloc(sizeof(int)*NBBreadTypes);
     ticks = t;
+    strategy = s;
 
-    for (int i = 0; i < NBBreadTypes; i++){
+    for(int i = 0; i < NBBreadTypes; i++){
         int type = i;
         Breads[type] = newList();
+        bakeBreads(Breads[type], amounts[i],0);
     }
-    bakeBreads(amounts,0);
 
+    
     /* Sell bread */
     srand(time(NULL));
     int type = 0;
@@ -132,10 +153,24 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t) {
                 BreadType->recentlySold = YES;
             }
             printf("A bread was sold! Type: %s, TGTG: %d\n", BreadTypeNames[type], Breads[type]->tgtgBasket);
+            
+            // Every k ticks, do a tgtg check
             if (i % ticks == 0){
-                printf("tgtg\n");
-                tgtg(i);
-                bakeBreads(amounts,i);
+                if(strategy == FIFO){
+                    fifo(i);
+                } else if (strategy == SecondChance){
+                    secondchance(i);
+                } else {
+                    nru(i);
+                }
+
+                // Bake some new breads
+                for(int j = 0; j < NBBreadTypes; j++){
+                    struct LinkedList* BreadType = Breads[j];
+                    if(BreadType->tgtgBasket == NO){
+                        bakeBreads(BreadType, amounts[j],i);
+                    }
+                }
             }
         }
     }
@@ -145,6 +180,6 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t) {
 int main(int argc, char const *argv[]){
     char* BreadTypeNames[] = {"Croissant", "Zopf", "Tessinerli"};
     int num[3] = {8,9,10}; 
-    runTGTG(BreadTypeNames,3,num, 20, 4);
+    runTGTG(BreadTypeNames,3,num, 20, 4, FIFO);
 }
 
