@@ -220,7 +220,7 @@ void makingBread() {
     0 = Fair Learners (prioritise apprentices who have made the least breads today)\n\
     1 = Fast Learners (prioritise apprentices who have made the most breads today)\n\
     2 = Arrival Order (prioritise apprentices who arrived early, timestamps)\n\
-    3 = Pre Learners (prioritise apprentices according to some predefined metric, e.g. the speed is alreadyd known, the Apprentice IDs are used for this)\n");
+    3 = Pre Learners (prioritise apprentices according to some predefined metric, e.g. the speed is alreadyd known, small Apprentice IDs are prioritised)\n");
     if (scanf("%d", &metric) != 1) {       // Get user input for amount of bread (int)
         printf("ERROR: Please enter a NUMBER (int)!\n");    // If no int, print error
         exit(1);                                            // and exit program
