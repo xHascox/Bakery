@@ -42,11 +42,13 @@ The discussion of the solution will be structured as follows: Chapter one will p
 ** Scenarios
 - Scenarios:
   + (i) Apprentices add the same item to the inventory: In func registerIngredient() we first check whether the ingredient has already been registered. If so, we restock to initial amount but do not add it again.
-  + (ii) Apprentices access the same item in the inventory: Not possible by design, since the datastructure is made mutually exclusive and since we synchronize the apprentices using the baker as the schedular.
+  + (ii) Apprentices access the same item in the inventory: Not possible by design, since the datastructure is made mutually exclusive and since we synchronize the apprentices using the baker as the scheduler.
   + (iii) Same as (ii) except in this case we synchronize between apprentice and shopper. But the approach stays the same.
 
 * Too Good To Go
-- Analogy to NRU
+- Dynamic array of  of bread types.
+-
+- Analogy to NRU.
 
 * Additional Feature
 - Chairs: Queue, mutexted.
