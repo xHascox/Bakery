@@ -17,15 +17,38 @@ struct LinkedList {
 typedef struct LinkedList LinkedList;
 
 
+/**
+ * @brief A new linked list struct is created and returned.
+ * 
+ * @return LinkedList* - Pointer to newly created LinkedList
+ */
 LinkedList* newList();
 
 
+/**
+ * @brief Created and adds a new Node with a timestamp 't' to the LinkedList. 
+ * 
+ * @param list Pointer to a LinkedList struct where a Node should be added to.
+ * @param t The current timestamp
+ */
 void addNode(LinkedList* list, int t);
 
 
+/**
+ * @brief Removes the first node of the LinkedList provided and returns its timestamp.
+ * 
+ * @param list Pointer to a LinkedList struct where the first Node should be removed from.
+ * @return int - The timestamp stored in the removed node.
+ */
 int removeNode(LinkedList* list);
 
 
+/**
+ * @brief Returns the lenght (amount of Nodes) of the provided LinkedList.
+ * 
+ * @param list Pointer to a LinkedList struct of which the length should be calculated.
+ * @return int - Lenght of the LinkedList (amount of Nodes)
+ */
 int length(LinkedList* list);
 
 

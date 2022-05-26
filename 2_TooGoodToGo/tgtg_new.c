@@ -25,7 +25,7 @@ int strategy;
 char **BreadTypeNames;
 int *RecentlySold;
 int NBBreadTypes;
-struct LinkedList **Breads;
+LinkedList **Breads;
 int BreadsToSell;
 int BreadsSold;
 int ticks;
@@ -37,7 +37,7 @@ pthread_t tgtg_coordinator;
 pthread_mutex_t mutTGTGFlag;
 
 // Functions
-void bakeBreads(struct LinkedList* BreadType, char *name, int amount, int timestamp);
+void bakeBreads(LinkedList* BreadType, char *name, int amount, int timestamp);
 void *tgtg_coordinate();
 void tgtg(int strategy, int timestamp);
 void fifo(int timestamp);
@@ -55,7 +55,7 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
  * @param amount 
  * @param timestamp 
  */
-void bakeBreads(struct LinkedList* BreadType, char *name, int amount, int timestamp){
+void bakeBreads(LinkedList* BreadType, char *name, int amount, int timestamp){
     for(int i = 0; i < amount; i++){
         addNode(BreadType,timestamp);
     }
@@ -94,7 +94,7 @@ void tgtg(int strategy, int timestamp){
     }
 
     for(int i = 0; i < NBBreadTypes; i++){
-        struct LinkedList* BreadType = Breads[i];
+        LinkedList* BreadType = Breads[i];
         BreadType->recentlySold = NO;
     }
 }
@@ -108,7 +108,7 @@ void tgtg(int strategy, int timestamp){
 void fifo(int timestamp){
     printf("We donate all the breads produced before %d\n", timestamp - grace_period);
     for (int i = 0; i < NBBreadTypes; i++){
-        struct LinkedList* BreadType = Breads[i];
+        LinkedList* BreadType = Breads[i];
         int donate_counter = 0;
         while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than two ticks
             donate_counter += 1;
@@ -127,7 +127,7 @@ void fifo(int timestamp){
  */
 void secondchance(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
-        struct LinkedList* BreadType = Breads[i];
+        LinkedList* BreadType = Breads[i];
         if(BreadType->oldestBread <= timestamp - grace_period){
             if(BreadType->recentlySold == NO){
                 int donate_counter = 0;
@@ -154,7 +154,7 @@ void secondchance(int timestamp){
  */
 void nru(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
-        struct LinkedList* BreadType = Breads[i];
+        LinkedList* BreadType = Breads[i];
         if(BreadType->recentlySold == NO){
             int donate_counter = 0;
             while(length(BreadType) > 0){ // Donate bread that is older than two ticks
@@ -177,7 +177,7 @@ void nru(int timestamp){
  */
 void sellBread(int timestamp){
     int type = rand() % NBBreadTypes;
-    struct LinkedList *BreadType = Breads[type];
+    LinkedList *BreadType = Breads[type];
     if (length(BreadType) > 0){
         int timestamp = removeNode(BreadType);
         BreadType->recentlySold = YES;
@@ -213,7 +213,7 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
     BreadTypeNames = names;
     NBBreadTypes= nbTypes;
     BreadAmounts = amounts;
-    Breads = malloc(sizeof(struct LinkedList*)*NBBreadTypes);
+    Breads = malloc(sizeof(LinkedList*)*NBBreadTypes);
     RecentlySold = malloc(sizeof(int)*NBBreadTypes);
     ticks = t;
     strategy = s;
