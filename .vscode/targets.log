@@ -1,6 +1,4 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
-make: *** No rule to make target 'all'.  Stop.
-
 # GNU Make 4.3
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2020 Free Software Foundation, Inc.
@@ -8,7 +6,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sun May 22 09:48:08 2022
+# Make data base, printed on Thu May 26 21:30:28 2022
 
 # Variables
 
@@ -23,7 +21,7 @@ SNAP_INSTANCE_KEY =
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-fb2ade04-63ce-4718-9418-74c042324a18.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-c3987300-69e6-4855-b617-8df71c9b46e7.sock
 # environment
 VSCODE_CWD = /home/grischu
 # environment
@@ -59,7 +57,7 @@ VSCODE_CODE_CACHE_PATH = /home/grischu/.config/Code/CachedData/c3511e6c69bb39013
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.5OWOM1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.W5RGM1
 # default
 .LOADED := 
 # default
@@ -95,7 +93,7 @@ SNAP_REEXEC =
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 2621
+VSCODE_PID = 3478
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -149,7 +147,7 @@ SNAP_USER_COMMON = /home/grischu/snap/code/common
 # environment
 SNAP = /snap/code/97
 # environment
-INVOCATION_ID = 72466dc021774836ab55d55a537cf767
+INVOCATION_ID = d76f2b7a060e42c3bb6758c75c93093b
 # environment
 SNAP_REVISION = 97
 # environment
@@ -197,9 +195,9 @@ SNAP_DATA = /var/snap/code/97
 # environment
 SNAP_CONTEXT = 14MvNVAaIpP4Mftf4UdBMUnjPO1JPjgBoLPjqyEMcYo_liC00Qjr
 # environment
-MANAGERPID = 1092
+MANAGERPID = 1098
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 2544
+GIO_LAUNCHED_DESKTOP_FILE_PID = 3415
 # environment
 _ = /snap/code/97/usr/share/code/code
 # environment
@@ -207,7 +205,7 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/grischu/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:19567
+JOURNAL_STREAM = 8:17190
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -259,9 +257,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # Directories
 
-# . (device 2049, inode 142436): 13 files, no impossibilities.
+# . (device 2049, inode 142436): 18 files, no impossibilities.
 
-# 13 files, no impossibilities in 1 directories.
+# 18 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -287,6 +285,9 @@ rm:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
+make: *** No rule to make target 'all'.  Stop.
+
 #  recipe to execute (from 'Makefile', line 14):
 	rm *.o
 
@@ -306,7 +307,6 @@ clean:
 
 # Not a target:
 .DEFAULT:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -333,12 +333,12 @@ run:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 23 / storage = 239 B / avg = 10 B
-# current buf: size = 8162 B / used = 239 B / count = 23 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 28 / storage = 342 B / avg = 12 B
+# current buf: size = 8162 B / used = 342 B / count = 28 / avg = 12 B
 
-# strcache performance: lookups = 32 / hit rate = 28%
+# strcache performance: lookups = 37 / hit rate = 24%
 # hash-table stats:
-# Load=23/8192=0%, Rehash=0, Collisions=0/32=0%
-# Finished Make data base on Sun May 22 09:48:08 2022
+# Load=28/8192=0%, Rehash=0, Collisions=0/37=0%
+# Finished Make data base on Thu May 26 21:30:28 2022
 
  

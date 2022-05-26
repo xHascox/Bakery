@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <limits.h>
 #include <assert.h>
 
 #include "LinkedList.h"
@@ -6,6 +7,7 @@
 
 #define NO 0
 #define YES 1
+
 
 
 /**
@@ -18,6 +20,7 @@ struct Node {
 };
 typedef struct Node Node;
 
+
 /**
  * @brief 
  * 
@@ -28,11 +31,13 @@ LinkedList* newList(){
     list->head = malloc(sizeof(Node));
     list->head->timestamp = 0;
     list->head->next = NULL;
-    list->oldestBread = 0;
+    list->oldestBread = INT_MAX;
     list->recentlySold = NO;
-    list->tgtgBasket = NO;
+    list->totalSold = 0;
+    list->totalDonated = 0;
     return list;
 }
+
 
 /**
  * @brief 
@@ -49,10 +54,11 @@ void addNode(LinkedList* list, int t){
         current = current->next;
     }
     current->next = new;
-    if(list->oldestBread <= t){
+    if(list->oldestBread >= t){
         list->oldestBread = t;
     }
 }
+
 
 /**
  * @brief 
@@ -69,12 +75,13 @@ int removeNode(LinkedList* list){
     if(second != NULL){
         list->oldestBread = second->timestamp;
     } else {
-        list->oldestBread = 0;
+        list->oldestBread = INT_MAX;
     }
     list->recentlySold = YES;
     free(first);
     return t;
 }
+
 
 /**
  * @brief 
@@ -91,3 +98,4 @@ int length(LinkedList* list){
     }
     return i;
 }
+

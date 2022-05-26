@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#include "LinkedList.h"
+
 // Readability
 #define NO 0
 #define YES 1
@@ -44,71 +46,15 @@ void nru(int timestamp);
 void sellBread(int timestamp);
 void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int s);
 
-struct LinkedList {
-    struct Node* head;
-    int oldestBread;
-    int recentlySold;
-    int totalSold;
-    int totalDonated;
-};
 
-struct Node {
-    int timestamp;
-    struct Node *next;
-};
-
-struct LinkedList* newList(){
-    struct LinkedList* list = malloc(sizeof(struct LinkedList));
-    list->head = malloc(sizeof(struct Node));
-    list->head->timestamp = 0;
-    list->head->next = NULL;
-    list->oldestBread = INT_MAX;
-    list->recentlySold = NO;
-    list->totalSold = 0;
-    list->totalDonated = 0;
-    return list;
-}
-
-void addNode(struct LinkedList* list, int t){
-    struct Node* new = malloc(sizeof(struct Node));
-    new->timestamp = t;
-    new->next = NULL;
-    struct Node* current = list->head;
-    while(current->next != NULL){
-        current = current->next;
-    }
-    current->next = new;
-    if(list->oldestBread >= t){
-        list->oldestBread = t;
-    }
-}
-
-int removeNode(struct LinkedList* list){
-    struct Node* first = list->head->next;
-    assert(first != NULL); // List empty
-    struct Node* second = first->next;
-    list->head->next = second;
-    int t = first->timestamp;
-    if(second != NULL){
-        list->oldestBread = second->timestamp;
-    } else {
-        list->oldestBread = INT_MAX;
-    }
-    list->recentlySold = YES;
-    free(first);
-    return t;
-}
-
-int length(struct LinkedList* list){
-    int i = 0;
-    struct Node* current = list->head;
-    while(current->next != NULL){
-        i += 1;
-        current = current->next;
-    }
-    return i;
-}
-
+/**
+ * @brief 
+ * 
+ * @param BreadType 
+ * @param name 
+ * @param amount 
+ * @param timestamp 
+ */
 void bakeBreads(struct LinkedList* BreadType, char *name, int amount, int timestamp){
     for(int i = 0; i < amount; i++){
         addNode(BreadType,timestamp);
@@ -116,17 +62,28 @@ void bakeBreads(struct LinkedList* BreadType, char *name, int amount, int timest
     printf("Produced %d %ss at time %d\n", amount, name, timestamp);
 }
 
+
+/**
+ * @brief 
+ * 
+ * @return void* 
+ */
 void *tgtg_coordinate(){
     while(BreadsSold < BreadsToSell){
         sleep(ticks);
         pthread_mutex_lock(&mutTGTGFlag);
         tgtg_flag = YES;
         pthread_mutex_unlock(&mutTGTGFlag);
-    }
-    pthread_exit(0);
+    }// The oldest Bread
 }
 
 
+/**
+ * @brief 
+ * 
+ * @param strategy 
+ * @param timestamp 
+ */
 void tgtg(int strategy, int timestamp){
     if(strategy == FIFO){
         fifo(timestamp);
@@ -142,6 +99,12 @@ void tgtg(int strategy, int timestamp){
     }
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param timestamp 
+ */
 void fifo(int timestamp){
     printf("We donate all the breads produced before %d\n", timestamp - grace_period);
     for (int i = 0; i < NBBreadTypes; i++){
@@ -156,6 +119,12 @@ void fifo(int timestamp){
     }
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param timestamp 
+ */
 void secondchance(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
         struct LinkedList* BreadType = Breads[i];
@@ -177,6 +146,12 @@ void secondchance(int timestamp){
     }
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param timestamp 
+ */
 void nru(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
         struct LinkedList* BreadType = Breads[i];
@@ -194,6 +169,12 @@ void nru(int timestamp){
     }
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param timestamp 
+ */
 void sellBread(int timestamp){
     int type = rand() % NBBreadTypes;
     struct LinkedList *BreadType = Breads[type];
@@ -212,6 +193,18 @@ void sellBread(int timestamp){
     }
 }
 
+
+/**
+ * @brief 
+ * 
+ * @param names 
+ * @param nbTypes 
+ * @param amounts 
+ * @param max 
+ * @param t 
+ * @param p 
+ * @param s 
+ */
 void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int s) {
 
     printf("--- start ---\n");

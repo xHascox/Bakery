@@ -1,4 +1,4 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/grischu/Documents/OS/Project/Bakery'
 gcc -pthread -o testing1.o testing1.c && gcc -pthread -o	./1_MakingBread/main.o ./1_MakingBread/cli.c ./1_MakingBread/ExclAccInv.o ./1_MakingBread/BinTreeInv.o ./1_MakingBread/RecipeBook.o && make precompile
 make: Leaving directory '/home/grischu/Documents/OS/Project/Bakery'
