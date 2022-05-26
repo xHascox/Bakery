@@ -15,7 +15,7 @@
 // Paging Algorithms
 int strategy;
 #define FIFO 0
-#define SecondChance 1
+#define SECOND_CHANCE 1
 #define NRU 2
 
 
@@ -130,7 +130,7 @@ void *tgtg_coordinate(){
 void tgtg(int strategy, int timestamp){
     if(strategy == FIFO){
         fifo(timestamp);
-    } else if (strategy == SecondChance){
+    } else if (strategy == SECOND_CHANCE){
         secondchance(timestamp);
     } else {
         nru(timestamp);
@@ -182,7 +182,7 @@ void nru(int timestamp){
         struct LinkedList* BreadType = Breads[i];
         if(BreadType->recentlySold == NO){
             int donate_counter = 0;
-            while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than two ticks
+            while(length(BreadType) > 0){ // Donate bread that is older than two ticks
                 donate_counter += 1;
                 removeNode(BreadType);
             }
@@ -277,6 +277,6 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
 int main(int argc, char const *argv[]){
     char* BreadTypeNames[] = {"Croissant", "Zopf", "Tessinerli", "Bli", "Bla", "Blu"};
     int num[6] = {3,3,3,3,3,3}; 
-    runTGTG(BreadTypeNames,6,num, 20, 5, 8, SecondChance);
+    runTGTG(BreadTypeNames,6,num, 20, 5, 8, NRU);
     return 0;
 }

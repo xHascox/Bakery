@@ -1,4 +1,4 @@
-% Created 2022-05-26 Do 13:52
+% Created 2022-05-26 Do 17:47
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -12,7 +12,7 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
-\usepackage[a4paper, margin=1in]{geometry}
+\usepackage[a4paper, margin=0.75in]{geometry}
 \author{Group 1: Gabriel, Odermatt, Wey \& Yang}
 \date{\today}
 \title{OS Project - Fribourgeois Bakery}
@@ -29,84 +29,63 @@
 \tableofcontents
 
 \setlength\parindent{0pt}
+\setlength\parskip{-5pt}
 
 \section{Introduction}
-\label{sec:orgddae4fc}
+\label{sec:org15d1ca8}
 
 The present documentation reports on the solution to the \emph{Fribourgeois Bakery} project elaborated by Group 1.\\
 
-The discussion of the solution will be structured as follows: Chapter one will present the datastructure that represents our inventory as well as our solution to the task ``Learning to make bread''. Chapter two will focus on ``Too good to go'' and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.\\
+The discussion of the solution will be structured as follows: Chapter one will present our solution to the task ``Learing To Make Bread''. Chapter two will focus on ``Too Good To Go'' and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.\\
 
-\begin{itemize}
-\item CLI to invoke scripts.\\
-\end{itemize}
+With our implementation we provide a commandline interface that allows the user to test all functionalities, provide parameters and run the testing scripts.\\
 
-\section{Inventory and Making Bread}
-\label{sec:orge8a6dbc}
+\section{Learning To Making Bread}
+\label{sec:org3965db4}
+
+In summary, our implementation of ``Learning To Make Bread'' works as follows: (i) The user inputs the parameters such as the bread types and the ingredients they require, the number of apprentices, the scheduling algorithm, etc. (ii) Then the threads representing the baker, the apprentices and the so-called 'shopper' are spawned and start their respective task: The apprentices pick a recipe at random, access the inventory to get the required ingredients and bake the bread. The baker ensures that only one apprentice at a time accesses the inventory and the shopper restocks the inventory when it an ingredient runs out.\\
+
+Let us look at some implementation decisions in a bit more detail:\\
 
 \subsection{Inventory}
-\label{sec:orgfc7f789}
-\begin{itemize}
-\item Binary tree where each node represents an ingredient type. Each of those nodes holds a linked list where each node represents one unit of that ingredient type.\\
-\item Building and searching of tree: Tree is lexographically sorted -- meaning that that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. ``Smaller'' and ``bigger'' in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently\(\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}\).\\
-\item Traversal of the tree:\\
-\begin{itemize}
-\item Iterativ oder rekursiv, richtig? (@Lukas). In getInvNode() ist es iterativ, in restock() ist es rekursiv.\\
-\end{itemize}
-\item Useful functions provided:\\
-\begin{itemize}
-\item registerIngredient()\\
-\item addIngredient()\\
-\item takeIngredient()\\
-\item restock()\\
-\end{itemize}
-\item Data structure size: Binary tree can grow in two dimensions: Regarding ingredient types and regarding ingredient units.\\
-\item Simultaneous access:\\
-\begin{itemize}
-\item We chose to implement concurrency client-side, i.e. not in the datastructure itself but in the ``Making bread'' script.\\
-\item We could have implemented mutual exclusion in the datastructure itself either on the entire datastructure or only on the linked list inside the ingredient node. However,\\
-\end{itemize}
-\end{itemize}
+\label{sec:orgc99f62f}
 
-\subsection{Making Bread}
-\label{sec:orgaf7ab8d}
+The inventory is implemented as a binary tree where each tree-node represents an ingredient type. Each of those tree-nodes holds a linked list where each list-node represents one unit of that ingredient type. This datastructure can grow in two ways: With respect to the number of ingredients (the tree grows) and with respect to the number of units of a specific ingredient (the respective linked list grows). The structure is defined in the file 'Inventory\_BinTree.c' and exposes some useful functions such as 'registerIngredient', 'addIngredient', 'takeIngredient' and 'restock'.\\
 
-\begin{itemize}
-\item Synchronization:\\
-\begin{itemize}
-\item Mutex: The inventory is mutexed.\\
-\item Semaphore: Coordination between baker, apprentices and shopper.\\
-\end{itemize}
-\item Scheduler Strategy:\\
-\begin{itemize}
-\item When an apprentice wants to access the inventory they announce their interest in a global array by modifying the field at the index that corresponds to their id. Depending on the schedular metric used, they insert differnt values. Access to this array may be concurrent since every index can only be written by one apprentice.\\
-\item Implemented four schedulers: (i) Predefined learners (ii) Arrival Order (based on time) (iii) Fast learners (apprentice with the most baked breads) (iv) Fairlearners (apprentice with the least baked breads).\\
-\item Explain when each of the strategies performs best and worst.\\
-\end{itemize}
-\end{itemize}
+\textbf{Building and searching of tree}: The tree is sorted lexographically -- meaning that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. ``Smaller'' and ``bigger'' in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently\(\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}\).\\
+
+\textbf{Traversal of the tree}: The tree can be traversed both iteratively and recursively. The function 'getInvNode' -- which searches the tree for an ingredient and returns one unit of that ingredient -- works iteratively, i.e. the tree is traversed from the root to the leaves using a while-loop. Conversely, the function restockRecursion -- which traverses the tree and restocks every ingredient -- works recursively, i.e. the tree is traversed from the left-most leave to the right-most leave.\\
+
+\textbf{Mutual exclusion}: Our datastructure does not enforce mutual exclusion. That is: It is up to the client using the datastructure to ensure that it is accessed only by one thread at a time. Our client-side approach to mutual exlusion will be discussed in the next section.\\
+
+\subsection{Mutual Exlusion and Scheduling}
+\label{sec:org42d578d}
+
+The inventory may only be accessed by one apprentice at a time. Since the resources are limited, every apprentices tries to access the inventory as soon as possible. Therefore, access to the inventory has to be made (i) mutually exclusive and (ii) coordinated in such a way that the apprentices may access in a specific order.\\
+
+\textbf{Scheduling}: When an apprentice wants to access the inventory, they have to announce their interest by modifying the 'interested\_array' at the index that corresponds to their thread-id. Depending on the scheduling algorithm used, they modify the array differently, e.g. if the algorithm 'ARRIVALORDER' is used, the apprentices add their time of arrival to the 'interested\_array'. Once the apprentice has announced their interested they sleep on a semaphore. The baker analyses the interested\_array and chooses the apprentice according to the order of the scheduling algorithm. The baker then wakes that aprentice by posting their semaphore and then sleeps on its own semaphore. The chosen apprentice wakes up and enters the inventory. When they've finished the leave the inventory, wake the baker and start baking their bread. This process repeats until the the bakery has reached the maximal number of breads for the day.\\
+
+Our group has implemented a total of four scheduling algorithms: (i) ARRIVALORDER sorts the apprentices by their arrivaltime, favoring apprentices that have arrived earlier. (ii) FASTLEARNERS sorts the apprentices according to the number of breads they have already produced. The more bread an apprentice has baked the higher they're ranked. (iii) FAIRLEARNERS is the counterpart to FASTLEARNERS and favours the apprentice with the least amount of baked breads. (iv) Finally, PRELEARNERS enforces a predefined order that corresponds to the apprentice's thread-id.\\
+
+Every scheduling algorithm has its own pros and cons. ???\\
+
+\textbf{Mutual Exclusion}: Thanks to the scheduling algorithms it is practically impossible for two apprentices to access the inventory at the same time. However, just to be sure, we still made access to the inventory mutually exclusive using the mutex 'inventory\_mutex'.\\
 
 \subsection{Scenarios}
-\label{sec:org9d09e61}
-\begin{itemize}
-\item Scenarios:\\
-\begin{itemize}
-\item (i) Apprentices add the same item to the inventory: In func registerIngredient() we first check whether the ingredient has already been registered. If so, we restock to initial amount but do not add it again.\\
-\item (ii) Apprentices access the same item in the inventory: Not possible by design, since the datastructure is made mutually exclusive and since we synchronize the apprentices using the baker as the scheduler.\\
-\item (iii) Same as (ii) except in this case we synchronize between apprentice and shopper. But the approach stays the same.\\
-\end{itemize}
-\end{itemize}
+\label{sec:org7325350}
+
+Lets have a look how our implementation manages the following three scenarios:\\
+
+\textbf{Apprentices add the same item to the inventory}: In our implementation a dedicated thread called 'shopper' takes care of restocking the inventory. Since there is only one such thread it is impossible for two threads to add the same item at the same time. Furthermore, the inventory is mutexed, ensuring that only one thread can access it at a time. As an additional precaution, the function registerIngredient ensures that when an ingredient is registered, this ingredient has not been registered before. If it is not the case, the function simply adds units to the already existing ingredient.\\
+
+\textbf{Apprentices access the same item in the inventory}: This is impossible since access to the entire inventory is mutually exclusive. This is a results of our decision to implement mutual exclusion client-side and not inside the datastructure. We chose this approach since it is conceptually cleaner to leave the decision to enforce mutual exclusion (or not) to the client. However, it would have been more performant to ensure mutual exclusion inside the datastructure because we could have differentiated between the different ingredient types making access to every ingredient individually mutually exclusive. This would have allowed several apprentices to access the inventory at the same time for as long as the do not touch the same ingredient.\\
+
+\textbf{An apprentice is adding an item and another is retrieving it}: Again, this scenario is not possible since the entire datastructure is mutexed. Therefore, if the shopper tried to restock the inventory while an apprentice was retrieving an ingredient, they would sleep on the mutex until the apprentice leaves the inventory.\\
 
 \section{Too Good To Go}
-\label{sec:orgd72a299}
+\label{sec:org5f1235b}
 
-On a high level, our implementation of ``Too Good To Go'' works as follows:\\
-\begin{itemize}
-\item The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging alorithm to be used, the number of ticks between TGTG-decisions, etc.\\
-\item The bakery produces an initial amount of breads.\\
-\item The bakery sells the bread and bakes new breads as they run out.\\
-\item Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate.\\
-\item As soon as the selling target for the day is reached, the bakery closes.\\
-\end{itemize}
+On a high level, our implementation of ``Too Good To Go'' works as follows: (i) The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging alorithm to be used, the number of ticks between TGTG-decisions, etc. (ii) The bakery produces an initial amount of breads. (iii) The bakery sells the bread and bakes new breads as they run out. (iv) Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate. (v) As soon as the selling target for the day is reached, the bakery closes.\\
 
 Let's have a look at the acutal implementation of some of those steps:\\
 
@@ -114,21 +93,16 @@ Let's have a look at the acutal implementation of some of those steps:\\
 
 \textbf{Time of TGTG}: The point in time when the baker has to decide which breads to donate is user-defined and enforced by a thread called 'tgtg\_coordinator'. Every X seconds, the 'tgtg\_coordinator' sets the flag 'tgtg\_flag' to TRUE. After every time the baker sold a bread, they check the flag. If its set to TRUE we call the paging algorithm to decide which breads to donate. Nota bene: Since the flag 'tgtg\_flag' is a shared variable we ensure mutual exclusion using the mutex 'mutTGTGFlag'.\\
 
-\begin{itemize}
-\item Datastructure: Dynamic Array of Bread Types. Where each bread type has a linked list.\\
-\item Procedure:\\
-\begin{itemize}
-\item Bake initial amounts of bread.\\
-\item Sell breads until the selling target for the day is reached.\\
-\item Ever x seconds, tgtg is triggered and whe donate bread according to paging algorithm.\\
-\end{itemize}
-\item Analogy to NRU.\\
-\end{itemize}
+\textbf{Paging Algorithms}: We have implemented all three strategies: ``donate the old bread'' (analogy to FIFO), ``second chance'' (analogy to SECOND\_CHANCE) and ``not recently sold'' (analogy to NRU). The implementation of FIFO works as follows: The baker looks at the timestamp of every bread and checks whether the bread was made in the last X seconds where X is user-defined via the variable 'grace\_period'. If the bread is older than the current time minus the grace period, it is donated. The implementation of NRU checks for each bread type whether that bread type was sold to at least one customer in the last Y seconds. Y is user-define via the variable 'ticks'. If not, all breads of that type are donated. The last algorithm, SECOND\_CHANCE, is a hybrid of FIFO and NRU: Like FIFO, it checks for every bread whether it is older than a certain number of seconds. If so, it also checks whether that bread type was purchased by at least one customer during the last Y seconds. If so, the bread gets a second chance and is not donated.\\
 
 \section{Additional Feature}
-\label{sec:org57cd8b5}
-\begin{itemize}
-\item Chairs: Queue, mutexted.\\
-\item Synchronization: Semaphores (one for the baker and one for each chair).\\
-\end{itemize}
+\label{sec:orgb10188e}
+
+Group 1 chose to implement the second additional feature which we will call ``Sleeping Baker''. Conceptually, our implementation works as follows: (i) The user inputs the parameters suchs as the number of customers that will try to enter the baker, the number of chairs, etc. (ii) Then the baker-thread is created. For as long as the bakery is empty, the baker will sleep. As soon as a customer enters the bakery, the baker will wake up and serve them. (iii) From then on, some customer-threads are created at random intervals and will enter the bakery. If a chair is free they will take a seat and wait to be served. If no chair is free they will leave again. (iv) The script stops when the maximal number of customers was created.\\
+
+Let's have a look at the acutal implementation:\\
+
+\textbf{Synchronization}: The interactions between the customers and the baker is synchronized using semaphores. When a customer takes a seat on a free chair they up the baker's semaphore and start sleeping on their own semaphore. They baker's semaphore stores these ``ups'' and ensures that the baker does not fall asleep for as long as there are still cumstomers in the bakery.\\
+
+\textbf{Datastructure}: The customers that have been able to take a chair are stored in a queue. Every time the baker has finished serving a customer he deques the next semaphore from the queue.\\
 \end{document}
