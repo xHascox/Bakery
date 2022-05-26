@@ -1,4 +1,4 @@
-% Created 2022-05-23 Mo 16:12
+% Created 2022-05-26 Do 13:52
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -31,17 +31,21 @@
 \setlength\parindent{0pt}
 
 \section{Introduction}
-\label{sec:orgd5ac86a}
+\label{sec:orgddae4fc}
 
 The present documentation reports on the solution to the \emph{Fribourgeois Bakery} project elaborated by Group 1.\\
 
 The discussion of the solution will be structured as follows: Chapter one will present the datastructure that represents our inventory as well as our solution to the task ``Learning to make bread''. Chapter two will focus on ``Too good to go'' and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.\\
 
+\begin{itemize}
+\item CLI to invoke scripts.\\
+\end{itemize}
+
 \section{Inventory and Making Bread}
-\label{sec:orgb8b50e4}
+\label{sec:orge8a6dbc}
 
 \subsection{Inventory}
-\label{sec:org7e54d28}
+\label{sec:orgfc7f789}
 \begin{itemize}
 \item Binary tree where each node represents an ingredient type. Each of those nodes holds a linked list where each node represents one unit of that ingredient type.\\
 \item Building and searching of tree: Tree is lexographically sorted -- meaning that that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. ``Smaller'' and ``bigger'' in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently\(\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}\).\\
@@ -65,7 +69,7 @@ The discussion of the solution will be structured as follows: Chapter one will p
 \end{itemize}
 
 \subsection{Making Bread}
-\label{sec:orgac53115}
+\label{sec:orgaf7ab8d}
 
 \begin{itemize}
 \item Synchronization:\\
@@ -82,24 +86,47 @@ The discussion of the solution will be structured as follows: Chapter one will p
 \end{itemize}
 
 \subsection{Scenarios}
-\label{sec:orgb90574b}
+\label{sec:org9d09e61}
 \begin{itemize}
 \item Scenarios:\\
 \begin{itemize}
 \item (i) Apprentices add the same item to the inventory: In func registerIngredient() we first check whether the ingredient has already been registered. If so, we restock to initial amount but do not add it again.\\
-\item (ii) Apprentices access the same item in the inventory: Not possible by design, since the datastructure is made mutually exclusive and since we synchronize the apprentices using the baker as the schedular.\\
+\item (ii) Apprentices access the same item in the inventory: Not possible by design, since the datastructure is made mutually exclusive and since we synchronize the apprentices using the baker as the scheduler.\\
 \item (iii) Same as (ii) except in this case we synchronize between apprentice and shopper. But the approach stays the same.\\
 \end{itemize}
 \end{itemize}
 
 \section{Too Good To Go}
-\label{sec:org626b7a7}
+\label{sec:orgd72a299}
+
+On a high level, our implementation of ``Too Good To Go'' works as follows:\\
 \begin{itemize}
-\item Analogy to NRU\\
+\item The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging alorithm to be used, the number of ticks between TGTG-decisions, etc.\\
+\item The bakery produces an initial amount of breads.\\
+\item The bakery sells the bread and bakes new breads as they run out.\\
+\item Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate.\\
+\item As soon as the selling target for the day is reached, the bakery closes.\\
+\end{itemize}
+
+Let's have a look at the acutal implementation of some of those steps:\\
+
+\textbf{Datastructure}: The bread types are represented as a dynamic array. Each bread type occupies an index in the array. Every index contains a linked list in which each node represents one unit of that type of bread. Each node is timestamped when it is added to the list. Furthermore, the linked list contains some additional information such as the timestamp of the oldest bread present in the list, whether this bread type was recently requested by a customer, etc.\\
+
+\textbf{Time of TGTG}: The point in time when the baker has to decide which breads to donate is user-defined and enforced by a thread called 'tgtg\_coordinator'. Every X seconds, the 'tgtg\_coordinator' sets the flag 'tgtg\_flag' to TRUE. After every time the baker sold a bread, they check the flag. If its set to TRUE we call the paging algorithm to decide which breads to donate. Nota bene: Since the flag 'tgtg\_flag' is a shared variable we ensure mutual exclusion using the mutex 'mutTGTGFlag'.\\
+
+\begin{itemize}
+\item Datastructure: Dynamic Array of Bread Types. Where each bread type has a linked list.\\
+\item Procedure:\\
+\begin{itemize}
+\item Bake initial amounts of bread.\\
+\item Sell breads until the selling target for the day is reached.\\
+\item Ever x seconds, tgtg is triggered and whe donate bread according to paging algorithm.\\
+\end{itemize}
+\item Analogy to NRU.\\
 \end{itemize}
 
 \section{Additional Feature}
-\label{sec:org8151c41}
+\label{sec:org57cd8b5}
 \begin{itemize}
 \item Chairs: Queue, mutexted.\\
 \item Synchronization: Semaphores (one for the baker and one for each chair).\\

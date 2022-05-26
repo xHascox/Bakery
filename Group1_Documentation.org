@@ -46,8 +46,20 @@ The discussion of the solution will be structured as follows: Chapter one will p
   + (iii) Same as (ii) except in this case we synchronize between apprentice and shopper. But the approach stays the same.
 
 * Too Good To Go
-- Dynamic array of  of bread types.
--
+
+On a high level, our implementation of "Too Good To Go" works as follows: (i) The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging alorithm to be used, the number of ticks between TGTG-decisions, etc. (ii) The bakery produces an initial amount of breads. (iii) The bakery sells the bread and bakes new breads as they run out. (iv) Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate. (v) As soon as the selling target for the day is reached, the bakery closes.
+
+Let's have a look at the acutal implementation of some of those steps:
+
+*Datastructure*: The bread types are represented as a dynamic array. Each bread type occupies an index in the array. Every index contains a linked list in which each node represents one unit of that type of bread. Each node is timestamped when it is added to the list. Furthermore, the linked list contains some additional information such as the timestamp of the oldest bread present in the list, whether this bread type was recently requested by a customer, etc.
+
+*Time of TGTG*: The point in time when the baker has to decide which breads to donate is user-defined and enforced by a thread called 'tgtg_coordinator'. Every X seconds, the 'tgtg_coordinator' sets the flag 'tgtg_flag' to TRUE. After every time the baker sold a bread, they check the flag. If its set to TRUE we call the paging algorithm to decide which breads to donate. Nota bene: Since the flag 'tgtg_flag' is a shared variable we ensure mutual exclusion using the mutex 'mutTGTGFlag'.
+
+- Datastructure: Dynamic Array of Bread Types. Where each bread type has a linked list.
+- Procedure:
+  + Bake initial amounts of bread.
+  + Sell breads until the selling target for the day is reached.
+  + Ever x seconds, tgtg is triggered and whe donate bread according to paging algorithm.
 - Analogy to NRU.
 
 * Additional Feature
