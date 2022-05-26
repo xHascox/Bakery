@@ -249,7 +249,7 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
     }
 
     printf("----------------------------\n");
-    printf("Summary:\n");
+    printf("Summary:\n\n");
     for(int i = 0; i < NBBreadTypes; i++){
         int type = i;
         printf("%s:\n",BreadTypeNames[type]);
