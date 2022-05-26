@@ -48,12 +48,12 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
 
 
 /**
- * @brief 
+ * @brief Creates a specified amount of bread for a specified BreadType.
  * 
- * @param BreadType 
- * @param name 
- * @param amount 
- * @param timestamp 
+ * @param BreadType The LinkedList for a specific BreadType
+ * @param name Name of the specific BreadType
+ * @param amount Amount of specified BreadType produced
+ * @param timestamp Timestamp of when created
  */
 void bakeBreads(LinkedList* BreadType, char *name, int amount, int timestamp){
     for(int i = 0; i < amount; i++){
@@ -64,7 +64,8 @@ void bakeBreads(LinkedList* BreadType, char *name, int amount, int timestamp){
 
 
 /**
- * @brief 
+ * @brief This thread coordinates the entire process using a mutex with which it can lock the control flow.
+ * It sleeps for the defined amount of ticks to make the process more readable.
  * 
  * @return void* 
  */
@@ -197,15 +198,15 @@ void sellBread(int timestamp){
 /**
  * @brief 
  * 
- * @param names 
- * @param nbTypes 
- * @param amounts 
- * @param max 
- * @param t 
- * @param p 
- * @param s 
+ * @param names Array of strings (char*) with names of bread types
+ * @param nbTypes Number of bread types
+ * @param amounts Array of int for each bread type specifying the amount of breads to be baked  and subsequently sold
+ * @param max Amount of breads to sell
+ * @param _ticks Amount of ticks to wait between each run of an algorithm
+ * @param _grace_period Amount of ticks to wait until bread is donated
+ * @param _strategy Strategy definign which algorithm to use
  */
-void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int s) {
+void runTGTG(char** names, int nbTypes, int* amounts, int max, int _ticks, int _grace_period, int _strategy) {
 
     printf("--- start ---\n");
 
@@ -215,12 +216,12 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int
     BreadAmounts = amounts;
     Breads = malloc(sizeof(LinkedList*)*NBBreadTypes);
     RecentlySold = malloc(sizeof(int)*NBBreadTypes);
-    ticks = t;
-    strategy = s;
+    ticks = _ticks;
+    strategy = _strategy;
     BreadsSold = 0;
     tgtg_flag = NO;
     BreadsToSell = max;
-    grace_period = p;
+    grace_period = _grace_period;
     currentTime = time(NULL);
 
     pthread_mutex_init(&mutTGTGFlag, NULL);
