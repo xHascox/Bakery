@@ -98,4 +98,4 @@ Output von exclusive access noch clean machen.
 Too good to go ist sehr minimal
 What about testing scripts?
 Wir freen noch nicht in allen script memory. Für jeden malloc call brauchts ein free.
-
+Sleeping Baker: Customers dürfen nicht alle auf einmal kommen.
