@@ -56,9 +56,9 @@ void access_inventory(int i);
 void *scenarioBaker(void *j);
 
 /**
- * @brief The 'baker' is a thread which handles the apprentices's access to the inventory.
- * 
- * 	TODO: ADD MORE DESCRIPTION
+ * @brief The 'baker' is a thread which handles the apprentices's access to the inventory. The baker does the Scheduling. \n 
+ * The baker does not care about which specific metric is used, it always selects the apprentice with the lowest metric.  \n
+ * Depending on the metric, the apprentices indicate different values.
  * 
  * @param j Specifying pointer some value identifying the baker
  * @return void* 
@@ -95,9 +95,10 @@ void *baker(void *j){
 
 
 /**
- * @brief The 'scenarioBaker' is a thread which handles the apprentices's access to the inventory to resemble scenario 2 ("Apprentices access the same item in the inventory").
- * 
- * 	TODO: ADD MORE DESCRIPTION
+ * @brief The 'scenarioBaker' is a thread which handles the apprentices's access to the inventory according to Scenario 2. The baker does the Scheduling. \n 
+ * This version of baker wakes up two Apprentices simultaneously to comply with scenario 2.  \n
+ * The baker does not care about which specific metric is used, it always selects the apprentice with the lowest metric.  \n
+ * Depending on the metric, the apprentices indicate different values.
  * 
  * @param j Specifying pointer some value identifying the baker
  * @return void* 
@@ -213,7 +214,6 @@ void *apprentice(void *j){
 			metric = i;
 	    } 
 	    
-	    
 	    interested_array[i] = metric; // Announce interest
 	    
 	    sem_wait(&semA[i]); // Wait until its my turn
@@ -225,7 +225,8 @@ void *apprentice(void *j){
 	    	pthread_mutex_unlock(&mutex_inventory);	
 	    	printf("     Apprentice %d made %d breads today\n", i, abread);
 	    	pthread_exit(NULL);
-	    } else { // Bakery still open
+	    } 
+		else { // Bakery still open
 			access_inventory(i);
 			breads++;
 			abread++;
@@ -234,7 +235,7 @@ void *apprentice(void *j){
 			
 			sem_post(&semB); // Tell the baker I'm out again
 			
-			if (!fasttest) {
+			if (!fasttest) { // sleep to simulate that making bread takes some time, only if not specified otherwise by the variable fasttest
 				sleep(rand()%3+1);
 			}
 		}        
@@ -256,7 +257,7 @@ void access_inventory(int i){
 	printf("     Apprentice %d accesses the inventory\n",i);
 	
 	/* Choose which bread to make */
-	char* breadName = breadNames[rand()%NBBreadtypes/* +1 ??*/];
+	char* breadName = breadNames[rand()%NBBreadtypes];
 	char** ingredients = getIngredArray(breadName);
 	int ingredients_len = getNbIngredOfBreadType(breadName);
 
@@ -406,58 +407,3 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 
 
 }
-
-/*
-int main(int argc, char const *argv[]){
-	
-	int nbBT = 2;
-	char* ingr01[] = {"Salt", "BP", "Water"};
-	char* ingr02[] = {"Shit","Kek"};
-	char** ingr[] = {ingr01, ingr02};
-	int nbI[] = {3,2};
-	char* BT[] = {"HHH", "KKK"};
-	
-	int toTheMoon = 10;
-	
-	
-
-	int maxLen = 32;
-    char*** IArr;
-    int nbBTy = 2;
-    int nbIng01 = 2;
-    int nbIng02 = 3;
-    char** btName;
-	int* nbIn;
-	int toTheMooon = 10;
-
-	nbIn = (int*)malloc(nbBTy*sizeof(int));
-	nbIn[0] = nbIng01;
-	nbIn[1] = nbIng02;
-
-    btName = malloc(nbBTy*sizeof(char*));
-    btName[0] = malloc(maxLen*sizeof(char));
-    btName[1] = malloc(maxLen*sizeof(char));
-
-    strcpy(btName[0],"Bread01");
-    strcpy(btName[1],"Bread02");
-
-
-    IArr = malloc(nbBTy*sizeof(char*));
-    IArr[0] = malloc(nbIng01*sizeof(char*));
-    IArr[0][0] = malloc(maxLen*sizeof(char));
-    IArr[0][1] = malloc(maxLen*sizeof(char));
-    IArr[1] = malloc(nbIng02*sizeof(char*));
-    IArr[1][0] = malloc(maxLen*sizeof(char));
-    IArr[1][1] = malloc(maxLen*sizeof(char));
-    IArr[1][2] = malloc(maxLen*sizeof(char));
-
-    strcpy(IArr[0][0],"flour");
-    strcpy(IArr[0][1],"oil");
-    strcpy(IArr[1][0],"oil");
-    strcpy(IArr[1][1],"bp");
-    strcpy(IArr[1][2],"flour");
-
-	runMakingBread(30, 100, nbIn, IArr, toTheMooon, nbBTy, btName, FAIRLEARNERS, 0);
-	return 0;
-}
-*/
