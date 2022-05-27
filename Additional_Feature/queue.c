@@ -95,7 +95,7 @@ sem_t* dequeue(Queue* q) {
  * @param q Pointer to a queue to get the lenght of. 
  * @return int 
  */
-int length(Queue* q) {
+int lengthQ(Queue* q) {
     return q->nbElements;
 }
 

@@ -4,6 +4,7 @@
         "stdio.h": "c",
         "inventory.h": "c",
         "stdlib.h": "c",
-        "linkedlist.h": "c"
+        "linkedlist.h": "c",
+        "tgtg.h": "c"
     }
 }

@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
-#include "exclusive_access_inventory.h"
-#include "toogood.h"
-*/
-#include "sleeping_baker.h"
+
+#include "./1_MakingBread/exclusive_access_inventory.h"
+#include "./2_TooGoodToGo/tgtg.h"
+#include "./Additional_Feature/sleeping_baker.h"
 
 void checkOption(int* option);
 void optionSelection();
@@ -15,6 +14,7 @@ void tooGood();
 void sleepingBaker();
 void testingScripts();
 void autoMakingBread();
+void autoTooGood(int algo);
 
 
 
@@ -28,15 +28,19 @@ void autoMakingBread();
 int main(int argc, char const *argv[]) {
 
 
-    if (argc > 1) { //automated testing when an argument is given
+     if (argc > 1) { //automated testing when an argument is given
         //SYNTAX: ./main.o X [Y] [Z]
         // X = 1 // Making Bread
         if (atoi(argv[1]) == 1) {
         	int option = 3;
+            int fast = 1;
         	if (argc > 2) {
         		option = atoi(argv[2]);
         	}
-        	autoMakingBread(option); //TODO uncomment
+            if (argc > 3) {
+        		fast = atoi(argv[3]);
+        	}
+        	autoMakingBread(option, fast);
         }
 
         // Y = 0 // Fairlearners
@@ -45,11 +49,19 @@ int main(int argc, char const *argv[]) {
         // Y = 3 // default, Prelearners (called fast learners in the project description)
         // Y = 4 // Scenario 2
 
+        // Z = 0 // Slow test, the apprentices take some time to make bread, so the prints are printed slowly
+        // Z = 1 // Fast test, so the apprentices bake bread as fast as they can, so the end statistics can be seen without waiting forever
+
         // X = 2 // Too Good To Go
         
         if (atoi(argv[1]) == 2) {
-        	printf("tbd\n");
+        	int algo = 1;
+            if (argc > 2) {
+        		algo = atoi(argv[2]);
+        	}
+            autoTooGood(algo);
         }
+
 
         // X = 3 // Additional Feature Sleeping Baker
         
@@ -67,12 +79,12 @@ int main(int argc, char const *argv[]) {
         	}
         	runAddF(nbCustomers, nbChairs);
         }
-
-        
     }
     else { //manual testing
+        float version = 1.0;
+
         printf("Hello World!\n");
-        printf("You have started v0.8 of the Bakery!\n");
+        printf("You have started v%f of the Bakery!\n", version);
         printf("The following options are at your disposal:\n");
         printf(" -> Option 1: 'Making Bread'.\n");
         printf(" -> Option 2: 'To Good To Go'.\n");
@@ -85,7 +97,6 @@ int main(int argc, char const *argv[]) {
         optionSelection();
     }
     
-
     return 0;
 }
 
@@ -146,14 +157,9 @@ void optionSelection() {
 
 
 /***************************************  MAKING BREAD  *********************************************/
-/**
- * @brief Predefines the necessary arguments for the main run function for 'learning to make bread' and calls it. This funbction is mainly used for the testing scripts.
- * 
- * @param option 
- */
-void autoMakingBread(int option) {
-    int nbAppr = 3;
-    int maxBreads = 10; 
+void autoMakingBread(int option, int fast) {
+    int nbAppr = 1000;
+    int maxBreads = 10000; 
     int* nbIngrArr; 
     char*** ingrNames;
     int stonks = 20; 
@@ -185,16 +191,10 @@ void autoMakingBread(int option) {
 
     metric = 3; //prelearners = fast learners in documentation
 
-    // runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
-
-
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen, fast);
 }
 
 
-/**
- * @brief This function is responsible for asking the user to enter the necessary arguments to run 'learning to make bread'. \n
- * 
- */
 void makingBread() {
 
     int nbAppr;             // number of apprentices
@@ -204,8 +204,10 @@ void makingBread() {
     int* nbIngrArr;         // array of int specifying the amount of ingredients each bread type needs; the index corresponds to the different bread types
     char*** ingrNames;      // array with size equal to the number of bread types, pointing to the amount of ingredients (strings) each bread type has.
     int stonks;             // amount of initial stock and 'restockTo'-value
-    int metric;             // 
-    int scen;
+    int metric;             //
+
+    int scen = 0;           // = 0: no specific scenario
+    int fast = 0;           // fast = 0: sleeps are activated
 
     int maxStrLen = 32;
 
@@ -317,17 +319,33 @@ void makingBread() {
         exit(1);
     } 
 
+    /* ENTERING SCHEDULING METRIC */
+    printf("Please enter the scheduling metric:\n\
+    0 = Fair Learners (prioritise apprentices who have made the least breads today)\n\
+    1 = Fast Learners (prioritise apprentices who have made the most breads today)\n\
+    2 = Arrival Order (prioritise apprentices who arrived early, timestamps)\n\
+    3 = Pre Learners (prioritise apprentices according to some predefined metric, e.g. the speed is alreadyd known, small Apprentice IDs are prioritised)\n");
+    if (scanf("%d", &metric) != 1) {       // Get user input for amount of bread (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    // If no int, print error
+        exit(1);                                            // and exit program
+    }
+
     printf("\n\n");
 
-    printf("Function call for Making Bread disabled for testing Sleeping Baker!\n");
-    /* ----------------------------------------- */
-    // runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
-    /* ----------------------------------------- */
+    
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen, fast);
 }
 /***************************************  MAKING BREAD  *********************************************/
 
 
 /******************************************  TGTG  **************************************************/
+void autoTooGood(int algo) {
+    char* BreadTypeNames[] = {"Croissant", "Zopf", "Tessinerli", "BreadX", "BreadY", "BreadZ", "Bread1", "Flade", "SmallBread", "BigBread"};
+    int num[10] = {30,30,30,30,30,30,30,30,30,30}; 
+    runTGTG(BreadTypeNames,10,num, 290, 7, 10, algo);
+}
+
+
 void tooGood() {
 
     char** breadTypesArr;
@@ -384,14 +402,49 @@ void tooGood() {
         exit(1);
         } 
     }
+
+     printf("\n\n");
     
-    printf("\n\n");
+    /* ENTERING AMOUNT OF BREADS SOLD */
+    int breadsSold;
+    printf("Next, please enter the amount of breads sold.\n");
+    if (scanf("%d", &breadsSold) != 1) {       // Get user input for amount of sold Bread (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
+
+     printf("\n\n");
+    
+    /* ENTERING AMOUNT OF ITERATIONS USED FOR APPLYING TOO GOOD TO GO "TICKS" */
+    int ticks;
+    printf("Next, please enter the amount of breads sold until the too good to go algorithm is applied, e.g. Ticks.\n");
+    if (scanf("%d", &ticks) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
+
+     printf("\n\n");
+
+    /* ENTERING THE GRACE PERIOD */
+    int grace;
+    printf("Next, please enter the Grace Period.\n");
+    if (scanf("%d", &grace) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
+
+     printf("\n\n");
+
+    /* ENTERING THE GRACE PERIOD */
+    int algo;
+    printf("Next, please enter the algorithm that should be applied (0=FIFO, 1=2ndChance, 2=NRU).\n");
+    if (scanf("%d", &algo) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
 
 
-    printf("Function call for Making Bread disabled for testing Sleeping Baker!\n");
-    /* ----------------------------------------- */
-    // runTGTG(breadTypesArr, nbBreadTypes, nbBreads);
-    /* ----------------------------------------- */
+    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold, ticks, grace, algo);
 }
 /******************************************  TGTG  **************************************************/
 
@@ -436,14 +489,24 @@ void sleepingBaker() {
 /*************************************  SLEEPING BAKER  *********************************************/
 
 
-
+void checkOptionTest(int* option);
+void optionSelectionTest();
 void testBaking();
 void testTgtg();
 void testAdditional();
-void testScenarios();
 
 void testingScripts() {
 
+    printf("\n");
+    printf("For the testing part, you have three testing options at your disposal:\n");
+    printf(" -> Option 1: 'Test Making Bread'.\n");
+    printf(" -> Option 2: 'Test To Good To Go'.\n");
+    printf(" -> Option 3: 'Test Additional Feature'.\n");
+    printf("\n");
+
+
+    printf("You are now asked to enter a number from one to three (1,2,3) to select a testing option.\n");
+    optionSelectionTest();
     /*
     please choose which part you would like to test
     if 1:
@@ -462,40 +525,57 @@ void testingScripts() {
 
 
 void testBaking() {
-    printf("Work in progress!\n");
-
-
-
+    int option = 3;
+    int fast = 1;
+    autoMakingBread(option, fast);
 }
 
 
 void testTgtg() {
-    printf("Work in progress!\n");
-
-
-
+    int algo = 1; 
+    autoTooGood(algo);
 }
 
 
 void testAdditional() {
-    printf("Work in progress!\n");
+    int nbCustomers = 30;
+    int nbChairs = 10;
+    runAddF(nbCustomers, nbChairs);
+}
 
-
-
+/**********************************  COMMAND LINE OPTIONS FOR TESTING  ******************************************/
+void checkOptionTest(int* option) {
+    
+    printf("Please enter your testing option: ");
+    if (scanf("%d", option) != 1) {
+ 
+        printf("ERROR: Please enter a NUMBER (int)!\n");
+        exit(1);
+    }
+    if (*option <= 0 || *option >= 5) {
+        printf("Please choose from a number between one and three (1,2,3)!\n");
+        checkOption(option);
+    }
 }
 
 
-void testScenarios() {
-    printf("Work in progress!\n");  
-
-    // adding the same item to the inventory
-
-    // accessing the same item in the inventory
-
-    // adding and removing same item at the same time
-
+void optionSelectionTest() {
+    int option = 0;
+    
+    checkOption(&option);
+ 
+    if (option == 1) {
+        printf("You have chosen testing option one: %d\n", option);
+        printf("\n\n");
+        testBaking();
+    } else if (option == 2) {
+        printf("You have chosen testing option two: %d\n", option);
+        printf("\n\n");
+        testTgtg();
+    } else if (option == 3) {
+        printf("You have chosen testing option three: %d\n", option);
+        printf("\n\n");
+        testAdditional();
+    }
 }
-
-
-
-
+/**********************************  COMMAND LINE OPTIONS FOR TESTING  ******************************************/

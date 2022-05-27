@@ -18,18 +18,18 @@ Queue* chairs;      // Queue where the semaphores for the waiting customers are 
 pthread_mutex_t mutex_chairs;   // The mutex lock for accessing the queue
 
 sem_t* semC; // Customer semaphore :: dynamic array of sem_t
-sem_t semB; // Baker semaphore
+sem_t semBaker; // Baker semaphore
 
 /**
  * @brief The baker is a thread which wakes up customer threads and serves them. The baker wakes one of them up by dequeuing a semaphore and posting it.
  * 
  * @return void* 
  */
-void *baker(){
+void *sleepingBaker(){
     
     while(TRUE) {
 
-        sem_wait(&semB);
+        sem_wait(&semBaker);
 
         if (bakeryOpen == FALSE){ // Bakery closed --> exit
             pthread_exit(NULL);
@@ -55,13 +55,13 @@ void *customer(void *id){
 
     pthread_mutex_lock(&mutex_chairs);
 
-    if (length(chairs) >= NBChairs) { // There are no free chairs
+    if (lengthQ(chairs) >= NBChairs) { // There are no free chairs
         printf("This place is overcrowded. I'm leaving! (Customer %d left).\n",cid);
         pthread_mutex_unlock(&mutex_chairs);
 
     } else { // There are free chairs
         enqueue(chairs, &semC[cid]);
-        sem_post(&semB);
+        sem_post(&semBaker);
         pthread_mutex_unlock(&mutex_chairs);
         printf("Customer %d is waiting in a chair\n", cid);
 
@@ -96,14 +96,14 @@ void runAddF(int nbcustomers, int nbchairs) {
 
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
 
-    sem_init(&semB, 0, 0);
+    sem_init(&semBaker, 0, 0);
     for (int i=0; i < NBCustomers  ; i++)
         sem_init(&semC[i], 0, 0);
 
     /* CREATE THREADS */
 
     pthread_t bakert;
-    pthread_create(&bakert, NULL, baker, NULL);
+    pthread_create(&bakert, NULL, sleepingBaker, NULL);
 
     pthread_t threads[NBCustomers];
     int iVals[NBCustomers];
@@ -131,7 +131,7 @@ void runAddF(int nbcustomers, int nbchairs) {
     printf("All customers joined!\n");
 
     bakeryOpen = FALSE;
-    sem_post(&semB);
+    sem_post(&semBaker);
     pthread_join(bakert, NULL);
     printf("---closed---\n");
 }
