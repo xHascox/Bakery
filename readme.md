@@ -4,17 +4,17 @@ run the "make" command in the root directory
 
 ## Manual Testing
 
-Run ./main.o and you are guided through by the program interface.
+Run ./bakery.o and you are guided through by the program interface.
 
 ## Automated Testing
 
-Example: ./main.o 1 3 1 
+Example: ./bakery.o 1 3 1 
 
 This will run the testing script of Making Bread with "Pre Learners" as the scheduling emtric and sleeps deactivated
 
 ### 1 Making Bread
 
-SYNTAX: ./main.o X [Y] [[Z]]
+SYNTAX: ./bakery.o X [Y] [[Z]]
 
     // X = 1 // Making Bread
 
@@ -40,7 +40,7 @@ Default Values used:
 
 ### 2 Too Good To Go
 
-SYNTAX: ./main.o X [Y]
+SYNTAX: ./bakery.o X [Y]
 
         // X = 2 // Too Good To Go
 
@@ -48,9 +48,18 @@ SYNTAX: ./main.o X [Y]
         // Y = 1 // Second Chance
         // Y = 2 // NRU
 
+Default Values used: 
+
+    - Number of Breadtypes          10
+    - Number of Breads of each Type 30
+    - Breads to be sold             290
+    - Ticks                         7
+    - Grace Period                  10 
+    - Algorithm                     1 (Second Chance)
+
 ### 3 Additional Feature
 
-SYNTAX: ./main.o X [Y] [[Z]]
+SYNTAX: ./bakery.o X [Y] [[Z]]
 
         // X = 3 // Additional Feature Sleeping Baker
         
@@ -58,6 +67,10 @@ SYNTAX: ./main.o X [Y] [[Z]]
 
         // Z = Number of Chairs
 
+Default Values used: 
+
+    - Number of Customers          30
+    - Number of Chairs             10
 
 ## Important Keywords / Glossary
 
