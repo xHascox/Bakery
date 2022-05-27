@@ -11,7 +11,8 @@
 
 
 /**
- * @brief This is simply ????????????????????
+ * @brief This Node represents a unit of a specific LinkedList's BreadType it is attached to.
+ * It only contains a pointer to the next node and the timestamp of the current node.
  * 
  */
 struct Node {
