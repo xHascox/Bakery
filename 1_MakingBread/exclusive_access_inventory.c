@@ -319,15 +319,10 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 	scheduler_metric = metric;
 	scenario = scen;
 
-	
-	printf("Before Recipe Book\n");
-
 	/* RECIPE BOOK CREATION */
 	for (int i = 0; i < NBBreadtypes; i++){
 		registerBreadType(breadNames[i], NBIngredients[i], ingredientNames[i]);
 	}
-
-	printf("Before IngredInv\n");
 	
 	/* INGREDIENTS INVENTORY CREATION */
 	for (int i = 0; i < NBBreadtypes; i++){
@@ -336,18 +331,11 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 		}
 	}
 
-
-	/* -----------------DEBUG--------------------- */
-	//*
-	printf("\n\n");
 	printf("_____________________________________________");
 	printRecipeBook();
-
-	printf("\n\n");
 	printf("_____________________________________________");
 	printInvTree();
-	//*/
-	/* ------------------------------------------- */
+
 
 
 	
