@@ -16,14 +16,18 @@ void autoMakingBread();
 
 int main(int argc, char const *argv[]) {
     if (argc > 1) { //automated testing when an argument is given
-        //SYNTAX: ./main.o X [Y] 
+        //SYNTAX: ./main.o X [Y] [Z]
         // X = 1 // Making Bread
         if (atoi(argv[1]) == 1) {
         	int option = 3;
+            int fast = 1;
         	if (argc > 2) {
         		option = atoi(argv[2]);
         	}
-        	autoMakingBread(option);
+            if (argc > 3) {
+        		fast = atoi(argv[3]);
+        	}
+        	autoMakingBread(option, fast);
         }
 
         // Y = 0 // Fairlearners
@@ -31,6 +35,9 @@ int main(int argc, char const *argv[]) {
         // Y = 2 // Arrivalorder
         // Y = 3 // default, Prelearners (called fast learners in the project description)
         // Y = 4 // Scenario 2
+
+        // Z = 0 // Slow test, the apprentices take some time to make bread, so the prints are printed slowly
+        // Z = 1 // Fast test, so the apprentices bake bread as fast as they can, so the end statistics can be seen without waiting forever
 
         // X = 2 // Too Good To Go
         
@@ -66,9 +73,9 @@ int main(int argc, char const *argv[]) {
     return 0;
 }
 
-void autoMakingBread(int option) {
-    int nbAppr = 3;
-    int maxBreads = 10; 
+void autoMakingBread(int option, int fast) {
+    int nbAppr = 1000;
+    int maxBreads = 3000; 
     int* nbIngrArr; 
     char*** ingrNames;
     int stonks = 20; 
@@ -100,7 +107,7 @@ void autoMakingBread(int option) {
 
     metric = 3; //prelearners = fast learners in documentation
 
-    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen, fast);
 
 
 }
@@ -116,6 +123,7 @@ void makingBread() {
     char** breadTypesArr;
     int metric; 
     int scen;
+    int fast=0;
 
     int maxStrLen = 32;
 
@@ -229,7 +237,7 @@ void makingBread() {
     printf("\n\n");
 
 
-    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
+    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen, fast);
 
 }
 

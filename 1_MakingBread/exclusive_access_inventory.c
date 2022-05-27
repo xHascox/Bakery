@@ -46,6 +46,7 @@ char ***ingredientNames; // Ingredient names per bread type :: Array of arrays o
 char **breadNames; // Names of bread types :: Array of strings
 int NBBreadtypes; // Number of bread types :: int
 int restockToVal; // Initial number of units per ingredient and restock target :: int
+int fasttest = 0; // 0: The apprentices sleep for a random time to simulate making a bread, 1: they dont sleep
 
 // Functions
 void *baker(void *j);
@@ -232,7 +233,9 @@ void *apprentice(void *j){
 			
 			sem_post(&semB); // Tell the baker I'm out again
 			
-			sleep(rand()%3+1);
+			if (!fasttest) {
+				sleep(rand()%3+1);
+			}
 		}        
     }
     printf("     Apprentice %d made %d breads today\n", i, abread);
@@ -301,7 +304,7 @@ void access_inventory(int i){
  * @param metric Chosing scheduling algorithm for 'learning to make bread'
  * @param scen The second scenario an be acivated by entering the specific value (2)
  */
-void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen) {
+void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen, int fast) {
 	
 	printf("Beginning\n");
 
@@ -318,6 +321,7 @@ void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* 
 	breadNames = breadNamesArr;
 	scheduler_metric = metric;
 	scenario = scen;
+	fasttest = fast;
 
 	/* RECIPE BOOK CREATION */
 	for (int i = 0; i < NBBreadtypes; i++){
