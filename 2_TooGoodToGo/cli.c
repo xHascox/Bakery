@@ -14,11 +14,13 @@ void makingBread();
 void tooGood();
 void sleepingBaker();
 void testingScripts();
+void autoTooGood(int algo);
 
 
 
-int main(/*int argc, char const *argv[]*/) {
+int main(int argc, char const *argv[]) {
 
+    
     if (argc > 1) { //automated testing when an argument is given
         //SYNTAX: ./main.o X [Y] [Z]
         // X = 1 // Making Bread
@@ -31,7 +33,7 @@ int main(/*int argc, char const *argv[]*/) {
             if (argc > 3) {
         		fast = atoi(argv[3]);
         	}
-        	autoMakingBread(option, fast);
+        	//autoMakingBread(option, fast);
         }
 
         // Y = 0 // Fairlearners
@@ -45,11 +47,11 @@ int main(/*int argc, char const *argv[]*/) {
 
         // X = 2 // Too Good To Go
         if (atoi(argv[1]) == 2) {
-        	int algo = 1
+        	int algo = 1;
             if (argc > 2) {
         		algo = atoi(argv[2]);
         	}
-            autoTooGood(algo);
+            //autoTooGood(algo);
         }
         // Y = 0 // FIFO
         // Y = 1 // Second Chance
@@ -329,7 +331,7 @@ void optionSelection() {
     if (option == 1) {
         printf("You have chosen option one: %d\n", option);
         printf("\n\n");
-        makingBread();
+        //makingBread();
     } else if (option == 2) {
         printf("You have chosen option two: %d\n", option);
         printf("\n\n");
