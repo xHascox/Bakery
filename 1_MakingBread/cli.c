@@ -75,7 +75,7 @@ int main(int argc, char const *argv[]) {
 
 void autoMakingBread(int option, int fast) {
     int nbAppr = 1000;
-    int maxBreads = 3000; 
+    int maxBreads = 10000; 
     int* nbIngrArr; 
     char*** ingrNames;
     int stonks = 20; 

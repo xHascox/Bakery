@@ -23,6 +23,11 @@ SYNTAX: ./main.o X [Y] [Z]
     // Z = 0 // Slow test, the apprentices take some time to make bread, so the prints are printed slowly
     // Z = 1 // Fast test, so the apprentices bake bread as fast as they can, so the end statistics can be seen without waiting forever
 
+Default Values used: 
+    1000 Apprentices
+    10000 target number of Breads
+    ...
+
 ### 2 Too Good To Go
 
 ### 3 Additional Feature
