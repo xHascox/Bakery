@@ -105,19 +105,23 @@ void runAddF(int nbcustomers, int nbchairs) {
 
     /* CREATE THREADS */
 
+    pthread_t bakert;
+    pthread_create(&bakert, NULL, baker, NULL);
+
     pthread_t threads[NBCustomers];
     
     for (int i=0; i < NBCustomers  ; i++) {
+        sleep(0.5);
         if(pthread_create(&threads[i], NULL, customer, (void *)i)){
             printf("Error in thread creation!\n");
             exit(1);
         } else {
             printf("Customer %d created!\n", i);
         }
+        if (i % (NBChairs+1) == 0){
+            sleep(3);
+        }
     }
-
-    pthread_t bakert;
-    pthread_create(&bakert, NULL, baker, NULL);
     
 
     /* JOINING THREADS */

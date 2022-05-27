@@ -2,7 +2,7 @@
 #+AUTHOR: Group 1: Gabriel, Odermatt, Wey & Yang
 #+OPTIONS: \n:t
 #+LATEX: \setlength\parindent{0pt}
-#+LATEX: \setlength\parskip{-5pt}
+#+LATEX: \setlength\parskip{-9pt}
 #+LATEX_HEADER: \usepackage[a4paper, margin=0.75in]{geometry}
 
 * Introduction
@@ -23,7 +23,7 @@ Let us look at some implementation decisions in a bit more detail:
 
 The inventory is implemented as a binary tree where each tree-node represents an ingredient type. Each of those tree-nodes holds a linked list where each list-node represents one unit of that ingredient type. This datastructure can grow in two ways: With respect to the number of ingredients (the tree grows) and with respect to the number of units of a specific ingredient (the respective linked list grows). The structure is defined in the file 'Inventory_BinTree.c' and exposes some useful functions such as 'registerIngredient', 'addIngredient', 'takeIngredient' and 'restock'.
 
-*Building and searching of tree*: The tree is sorted lexographically -- meaning that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. "Smaller" and "bigger" in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently$\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}$.
+*Building and searching of tree*: The tree is sorted lexographically -- meaning that the left child of each parent node contains an ingredient type whose name is smaller and the right child contains an ingredient type whose name is bigger than the parents name. "Smaller" and "bigger" in this context refer to the ordering of characters proposed by the ASCII standard. Due to this strict ordering of ingredients, the tree can be traversed and searched very efficiently.$\footnote{Strictly speaking this does not always have to be the case. If the ingredients happen to be added in ASCII order (or in reverse) then the tree would be a normal linked list and searching the tree would perform accordingly.}$
 
 *Traversal of the tree*: The tree can be traversed both iteratively and recursively. The function 'getInvNode' -- which searches the tree for an ingredient and returns one unit of that ingredient -- works iteratively, i.e. the tree is traversed from the root to the leaves using a while-loop. Conversely, the function restockRecursion -- which traverses the tree and restocks every ingredient -- works recursively, i.e. the tree is traversed from the left-most leave to the right-most leave.
 
@@ -35,9 +35,26 @@ The inventory may only be accessed by one apprentice at a time. Since the resour
 
 *Scheduling*: When an apprentice wants to access the inventory, they have to announce their interest by modifying the 'interested_array' at the index that corresponds to their thread-id. Depending on the scheduling algorithm used, they modify the array differently, e.g. if the algorithm 'ARRIVALORDER' is used, the apprentices add their time of arrival to the 'interested_array'. Once the apprentice has announced their interested they sleep on a semaphore. The baker analyses the interested_array and chooses the apprentice according to the order of the scheduling algorithm. The baker then wakes that aprentice by posting their semaphore and then sleeps on its own semaphore. The chosen apprentice wakes up and enters the inventory. When they've finished the leave the inventory, wake the baker and start baking their bread. This process repeats until the the bakery has reached the maximal number of breads for the day.
 
-Our group has implemented a total of four scheduling algorithms: (i) ARRIVALORDER sorts the apprentices by their arrivaltime, favoring apprentices that have arrived earlier. (ii) FASTLEARNERS sorts the apprentices according to the number of breads they have already produced. The more bread an apprentice has baked the higher they're ranked. (iii) FAIRLEARNERS is the counterpart to FASTLEARNERS and favours the apprentice with the least amount of baked breads. (iv) Finally, PRELEARNERS enforces a predefined order that corresponds to the apprentice's thread-id.
+Our group has implemented a total of four scheduling algorithms: (i) ARRIVALORDER (analogy to FCFS) sorts the apprentices by their arrivaltime, favoring apprentices that have arrived earlier. (ii) FASTLEARNERS (analogy to "Shortest Process Next" or "Priority Scheduling") sorts the apprentices according to the number of breads they have already produced. The more bread an apprentice has baked the higher they're ranked. (iii) FAIRLEARNERS (analogy to "Guaranteed Scheduling") is the counterpart to FASTLEARNERS and favours the apprentice with the least amount of baked breads. (iv) Finally, PRELEARNERS (analogy to "Round Robin") enforces a predefined order that corresponds to the apprentice's thread-id.
 
-Every scheduling algorithm has its own pros and cons. ???
+Our scheduling algorithms are mere analogies to the real scheduling algorithms running inside an OS. In constrast to the real algorithms our implementations do not differ regarding performance since the baker always checks the entire 'interested_array' before admitting an apprentice to the inventory. The following comparison of the scheduling algorithms will therefore focus on the real scheduling algorithms and compare them regarding throughput, turnaroundtime and fairness (see Table [[fig:comparison]]).
+
+#+Name: fig:comparison
+#+Caption: Comparison of Scheduling Algorithms
+#+ATTR_LATEX: :align |p{5cm}|p{5cm}|p{7cm}|
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| *Scheduling Algorithm*  | *+*                                      | *-*                                                                                       |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| FCFS                  | Optimal usage of CPU time              | Suboptimal throughput and turnaround time (Because a CPU-bound processes block the CPU) |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| Shortest Process Next | Optimal throughput and turnaround time | CPU-bound processes might starve                                                        |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| Priority Scheduling   | Allows to enforce a metric             | Processes with low priority might starve                                                |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| Guaranteed Scheduling | Fair                                   | Suboptimal throughput and turnaround time                                               |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+| Round Robin           | Fair                                   | Suboptimal throughput and turnaround time                                               |
+|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
 
 *Mutual Exclusion*: Thanks to the scheduling algorithms it is practically impossible for two apprentices to access the inventory at the same time. However, just to be sure, we still made access to the inventory mutually exclusive using the mutex 'inventory_mutex'.
 

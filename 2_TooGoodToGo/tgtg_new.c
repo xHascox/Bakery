@@ -90,7 +90,7 @@ void tgtg(int strategy, int timestamp){
         fifo(timestamp);
     } else if (strategy == SECOND_CHANCE){
         secondchance(timestamp);
-    } else {
+    } else { // NRU
         nru(timestamp);
     }
 
@@ -111,9 +111,9 @@ void fifo(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
         LinkedList* BreadType = Breads[i];
         int donate_counter = 0;
-        while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than two ticks
+        while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than X ticks
             donate_counter += 1;
-            time_t t = removeNode(BreadType);
+            removeNode(BreadType);
         }
         BreadType->totalDonated += donate_counter;
         printf("We donated %d %ss\n", donate_counter, BreadTypeNames[i]);

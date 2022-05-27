@@ -127,7 +127,7 @@ void optionSelection() {
     if (option == 1) {
         printf("You have chosen option one: %d\n", option);
         printf("\n\n");
-        makingBread();
+        // makingBread();
     } else if (option == 2) {
         printf("You have chosen option two: %d\n", option);
         printf("\n\n");
@@ -185,7 +185,7 @@ void autoMakingBread(int option) {
 
     metric = 3; //prelearners = fast learners in documentation
 
-    runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
+    // runMakingBread(nbAppr, maxBreads, nbBreadTypes, breadTypesArr, nbIngrArr, ingrNames, stonks, metric, scen);
 
 
 }

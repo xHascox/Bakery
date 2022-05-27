@@ -91,11 +91,4 @@ d default testings mömmer zeme merge, im MakingBread heds d autoMakeBread funcn
 Speicherzugriffsfehler wenn ich maing bread ./mainn.o 1
 mache ganz am schluss, lol wtf?
 
-In CLI muss noch metric exposed werden.
-In baker() muss noch metric implementiert werden. Können wir "scenarios" löschen?
-Doctypes in allen files (ausser BinaryTree)
-Output von exclusive access noch clean machen.
-Too good to go ist sehr minimal
-What about testing scripts?
-Wir freen noch nicht in allen script memory. Für jeden malloc call brauchts ein free.
-Sleeping Baker: Customers dürfen nicht alle auf einmal kommen.
+Testing script for tgtg
