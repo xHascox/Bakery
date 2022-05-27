@@ -257,7 +257,7 @@ void access_inventory(int i){
 	printf("     Apprentice %d accesses the inventory\n",i);
 	
 	/* Choose which bread to make */
-	char* breadName = breadNames[rand()%NBBreadtypes/* +1 ??*/];
+	char* breadName = breadNames[rand()%NBBreadtypes];
 	char** ingredients = getIngredArray(breadName);
 	int ingredients_len = getNbIngredOfBreadType(breadName);
 
