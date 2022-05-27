@@ -42,7 +42,7 @@ void *tgtg_coordinate();
 void tgtg(int strategy, int timestamp);
 void fifo(int timestamp);
 void secondchance(int timestamp);
-void nru(int timestamp);
+void nru();
 void sellBread(int timestamp);
 void runTGTG(char** names, int nbTypes, int* amounts, int max, int t, int p, int s);
 
@@ -64,8 +64,9 @@ void bakeBreads(LinkedList* BreadType, char *name, int amount, int timestamp){
 
 
 /**
- * @brief This thread coordinates the entire process using a mutex with which it can lock the control flow.
- * It sleeps for the defined amount of ticks to make the process more readable.
+ * @brief This thread coordinates the 'tgtg'-function call which selects the algorith to be used.
+ * Since it is a thrad, it sleeps independently. When it wakes up, it tries to lock the mutex
+ * to set the tgtg_flag to 'YES'. The consequence of which is a tgtg-function call.
  * 
  * @return void* 
  */
@@ -76,14 +77,15 @@ void *tgtg_coordinate(){
         tgtg_flag = YES;
         pthread_mutex_unlock(&mutTGTGFlag);
     }// The oldest Bread
+    pthread_exit(NULL);
 }
 
 
 /**
- * @brief 
+ * @brief This function decides on an algorithm to be apllied with the specified strategy.
  * 
- * @param strategy 
- * @param timestamp 
+ * @param strategy Algorithm to be applied
+ * @param timestamp Current timestamp
  */
 void tgtg(int strategy, int timestamp){
     if(strategy == FIFO){
@@ -91,7 +93,7 @@ void tgtg(int strategy, int timestamp){
     } else if (strategy == SECOND_CHANCE){
         secondchance(timestamp);
     } else { // NRU
-        nru(timestamp);
+        nru();
     }
 
     for(int i = 0; i < NBBreadTypes; i++){
@@ -102,9 +104,11 @@ void tgtg(int strategy, int timestamp){
 
 
 /**
- * @brief 
+ * @brief The old breads from every BreadType are removed in a fifo fashion. 
+ * If a specific bread is older than the current 'timestamp - grace_period' (time a bread 
+ * is allowed to sit on the shelf unsold) it is removed.
  * 
- * @param timestamp 
+ * @param timestamp Current timestamp
  */
 void fifo(int timestamp){
     printf("We donate all the breads produced before %d\n", timestamp - grace_period);
@@ -113,7 +117,7 @@ void fifo(int timestamp){
         int donate_counter = 0;
         while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than X ticks
             donate_counter += 1;
-            removeNode(BreadType);
+            emoveNode(BreadType);
         }
         BreadType->totalDonated += donate_counter;
         printf("We donated %d %ss\n", donate_counter, BreadTypeNames[i]);
@@ -122,9 +126,10 @@ void fifo(int timestamp){
 
 
 /**
- * @brief 
+ * @brief The old breads of the bread types is given a second chance, if it has been sold recently. 
+ * Otherwise the breads older than 'timestamp - grace_period' are donated.
  * 
- * @param timestamp 
+ * @param timestamp Current timestamp
  */
 void secondchance(int timestamp){
     for (int i = 0; i < NBBreadTypes; i++){
@@ -132,7 +137,7 @@ void secondchance(int timestamp){
         if(BreadType->oldestBread <= timestamp - grace_period){
             if(BreadType->recentlySold == NO){
                 int donate_counter = 0;
-                while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than two ticks
+                while(BreadType->oldestBread <= timestamp - grace_period){ 
                     donate_counter += 1;
                     removeNode(BreadType);
                 }
@@ -151,14 +156,13 @@ void secondchance(int timestamp){
 /**
  * @brief 
  * 
- * @param timestamp 
  */
-void nru(int timestamp){
+void nru(){
     for (int i = 0; i < NBBreadTypes; i++){
         LinkedList* BreadType = Breads[i];
         if(BreadType->recentlySold == NO){
             int donate_counter = 0;
-            while(length(BreadType) > 0){ // Donate bread that is older than two ticks
+            while(length(BreadType) > 0){ 
                 donate_counter += 1;
                 removeNode(BreadType);
             }
@@ -174,7 +178,7 @@ void nru(int timestamp){
 /**
  * @brief 
  * 
- * @param timestamp 
+ * @param timestamp Current timestamp
  */
 void sellBread(int timestamp){
     int type = rand() % NBBreadTypes;
@@ -196,7 +200,9 @@ void sellBread(int timestamp){
 
 
 /**
- * @brief 
+ * @brief First the local variables, the mutex and the tgtg-coordinator thread are initialized. 
+ * Secondly, the necessary breads are baked. After that, the selling if bread is stared. 
+ * Lastly, the thread is joined and a summary is printed.
  * 
  * @param names Array of strings (char*) with names of bread types
  * @param nbTypes Number of bread types
@@ -253,6 +259,8 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int _ticks, int _
         pthread_mutex_unlock(&mutTGTGFlag);
     }
 
+    pthread_join(tgtg_coordinator, NULL);
+
     printf("----------------------------\n");
     printf("Summary:\n\n");
     for(int i = 0; i < NBBreadTypes; i++){
@@ -268,9 +276,11 @@ void runTGTG(char** names, int nbTypes, int* amounts, int max, int _ticks, int _
 }
 
 
+/*
 int main(int argc, char const *argv[]){
     char* BreadTypeNames[] = {"Croissant", "Zopf", "Tessinerli", "Bli", "Bla", "Blu"};
     int num[6] = {3,3,3,3,3,3}; 
     runTGTG(BreadTypeNames,6,num, 20, 5, 8, NRU);
     return 0;
 }
+*/
