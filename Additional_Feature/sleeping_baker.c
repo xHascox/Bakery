@@ -51,7 +51,7 @@ void *baker(){
  */
 void *customer(void *id){
     
-    int cid = (int) id;
+    int cid = *(int*) id;
 
     pthread_mutex_lock(&mutex_chairs);
 
@@ -77,7 +77,7 @@ void *customer(void *id){
  * @brief This is the main run-function of the additional feature (sleeping baker). \n
  * It takes in the required arguments and declares some local variables with them. \n
  * Then the queue and the semaphore array are created and initialized. After that, the customers and baker threads are also created. \n
- * Lastly, the customer threads are joined, the bakery is closed and the baker is also joined.
+ * Lastly, the customer threads are joined, the bakery is closed and the baker is also joined. \n
  * 
  * @param nbcustomers Amount of customers to be served.
  * @param nbchairs Amount of free places for a customer to sit in.
@@ -109,10 +109,12 @@ void runAddF(int nbcustomers, int nbchairs) {
     pthread_create(&bakert, NULL, baker, NULL);
 
     pthread_t threads[NBCustomers];
+    int iVals[NBCustomers];
     
     for (int i=0; i < NBCustomers  ; i++) {
         sleep(0.5);
-        if(pthread_create(&threads[i], NULL, customer, (void *)i)){
+        iVals[i] = i;
+        if(pthread_create(&threads[i], NULL, customer, (void *)&iVals[i])){
             printf("Error in thread creation!\n");
             exit(1);
         } else {

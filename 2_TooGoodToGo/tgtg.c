@@ -9,6 +9,7 @@
 #include <sys/time.h>
 
 #include "LinkedList.h"
+#include "tgtg.h"
 
 // Readability
 #define NO 0
