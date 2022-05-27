@@ -19,23 +19,75 @@ void testingScripts();
 
 int main(/*int argc, char const *argv[]*/) {
 
+    if (argc > 1) { //automated testing when an argument is given
+        //SYNTAX: ./main.o X [Y] [Z]
+        // X = 1 // Making Bread
+        if (atoi(argv[1]) == 1) {
+        	int option = 3;
+            int fast = 1;
+        	if (argc > 2) {
+        		option = atoi(argv[2]);
+        	}
+            if (argc > 3) {
+        		fast = atoi(argv[3]);
+        	}
+        	autoMakingBread(option, fast);
+        }
 
-    printf("Hello World!\n");
-    printf("You have started v0.8 of the Bakery!\n");
-    printf("The following options are at your disposal:\n");
-    printf(" -> Option 1: 'Making Bread'.\n");
-    printf(" -> Option 2: 'To Good To Go'.\n");
-    printf(" -> Option 3: 'Additional Feature'.\n");
-    printf(" -> Option 4: 'Testing Scrips'.\n");
-    printf("\n");
+        // Y = 0 // Fairlearners
+        // Y = 1 // Fastlearners
+        // Y = 2 // Arrivalorder
+        // Y = 3 // default, Prelearners (called fast learners in the project description)
+        // Y = 4 // Scenario 2
+
+        // Z = 0 // Slow test, the apprentices take some time to make bread, so the prints are printed slowly
+        // Z = 1 // Fast test, so the apprentices bake bread as fast as they can, so the end statistics can be seen without waiting forever
+
+        // X = 2 // Too Good To Go
+        if (atoi(argv[1]) == 2) {
+        	int algo = 1
+            if (argc > 2) {
+        		algo = atoi(argv[2]);
+        	}
+            autoTooGood(algo);
+        }
+        // Y = 0 // FIFO
+        // Y = 1 // Second Chance
+        // Y = 2 // NRU
+
+        // X = 3 // Additional Feature Sleeping Baker
+        
+        if (atoi(argv[1]) == 3) {
+        
+        }
+
+        
+    }
+    else {
+
+        printf("Hello World!\n");
+        printf("You have started v0.8 of the Bakery!\n");
+        printf("The following options are at your disposal:\n");
+        printf(" -> Option 1: 'Making Bread'.\n");
+        printf(" -> Option 2: 'To Good To Go'.\n");
+        printf(" -> Option 3: 'Additional Feature'.\n");
+        printf(" -> Option 4: 'Testing Scrips'.\n");
+        printf("\n");
 
 
-    printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
-    optionSelection();
-    
+        printf("You are now asked to enter a number from one to four (1,2,3,4) to select an option.\n");
+        optionSelection();
+    }
 
     return 0;
 }
+
+void autoTooGood(int algo) {
+    char* BreadTypeNames[] = {"Croissant", "Zopf", "Tessinerli", "BreadX", "BreadY", "BreadZ", "Bread1", "Flade", "SmallBread", "BigBread"};
+    int num[10] = {30,30,30,30,30,30,30,30,30,30}; 
+    runTGTG(BreadTypeNames,10,num, 290, 7, 10, algo);
+}
+
 
 /***************************************  MAKING BREAD  *********************************************/
 void makingBread() {
@@ -222,8 +274,24 @@ void tooGood() {
         exit(1);                                            
     }
 
+    /* ENTERING THE GRACE PERIOD */
+    int grace;
+    printf("Next, please enter the Grace Period.\n");
+    if (scanf("%d", &grace) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
 
-    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold, ticks);
+    /* ENTERING THE GRACE PERIOD */
+    int algo;
+    printf("Next, please enter the algorithm that should be applied (0=FIFO, 1=2ndChance, 2=NRU).\n");
+    if (scanf("%d", &algo) != 1) {       // Get user input for amount of Ticks (int)
+        printf("ERROR: Please enter a NUMBER (int)!\n");    
+        exit(1);                                            
+    }
+
+
+    runTGTG(breadTypesArr, nbBreadTypes, nbBreads, breadsSold, ticks, grace, algo);
 
 }
 /******************************************  TGTG  **************************************************/
