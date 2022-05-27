@@ -117,7 +117,7 @@ void fifo(int timestamp){
         int donate_counter = 0;
         while(BreadType->oldestBread <= timestamp - grace_period){ // Donate bread that is older than X ticks
             donate_counter += 1;
-            emoveNode(BreadType);
+            removeNode(BreadType);
         }
         BreadType->totalDonated += donate_counter;
         printf("We donated %d %ss\n", donate_counter, BreadTypeNames[i]);
@@ -154,7 +154,8 @@ void secondchance(int timestamp){
 
 
 /**
- * @brief 
+ * @brief If a bread type has not been sold withn the specified ticks, it is donated.
+ * The ticks are define the time in which the tgtg function is called. They are not used inside this function.
  * 
  */
 void nru(){
@@ -176,7 +177,7 @@ void nru(){
 
 
 /**
- * @brief 
+ * @brief Here, bread is sold - a BreadType is chosen randomly. If there is no bread left, new bread is baked.
  * 
  * @param timestamp Current timestamp
  */
@@ -184,14 +185,14 @@ void sellBread(int timestamp){
     int type = rand() % NBBreadTypes;
     LinkedList *BreadType = Breads[type];
     if (length(BreadType) > 0){
-        int timestamp = removeNode(BreadType);
+        removeNode(BreadType);
         BreadType->recentlySold = YES;
         BreadType->totalSold += 1;
         printf("A bread was sold! Type: %s\n", BreadTypeNames[type]);
     } else {
         printf("Unfortunately there is no more %s left. We will bake some more.\n", BreadTypeNames[type]);
         bakeBreads(BreadType, BreadTypeNames[type], BreadAmounts[type], timestamp);
-        time_t timestamp = removeNode(BreadType);
+        removeNode(BreadType);
         BreadType->recentlySold = YES;
         BreadType->totalSold += 1;
         printf("A bread was sold! Type: %s\n", BreadTypeNames[type]);
