@@ -4,7 +4,7 @@ run the "make" command in the root directory
 
 ## Manual Testing
 
-Run ./bakery.o and you are guided through by the program interface.
+Run "make run" and you are guided through the program by a commandline interface.
 
 ## Automated Testing
 
