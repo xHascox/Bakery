@@ -28,13 +28,13 @@ SYNTAX: ./main.o X [Y] [[Z]]
     // Z = 1 // Default, Fast test, so the apprentices bake bread as fast as they can, so the end statistics can be seen without waiting forever
 
 Default Values used: 
-    Apprentices                 1000
-    Target number of Breads     10000
-    Inventory Stock             20
-    Number of Breadtypes        1
-    Number of Ingredients       1
-    Scheduling metric           3 (pre learners) [Y]
-    fast                        1 (sleep deactivated) [Z]
+    - Apprentices                 1000
+    - Target number of Breads     10000
+    - Inventory Stock             20
+    - Number of Breadtypes        1
+    - Number of Ingredients       1
+    - Scheduling metric           3 (pre learners) [Y]
+    - fast                        1 (sleep deactivated) [Z]
 
 
 ### 2 Too Good To Go
