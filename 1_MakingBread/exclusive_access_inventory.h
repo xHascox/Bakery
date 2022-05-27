@@ -19,7 +19,7 @@
  * @param metric Chosing scheduling algorithm for 'learning to make bread'
  * @param scen The second scenario an be acivated by entering the specific value (2)
  */
-void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen);
+void runMakingBread (int nbAppr, int maxB, int nbBT, char** breadNamesArr, int* nbIngrArr, char*** ingNames, int stonks, int metric, int scen, int fast);
 
 
 
