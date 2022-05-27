@@ -51,8 +51,8 @@ SYNTAX: ./bakery.o X [Y]
 Default Values used: 
 
     - Number of Breadtypes          10
-    - Number of Breads of each Type 30
-    - Breads to be sold             290
+    - Number of Breads of each Type 15
+    - Breads to be sold             50
     - Ticks                         7
     - Grace Period                  10 
     - Algorithm                     1 (Second Chance)
