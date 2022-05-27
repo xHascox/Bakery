@@ -91,15 +91,12 @@ void runAddF(int nbcustomers, int nbchairs) {
     NBCustomers = nbcustomers;
     NBChairs = nbchairs;
     bakeryOpen = TRUE;
-
     chairs = init_queue();
-
     semC = malloc(NBCustomers*sizeof(sem_t));
 
     /* INITIALIZE MUTEX AND CONDITION VARIABLES */
 
     sem_init(&semB, 0, 0);
-
     for (int i=0; i < NBCustomers  ; i++)
         sem_init(&semC[i], 0, 0);
 
@@ -137,8 +134,3 @@ void runAddF(int nbcustomers, int nbchairs) {
     printf("---closed---\n");
 }
 
-/*
-int main(int argc, char const *argv[]) {
-    run(30,10);
-}
-*/
