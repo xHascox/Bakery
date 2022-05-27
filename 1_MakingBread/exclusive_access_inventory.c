@@ -220,12 +220,13 @@ void *apprentice(void *j){
 		printf("Apprentice %d woke up:\n", i);
 
 	    pthread_mutex_lock(&mutex_inventory);
-	    access_inventory(i);
+	    
 	    if (breads>=maxBread) { // Bakery closed for the day
 	    	pthread_mutex_unlock(&mutex_inventory);	
-	    	printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
+	    	printf("     Apprentice %d made %d breads today\n", i, abread);
 	    	pthread_exit(NULL);
 	    } else { // Bakery still open
+			access_inventory(i);
 			breads++;
 			abread++;
 			printf("     Apprentice %d made bread #%d (their %dth bread)\n",i, breads, abread);
