@@ -62,12 +62,13 @@ SYNTAX: ./main.o X [Y] [[Z]]
 ## Important Keywords / Glossary
 
 #### Making Bread: metric
+
 This parameter changes on which premise the baker allows apprentices to access the inventory.
 
-Fair Learners: Schedule the apprentice with the smallest number of breads he has already made first
-Fast Learners: Schedule the apprentice with the largest number of breads he has already made first
-Arrival Order: Schedule the apprentice that arrived first (using timestamps)
-Pre Learners: Schedule according to a predefined order (Apprentice IDs)
+- Fair Learners: Schedule the apprentice with the smallest number of breads he has already made first
+- Fast Learners: Schedule the apprentice with the largest number of breads he has already made first
+- Arrival Order: Schedule the apprentice that arrived first (using timestamps)
+- Pre Learners: Schedule according to a predefined order (Apprentice IDs)
 
 
 
