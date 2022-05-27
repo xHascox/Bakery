@@ -9,7 +9,7 @@
 
 The present documentation reports on the solution to the /Fribourgeois Bakery/ project elaborated by Group 1.
 
-The discussion of the solution will be structured as follows: Chapter one will present our solution to the task "Learing To Make Bread". Chapter two will focus on "Too Good To Go" and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.
+The discussion of the solution will be structured as follows: Chapter one will present our solution to the task "Learning To Make Bread". Chapter two will focus on "Too Good To Go" and chapter four will present our additional feature. Our implementation decisions as well as the scenarios will be discussed in chapter one.
 
 With our implementation we provide a commandline interface that allows the user to test all functionalities, provide parameters and run the testing scripts.
 
@@ -27,34 +27,34 @@ The inventory is implemented as a binary tree where each tree-node represents an
 
 *Traversal of the tree*: The tree can be traversed both iteratively and recursively. The function 'getInvNode' -- which searches the tree for an ingredient and returns one unit of that ingredient -- works iteratively, i.e. the tree is traversed from the root to the leaves using a while-loop. Conversely, the function restockRecursion -- which traverses the tree and restocks every ingredient -- works recursively, i.e. the tree is traversed from the left-most leave to the right-most leave.
 
-*Mutual exclusion*: Our datastructure does not enforce mutual exclusion. That is: It is up to the client using the datastructure to ensure that it is accessed only by one thread at a time. Our client-side approach to mutual exlusion will be discussed in the next section.
+*Mutual exclusion*: Our datastructure does not enforce mutual exclusion. That is: It is up to the client using the datastructure to ensure that it is accessed only by one thread at a time. Our client-side approach to mutual exclusion will be discussed in the next section.
 
-** Mutual Exlusion and Scheduling
+** Mutual Exclusion and Scheduling
 
 The inventory may only be accessed by one apprentice at a time. Since the resources are limited, every apprentices tries to access the inventory as soon as possible. Therefore, access to the inventory has to be made (i) mutually exclusive and (ii) coordinated in such a way that the apprentices may access in a specific order.
 
-*Scheduling*: When an apprentice wants to access the inventory, they have to announce their interest by modifying the 'interested_array' at the index that corresponds to their thread-id. Depending on the scheduling algorithm used, they modify the array differently, e.g. if the algorithm 'ARRIVALORDER' is used, the apprentices add their time of arrival to the 'interested_array'. Once the apprentice has announced their interested they sleep on a semaphore. The baker analyses the interested_array and chooses the apprentice according to the order of the scheduling algorithm. The baker then wakes that aprentice by posting their semaphore and then sleeps on its own semaphore. The chosen apprentice wakes up and enters the inventory. When they've finished the leave the inventory, wake the baker and start baking their bread. This process repeats until the the bakery has reached the maximal number of breads for the day.
+*Scheduling*: When an apprentice wants to access the inventory, they have to announce their interest by modifying the 'interested_array' at the index that corresponds to their thread-id. Depending on the scheduling algorithm used, they modify the array differently, e.g. if the algorithm 'ARRIVALORDER' is used, the apprentices add their time of arrival to the 'interested_array'. Once the apprentice has announced their interested they sleep on a semaphore. The baker analyses the interested_array and chooses the apprentice according to the order of the scheduling algorithm. The baker then wakes that apprentice by posting their semaphore and then sleeps on its own semaphore. The chosen apprentice wakes up and enters the inventory. When they've finished they leave the inventory, wake the baker and start baking their bread. This process repeats until the the bakery has reached the maximal number of breads for the day.
 
-Our group has implemented a total of four scheduling algorithms: (i) ARRIVALORDER (analogy to FCFS) sorts the apprentices by their arrivaltime, favoring apprentices that have arrived earlier. (ii) FASTLEARNERS (analogy to "Shortest Process Next" or "Priority Scheduling") sorts the apprentices according to the number of breads they have already produced. The more bread an apprentice has baked the higher they're ranked. (iii) FAIRLEARNERS (analogy to "Guaranteed Scheduling") is the counterpart to FASTLEARNERS and favours the apprentice with the least amount of baked breads. (iv) Finally, PRELEARNERS (analogy to "Round Robin") enforces a predefined order that corresponds to the apprentice's thread-id.
+Our group has implemented a total of four scheduling algorithms: (i) ARRIVALORDER (analogy to FCFS) sorts the apprentices by their arrival time, favoring apprentices that have arrived earlier. (ii) FASTLEARNERS (analogy to "Shortest Process Next" or "Priority Scheduling") sorts the apprentices according to the number of breads they have already produced. The more bread an apprentice has baked the higher they're ranked. (iii) FAIRLEARNERS (analogy to "Guaranteed Scheduling") is the counterpart to FASTLEARNERS and favors the apprentice with the least amount of baked breads. (iv) Finally, PRELEARNERS (analogy to "Round Robin") enforces a predefined order that corresponds to the apprentice's thread-id.
 
-Our scheduling algorithms are mere analogies to the real scheduling algorithms running inside an OS. In constrast to the real algorithms our implementations do not differ regarding performance since the baker always checks the entire 'interested_array' before admitting an apprentice to the inventory. The following comparison of the scheduling algorithms will therefore focus on the real scheduling algorithms and compare them regarding throughput, turnaroundtime and fairness (see Table [[fig:comparison]]).
+Our scheduling algorithms are mere analogies to the real scheduling algorithms running inside an OS. However, in our implementation there is no analogous concept to I/O-bound and CPU-bound processes since the apprentices will spend the same amount of time in the inventory. The chosen scheduling algorithm does therefore not influence the running time of the "Making Bread" script. Comparing our algorithms regarding turnaround-time and throughput would therefore not make much sense. The following comparison of the scheduling algorithms will therefore focus on the real scheduling algorithms and compare them regarding throughput, turnaround-time and fairness (see Table [[fig:comparison]]).
 
 #+Name: fig:comparison
 #+Caption: Comparison of Scheduling Algorithms
-#+ATTR_LATEX: :align |p{5cm}|p{5cm}|p{7cm}|
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| *Scheduling Algorithm*  | *+*                                      | *-*                                                                                       |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| FCFS                  | Optimal usage of CPU time              | Suboptimal throughput and turnaround time (Because a CPU-bound processes block the CPU) |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| Shortest Process Next | Optimal throughput and turnaround time | CPU-bound processes might starve                                                        |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| Priority Scheduling   | Allows to enforce a metric             | Processes with low priority might starve                                                |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| Guaranteed Scheduling | Fair                                   | Suboptimal throughput and turnaround time                                               |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
-| Round Robin           | Fair                                   | Suboptimal throughput and turnaround time                                               |
-|-----------------------+----------------------------------------+-----------------------------------------------------------------------------------------|
+#+ATTR_LATEX: :align |p{5cm}|p{5cm}|p{6cm}|
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| *Scheduling Algorithm*  | *+*                                      | *-*                                                                                        |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| FCFS                  | Optimal usage of CPU time              | Sub-optimal throughput and turnaround time (Because a CPU-bound processes block the CPU) |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| Shortest Process Next | Optimal throughput and turnaround time | CPU-bound processes might starve                                                         |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| Priority Scheduling   | Allows to enforce a metric             | Processes with low priority might starve                                                 |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| Guaranteed Scheduling | Fair                                   | Sub-optimal throughput and turnaround time                                               |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
+| Round Robin           | Fair                                   | Sub-optimal throughput and turnaround time                                               |
+|-----------------------+----------------------------------------+------------------------------------------------------------------------------------------|
 
 *Mutual Exclusion*: Thanks to the scheduling algorithms it is practically impossible for two apprentices to access the inventory at the same time. However, just to be sure, we still made access to the inventory mutually exclusive using the mutex 'inventory_mutex'.
 
@@ -70,9 +70,9 @@ Lets have a look how our implementation manages the following three scenarios:
 
 * Too Good To Go
 
-On a high level, our implementation of "Too Good To Go" works as follows: (i) The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging alorithm to be used, the number of ticks between TGTG-decisions, etc. (ii) The bakery produces an initial amount of breads. (iii) The bakery sells the bread and bakes new breads as they run out. (iv) Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate. (v) As soon as the selling target for the day is reached, the bakery closes.
+On a high level, our implementation of "Too Good To Go" works as follows: (i) The user inputs the parameters such as the name of the bread types, the number of units of each type, the paging algorithm to be used, the number of ticks between TGTG-decisions, etc. (ii) The bakery produces an initial amount of breads. (iii) The bakery sells the bread and bakes new breads as they run out. (iv) Every X number of ticks, the baker applies the paging algorithm to decide which breads to donate. (v) As soon as the selling target for the day is reached, the bakery closes.
 
-Let's have a look at the acutal implementation of some of those steps:
+Let's have a look at the actual implementation of some of those steps:
 
 *Datastructure*: The bread types are represented as a dynamic array. Each bread type occupies an index in the array. Every index contains a linked list in which each node represents one unit of that type of bread. Each node is timestamped when it is added to the list. Furthermore, the linked list contains some additional information such as the timestamp of the oldest bread present in the list, whether this bread type was recently requested by a customer, etc.
 
@@ -82,10 +82,10 @@ Let's have a look at the acutal implementation of some of those steps:
 
 * Additional Feature
 
-Group 1 chose to implement the second additional feature which we will call "Sleeping Baker". Conceptually, our implementation works as follows: (i) The user inputs the parameters suchs as the number of customers that will try to enter the baker, the number of chairs, etc. (ii) Then the baker-thread is created. For as long as the bakery is empty, the baker will sleep. As soon as a customer enters the bakery, the baker will wake up and serve them. (iii) From then on, some customer-threads are created at random intervals and will enter the bakery. If a chair is free they will take a seat and wait to be served. If no chair is free they will leave again. (iv) The script stops when the maximal number of customers was created.
+Group 1 chose to implement the second additional feature which we will call "Sleeping Baker". Conceptually, our implementation works as follows: (i) The user inputs the parameters such as the number of customers that will try to enter the baker, the number of chairs, etc. (ii) Then the baker-thread is created. For as long as the bakery is empty, the baker will sleep. As soon as a customer enters the bakery, the baker will wake up and serve them. (iii) From then on, some customer-threads are created at certain intervals and will enter the bakery. If a chair is free they will take a seat and wait to be served. If no chair is free they will leave again. (iv) The script stops when the maximal number of customers was created.
 
-Let's have a look at the acutal implementation:
+Let's have a look at the actual implementation:
 
-*Synchronization*: The interactions between the customers and the baker is synchronized using semaphores. When a customer takes a seat on a free chair they up the baker's semaphore and start sleeping on their own semaphore. They baker's semaphore stores these "ups" and ensures that the baker does not fall asleep for as long as there are still cumstomers in the bakery.
+*Synchronization*: The interactions between the customers and the baker is synchronized using semaphores. When a customer takes a seat on a free chair they up the baker's semaphore and start sleeping on their own semaphore. They baker's semaphore stores these "ups" and ensures that the baker does not fall asleep for as long as there are still customers in the bakery.
 
-*Datastructure*: The customers that have been able to take a chair are stored in a queue. Every time the baker has finished serving a customer he deques the next semaphore from the queue.
+*Datastructure*: The customers that have been able to take a chair are stored in a queue. Every time the baker has finished serving a customer he dequeues the next semaphore from the queue.
